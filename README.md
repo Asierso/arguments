@@ -12,3 +12,7 @@ Un usuario lanza un tema, expone su postura y el debate comienza. Otros entran e
 
 Cada interacción cuenta, cada argumento pesa. Al final, solo una postura prevalecerá. 
 ¿Tienes lo necesario para convencer y salir victorioso? 
+
+## 🚀 Despliegue del servidor
+1. Clonar el repositorio
+2. Ejecutar el fichero `deploy.sh`. Asegurese de que tenga permisos para ejecutarse

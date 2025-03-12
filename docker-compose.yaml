@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+# Mongo DB Service
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -10,28 +9,31 @@ services:
       - mongodb_data:/data/db
     networks:
       - arguments-network
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: 1234
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
-
+# Arguments Backend Service
   arguments-backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: arguments-backend
     ports:
-      - "24833:24833"
+      - "24833:8088"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/arguments
-      - SPRING_DATA_MONGODB_DATABASE=arguments
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=1234
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
       - arguments-network
-
+# Ollama Service
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -41,6 +43,8 @@ services:
       - ollama_data:/root/.ollama
     networks:
       - arguments-network
+    entrypoint: ["sh", "-c"]
+    command: ["ollama serve && ollama pull llama3.2:1b "]
 
 networks:
   arguments-network:
