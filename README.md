@@ -1,5 +1,5 @@
 
-#  <img src="/mono-logo.png" width="25" alt="logo"> Arguments
+#  <img src="/resources/mono-logo.png" width="25" alt="logo"> Arguments
 Imagina una red social donde los debates no quedan en el aire, donde cada argumento cuenta y siempre hay un ganador. Arguments no es solo un espacio para discutir, es la arena definitiva para los que aman el debate y la lógica.
 
 ## 🧐 ¿En que consiste?
