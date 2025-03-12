@@ -29,6 +29,6 @@ public class ValidationUtils {
     }
 
     public static boolean checkToken(String token){
-        return token.equals(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS_PROPERTIES).getProperty("arguments.api.token"));
+        return token.equals(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.api.token"));
     }
 }

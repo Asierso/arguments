@@ -4,8 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum ResourceLocator {
-    ARGUMENTS_PROPERTIES("/arguments.properties"),
-    APPLICATION_PROPERTIES("/application.properties");
+    ARGUMENTS("/arguments.properties"),
+    APPLICATION("/application.properties"),
+    STATUS("/status.properties");
     private final String uri;
     private ResourceLocator(String uri){
         this.uri = uri;

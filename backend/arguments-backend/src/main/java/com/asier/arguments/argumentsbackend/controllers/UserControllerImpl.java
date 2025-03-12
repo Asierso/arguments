@@ -27,7 +27,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<User> select(String token, ObjectId id) {
+    public ResponseEntity<ServiceResponse> select(String token, ObjectId id) {
         if(!ValidationUtils.checkToken(token)){
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
         }

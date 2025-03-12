@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     ResponseEntity<ServiceResponse> insert(User entity);
-    ResponseEntity<User> select(ObjectId id);
+    ResponseEntity<ServiceResponse> select(ObjectId id);
 }

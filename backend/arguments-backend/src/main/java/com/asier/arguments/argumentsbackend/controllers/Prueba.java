@@ -11,6 +11,6 @@ import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 public class Prueba {
     @GetMapping("/api/token")
     public String test() {
-        return "Token: " + PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS_PROPERTIES).getProperty("arguments.api.token");
+        return "Token: " + PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.api.token");
     }
 }

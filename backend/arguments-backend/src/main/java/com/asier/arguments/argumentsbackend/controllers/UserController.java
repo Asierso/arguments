@@ -14,7 +14,7 @@ public interface UserController {
     public ResponseEntity<ServiceResponse> insert(@RequestParam String token, @RequestBody User user);
 
     @GetMapping("/api/v1/user/{id}")
-    public ResponseEntity<User> select(@RequestParam String token, @PathVariable ObjectId id);
+    public ResponseEntity<ServiceResponse> select(@RequestParam String token, @PathVariable ObjectId id);
 
     @PatchMapping("/api/v1/user")
     public ResponseEntity<Void> update(@RequestAttribute String token);
