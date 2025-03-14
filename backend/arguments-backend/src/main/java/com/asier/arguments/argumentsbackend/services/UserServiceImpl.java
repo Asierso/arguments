@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<ServiceResponse> insert(UserCreatorDto entity) {
         //Check if annotated fields @Mandatory are filled
-        if(!AnnotationsUtils.isValidEntity(entity) ||
-                !AnnotationsUtils.isValidEntity(entity.getUser()) ||
-                !AnnotationsUtils.isValidEntity(entity.getCredentials())) {
+        if(AnnotationsUtils.isNotValidEntity(entity) ||
+                AnnotationsUtils.isNotValidEntity(entity.getUser()) ||
+                AnnotationsUtils.isNotValidEntity(entity.getCredentials())) {
             return ResponseEntity.status(HttpStatusCode.valueOf(400))
                     .body(ServiceResponse.builder().status(statusProps.getProperty("status.incompleteData")).build());
         }
@@ -108,9 +108,27 @@ public class UserServiceImpl implements UserService{
         if(id != null){
             Optional<User> user = userRepository.findById(id);
             if(user.isPresent()){
-                User source = user.get();
-                AnnotationsUtils.modifyEntity(source,changes.getUser());
-                userRepository.save(source);
+                //If there are users included in changes, change it
+                if(changes.getUser() != null) {
+                    User userSource = user.get();
+                    AnnotationsUtils.modifyEntity(userSource, changes.getUser());
+                    userRepository.save(userSource);
+                }
+
+                //If there are credentials included in changes, change it
+                if(changes.getCredentials() != null){
+                    Optional<UserCredentials> credentials = userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
+                                    .username(user.get().getUsername()).build()));
+                    if(credentials.isPresent()){
+                        //Hash password
+                        changes.getCredentials().setPassword(BCrypt.hashpw(changes.getCredentials().getPassword(), BCrypt.gensalt()));
+
+                        //Apply changes
+                        UserCredentials credentialsSource = credentials.get();
+                        AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
+                        userCredentialsRepository.save(credentialsSource);
+                    }
+                }
 
                 //Send affirmative answer
                 return ResponseEntity.ok().body(ServiceResponse.builder()
@@ -126,6 +144,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<ServiceResponse> findAll() {
+        //Get all users
         return ResponseEntity.ok().body(ServiceResponse.builder()
                 .status(statusProps.getProperty("status.done"))
                 .result(userRepository.findAll()).build());

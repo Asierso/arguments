@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.entities;
 import com.asier.arguments.argumentsbackend.misc.Identify;
 import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
+import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,11 @@ public class UserCredentials implements Identify {
     @Mandatory
     private String username;
     @Mandatory
+    @Modifiable
     private String password;
     @Override
     public String getId() {
         return BasicUtils.getIdentity(id);
     }
 }
+//$2a$10$qHrtXAj3n1Uk5IvVNBMKh.g7.Y1MJAjPQo7kEZaeAXjzsS510/KcK
