@@ -7,7 +7,7 @@ import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
-import com.asier.arguments.argumentsbackend.utils.validation.ValidationUtils;
+import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import org.bson.types.ObjectId;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<ServiceResponse> insert(UserCreatorDto entity) {
         //Check if annotated fields @Mandatory are filled
-        if(!ValidationUtils.isValidEntity(entity) ||
-                !ValidationUtils.isValidEntity(entity.getUser()) ||
-                !ValidationUtils.isValidEntity(entity.getCredentials())) {
+        if(!AnnotationsUtils.isValidEntity(entity) ||
+                !AnnotationsUtils.isValidEntity(entity.getUser()) ||
+                !AnnotationsUtils.isValidEntity(entity.getCredentials())) {
             return ResponseEntity.status(HttpStatusCode.valueOf(400))
                     .body(ServiceResponse.builder().status(statusProps.getProperty("status.incompleteData")).build());
         }
@@ -90,6 +90,27 @@ public class UserServiceImpl implements UserService{
                                 .ifPresent(val -> userCredentialsRepository.deleteById(new ObjectId(val.getId())));
                 //Delete user
                 userRepository.deleteById(id);
+
+                //Send affirmative answer
+                return ResponseEntity.ok().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.done"))
+                        .build());
+            }
+        }
+
+        //Return not found
+        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.notFound")).build());
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> update(ObjectId id,UserCreatorDto changes) {
+        if(id != null){
+            Optional<User> user = userRepository.findById(id);
+            if(user.isPresent()){
+                User source = user.get();
+                AnnotationsUtils.modifyEntity(source,changes.getUser());
+                userRepository.save(source);
 
                 //Send affirmative answer
                 return ResponseEntity.ok().body(ServiceResponse.builder()

@@ -9,5 +9,6 @@ public interface UserService {
     ResponseEntity<ServiceResponse> insert(UserCreatorDto entity);
     ResponseEntity<ServiceResponse> select(ObjectId id);
     ResponseEntity<ServiceResponse> delete(ObjectId id);
+    ResponseEntity<ServiceResponse> update(ObjectId id, UserCreatorDto entity);
     ResponseEntity<ServiceResponse> findAll();
 }

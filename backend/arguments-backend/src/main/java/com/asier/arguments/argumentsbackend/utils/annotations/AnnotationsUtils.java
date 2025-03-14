@@ -1,12 +1,9 @@
-package com.asier.arguments.argumentsbackend.utils.validation;
-
-import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
-import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
+package com.asier.arguments.argumentsbackend.utils.annotations;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class ValidationUtils {
+public class AnnotationsUtils {
     public static boolean isValidEntity(Object entity){
         if(entity == null){
             return false;
@@ -28,7 +25,20 @@ public class ValidationUtils {
         return valid;
     }
 
-    public static boolean checkToken(String token){
-        return token.equals(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.api.token"));
+    public static <T> void modifyEntity(T source, T changes){
+        if(source == null){
+            return;
+        }
+
+        for (Field field : source.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                if (field.isAnnotationPresent(Modifiable.class))
+                    if(field.get(changes) != null)
+                        field.set(source, field.get(changes));
+            } catch (IllegalAccessException e) {
+                log.error("Error at modifying entity {}", source.getClass().getSimpleName());
+            }
+        }
     }
 }
