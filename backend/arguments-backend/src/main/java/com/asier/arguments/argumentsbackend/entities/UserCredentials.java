@@ -1,33 +1,31 @@
 package com.asier.arguments.argumentsbackend.entities;
 
 import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.validation.Mandatory;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import org.bson.types.ObjectId;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "users")
-public class User implements Identify {
+@Document(collection = "credentials")
+public class UserCredentials implements Identify {
     @Id
     private ObjectId id;
-
-    private String firstname;
-
-    private String lastname;
     @Mandatory
     private String username;
+    @Mandatory
+    private String password;
 
+    @Override
     public String getId() {
-        return id != null ? id.toHexString() : null;
+        return BasicUtils.getIdentity(id);
     }
 }

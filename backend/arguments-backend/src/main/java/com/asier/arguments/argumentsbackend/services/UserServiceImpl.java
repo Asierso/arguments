@@ -1,7 +1,10 @@
 package com.asier.arguments.argumentsbackend.services;
 
-import com.asier.arguments.argumentsbackend.entities.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.User;
+import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.asier.arguments.argumentsbackend.utils.validation.ValidationUtils;
@@ -23,27 +26,39 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserCredentialsRepository userCredentialsRepository;
+
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
 
     @Override
-    public ResponseEntity<ServiceResponse> insert(com.asier.arguments.argumentsbackend.entities.User entity) {
+    public ResponseEntity<ServiceResponse> insert(UserCreatorDto entity) {
         //Check if annotated fields @Mandatory are filled
-        if(!ValidationUtils.isValidEntity(entity)) {
+        if(!ValidationUtils.isValidEntity(entity) ||
+                !ValidationUtils.isValidEntity(entity.getUser()) ||
+                !ValidationUtils.isValidEntity(entity.getCredentials())) {
             return ResponseEntity.status(HttpStatusCode.valueOf(400))
                     .body(ServiceResponse.builder().status(statusProps.getProperty("status.incompleteData")).build());
         }
 
+        //Check if data is valid
+        if(!entity.getUser().getUsername().equals(entity.getCredentials().getUsername())){
+            return ResponseEntity.status(HttpStatusCode.valueOf(400))
+                    .body(ServiceResponse.builder().status(statusProps.getProperty("status.notValidRequest")).build());
+        }
+
         //Check if there's other user with same username
-        if(userRepository.exists(Example.of(User.builder().username(entity.getUsername()).build()))){
+        if(userRepository.exists(Example.of(User.builder().username(entity.getUser().getUsername()).build()))){
             return ResponseEntity.status(HttpStatusCode.valueOf(400))
                     .body(ServiceResponse.builder().status(statusProps.getProperty("status.userAlreadyExists")).build());
         }
 
         //Hash pwd
-        entity.setPassword(BCrypt.hashpw(entity.getPassword(), BCrypt.gensalt()));
+        entity.getCredentials().setPassword(BCrypt.hashpw(entity.getCredentials().getPassword(), BCrypt.gensalt()));
 
         //Save entity and return result ok
-        userRepository.save(entity);
+        userRepository.save(entity.getUser());
+        userCredentialsRepository.save(entity.getCredentials());
         return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).build());
     }
 
@@ -53,12 +68,46 @@ public class UserServiceImpl implements UserService{
         if(id != null){
             Optional<User> user = userRepository.findById(id);
             if(user.isPresent())
-                return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).result(user.get()).build());
+                return ResponseEntity.ok().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.done"))
+                        .result(user.get()).build());
         }
 
         //Return not found
         return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
                 .status(statusProps.getProperty("status.notFound")).build());
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> delete(ObjectId id) {
+        //Delete user and credentials if exists
+        if(id != null){
+            Optional<User> user = userRepository.findById(id);
+            if(user.isPresent()){
+                //Delete credentials if exists
+                userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
+                                .username(user.get().getUsername()).build()))
+                                .ifPresent(val -> userCredentialsRepository.deleteById(new ObjectId(val.getId())));
+                //Delete user
+                userRepository.deleteById(id);
+
+                //Send affirmative answer
+                return ResponseEntity.ok().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.done"))
+                        .build());
+            }
+        }
+
+        //Return not found
+        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.notFound")).build());
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> findAll() {
+        return ResponseEntity.ok().body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.done"))
+                .result(userRepository.findAll()).build());
     }
 
 }

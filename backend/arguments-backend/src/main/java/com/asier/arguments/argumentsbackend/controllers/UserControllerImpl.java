@@ -2,7 +2,8 @@ package com.asier.arguments.argumentsbackend.controllers;
 
 import java.util.List;
 
-import com.asier.arguments.argumentsbackend.entities.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.utils.validation.ValidationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,13 @@ import com.asier.arguments.argumentsbackend.entities.User;
 import com.asier.arguments.argumentsbackend.services.UserService;
 
 @RestController
+@SuppressWarnings({"unused"})
 public class UserControllerImpl implements UserController {
     @Autowired
     private UserService userService;
     
     @Override
-    public ResponseEntity<ServiceResponse> insert(String token, User user) {
+    public ResponseEntity<ServiceResponse> insert(String token, UserCreatorDto user) {
         if(!ValidationUtils.checkToken(token)){
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
         }
@@ -35,15 +37,19 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Void> update(String token) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ResponseEntity<ServiceResponse> delete(String token, ObjectId id) {
+        if(!ValidationUtils.checkToken(token)){
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
+        }
+        return userService.delete(id);
     }
 
     @Override
-    public ResponseEntity<List<User>> findAll(String token) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    public ResponseEntity<ServiceResponse> findAll(String token) {
+        if(!ValidationUtils.checkToken(token)){
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).build();
+        }
+        return userService.findAll();
     }
 
 }

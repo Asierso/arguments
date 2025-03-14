@@ -2,7 +2,8 @@ package com.asier.arguments.argumentsbackend.controllers;
 
 import java.util.List;
 
-import com.asier.arguments.argumentsbackend.entities.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import com.asier.arguments.argumentsbackend.entities.User;
 
 public interface UserController {
-    @PostMapping("/api/v1/user")
-    public ResponseEntity<ServiceResponse> insert(@RequestParam String token, @RequestBody User user);
+    @PostMapping("/api/v1/users")
+    public ResponseEntity<ServiceResponse> insert(@RequestParam String token, @RequestBody UserCreatorDto user);
 
-    @GetMapping("/api/v1/user/{id}")
+    @GetMapping("/api/v1/users/{id}")
     public ResponseEntity<ServiceResponse> select(@RequestParam String token, @PathVariable ObjectId id);
 
-    @PatchMapping("/api/v1/user")
-    public ResponseEntity<Void> update(@RequestAttribute String token);
+    @DeleteMapping("/api/v1/users/{id}")
+    public ResponseEntity<ServiceResponse> delete(@RequestParam String token,@PathVariable ObjectId id);
 
-    @GetMapping("/api/v1/user/all")
-    public ResponseEntity<List<User>> findAll(@RequestAttribute String token);
+    @GetMapping("/api/v1/users/all")
+    public ResponseEntity<ServiceResponse> findAll(@RequestParam String token);
 }
