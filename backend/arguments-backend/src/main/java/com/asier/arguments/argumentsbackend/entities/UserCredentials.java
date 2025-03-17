@@ -30,4 +30,3 @@ public class UserCredentials implements Identify {
         return BasicUtils.getIdentity(id);
     }
 }
-//$2a$10$qHrtXAj3n1Uk5IvVNBMKh.g7.Y1MJAjPQo7kEZaeAXjzsS510/KcK
