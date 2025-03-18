@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This class is returned in every server response
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

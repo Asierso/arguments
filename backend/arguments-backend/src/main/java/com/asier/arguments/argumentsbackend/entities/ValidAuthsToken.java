@@ -11,7 +11,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
+/**
+ * This class is used to create a registry of the valid users auth tokens.
+ * Auth tokens are stored without direct user reference.
+ * When a /auth request is filtered, Backend checks if the "Bearer" token exists in that collection
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

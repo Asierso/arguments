@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
+/**
+ * This web filter applies to all API calls that require user authentication.
+ * The token is calculated when server is started using properties secret
+ */
 @Slf4j
 @WebFilter("/api/v1/auth/*")
 public class AuthTokenFilter implements Filter {
@@ -37,18 +41,21 @@ public class AuthTokenFilter implements Filter {
             return;
         }
 
-        //Get user auth
+        //Get user auth and username. Username is contained in auth token
         String token = authHeader.substring(7);
         String username = authService.getAuthSubject(token);
 
         if (username != null) {
+            //Save username in request parameters
             request.setAttribute("username", username);
-            
+
+            //Check if the auth token is valid. Valid auth tokens are registered in auths collection
             if(!authTokenService.exists(ValidAuthsToken.builder().token(token).build())){
                 sendError(servletResponse);
                 return;
             }
 
+            //Continue with the endpoint call
             filterChain.doFilter(request, servletResponse);
         } else {
             sendError(servletResponse);

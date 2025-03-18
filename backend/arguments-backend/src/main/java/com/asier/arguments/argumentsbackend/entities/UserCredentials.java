@@ -13,6 +13,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * This entity creates association between username and password to allow logins.
+ * This is confident data and password are encrypted using BCrypt util
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

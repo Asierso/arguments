@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This DTO allows client to create users combining user data request and user credentials request
+ * just in one request
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

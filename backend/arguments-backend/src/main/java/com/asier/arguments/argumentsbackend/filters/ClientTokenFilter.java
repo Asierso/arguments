@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * This web filter applies to all API calls. All calls should be launched on authorized clients
+ * The token is calculated when server is started using properties secret
+ */
 @WebFilter(urlPatterns = "/api/*")
 public class ClientTokenFilter implements Filter {
     @Autowired
