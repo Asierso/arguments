@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -21,6 +22,7 @@ public class UserCredentials implements Identify {
     @Id
     private ObjectId id;
     @Mandatory
+    @Indexed
     private String username;
     @Mandatory
     @Modifiable

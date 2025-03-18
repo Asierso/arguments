@@ -1,0 +1,26 @@
+# Android
+/android/.DS_Store
+/android/build/
+/android/app/build/
+/android/gradle/
+/android/local.properties
+/android/.gradle/
+/android/.idea/
+/android/*.iml
+/android/.settings/
+/android/captures/
+
+# Backend
+/backend/target/
+/backend/.mvn/
+/backend/mvnw
+/backend/mvnw.cmd
+/backend/HELP.md
+/backend/.env
+/backend/logs/
+/backend/.DS_Store
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/*.iml
+/backend/.idea/
