@@ -11,16 +11,16 @@
 /android/captures/
 
 # Backend
-/backend/target/
-/backend/.mvn/
-/backend/mvnw
-/backend/mvnw.cmd
-/backend/HELP.md
-/backend/.env
-/backend/logs/
-/backend/.DS_Store
-/backend/.classpath
-/backend/.project
-/backend/.settings/
-/backend/*.iml
-/backend/.idea/
+/backend/arguments-backend/target/
+/backend/arguments-backend/.mvn/
+/backend/arguments-backend/mvnw
+/backend/arguments-backend/mvnw.cmd
+/backend/arguments-backend/HELP.md
+/backend/arguments-backend/.env
+/backend/arguments-backend/logs/
+/backend/arguments-backend/.DS_Store
+/backend/arguments-backend/.classpath
+/backend/arguments-backend/.project
+/backend/arguments-backend/.settings/
+/backend/arguments-backend/*.iml
+/backend/arguments-backend/.idea/
