@@ -25,14 +25,6 @@ public class AuthService {
     public boolean validateClientToken(String token){
         return token.equals(Base64.getEncoder().encodeToString(clientKey.getEncoded()));
     }
-    public boolean validateAuthToken(String token){
-        try {
-            Jwts.parserBuilder().setSigningKey(authKey).build().parseClaimsJws(token);
-            return true;
-        }catch (Exception ignore){
-            return false;
-        }
-    }
     public String getAuthSubject(String token){
         return Jwts.parserBuilder().setSigningKey(authKey).build().parseClaimsJws(token).getBody().getSubject();
     }

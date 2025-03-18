@@ -20,7 +20,7 @@ public class ClientTokenFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        if(authService.validateClientToken(req.getParameter("token"))){
+        if(authService.validateClientToken(req.getParameter("clientToken"))){
             filterChain.doFilter(servletRequest,servletResponse);
         }else{
             HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;

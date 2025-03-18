@@ -1,10 +1,11 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.impl;
 
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.User;
 import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
+import com.asier.arguments.argumentsbackend.services.UserService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 

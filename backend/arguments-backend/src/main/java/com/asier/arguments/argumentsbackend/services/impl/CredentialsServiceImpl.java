@@ -1,7 +1,8 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.impl;
 
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
+import com.asier.arguments.argumentsbackend.services.CredentialsService;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class CredentialsServiceImpl implements CredentialsService {
     @Autowired
     private UserCredentialsRepository credentialsRepository;
+
     @Override
     public boolean validate(UserCredentials credentials) {
         Optional<UserCredentials> opt =  credentialsRepository.findOne(Example.of(UserCredentials.builder()

@@ -13,6 +13,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This is the public User. People can see that information in Arguments social network
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
