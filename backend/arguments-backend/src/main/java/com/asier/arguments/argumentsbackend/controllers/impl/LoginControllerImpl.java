@@ -14,10 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequestMapping("/api/v1")
 public class LoginControllerImpl implements LoginController {
     @Autowired
     private CredentialsService credentialsService;
@@ -40,14 +42,8 @@ public class LoginControllerImpl implements LoginController {
     }
 
     @Override
-    public ResponseEntity<ServiceResponse> logout(String clientToken, HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.notValidRequest")).build());
-        }
-
-        if(validAuthsTokenService.delete(ValidAuthsToken.toAuthToken(authHeader.substring(7)))){
+    public ResponseEntity<ServiceResponse> logout(String clientToken, String authToken) {
+        if(validAuthsTokenService.delete(ValidAuthsToken.toAuthToken(authToken))){
             return ResponseEntity.ok(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.done")).build());
         }else{
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.unauthorizedAuth")).build());
@@ -55,7 +51,7 @@ public class LoginControllerImpl implements LoginController {
     }
 
     @Override
-    public String hello(String clientToken) {
-        return "hello ";
+    public String hello(String clientToken, String username) {
+        return "hello " + username;
     }
 }

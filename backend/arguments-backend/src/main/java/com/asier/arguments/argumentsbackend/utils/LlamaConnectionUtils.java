@@ -5,7 +5,7 @@ import com.asierso.llamaapi.LlamaConnection;
 
 import java.util.Properties;
 
-public class OllamaConnextionUtils {
+public class LlamaConnectionUtils {
     public static LlamaConnection getConnection() {
         Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
         StringBuilder uri = new StringBuilder().append(props.getProperty("llama.uri.protocol"))

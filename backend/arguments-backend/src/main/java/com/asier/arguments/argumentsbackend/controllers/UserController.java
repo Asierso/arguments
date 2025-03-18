@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import com.asier.arguments.argumentsbackend.entities.User;
 
 public interface UserController {
-    @PostMapping("/api/v1/users")
+    @PostMapping("/users")
     ResponseEntity<ServiceResponse> insert(@RequestParam String clientToken, @RequestBody UserCreatorDto user);
 
-    @GetMapping("/api/v1/users/{id}")
+    @GetMapping("/users/{id}")
     ResponseEntity<ServiceResponse> select(@RequestParam String clientToken, @PathVariable ObjectId id);
 
-    @DeleteMapping("/api/v1/users/{id}")
+    @DeleteMapping("/users/{id}")
     ResponseEntity<ServiceResponse> delete(@RequestParam String clientToken,@PathVariable ObjectId id);
 
-    @PatchMapping("/api/v1/users/{id}")
+    @PatchMapping("/users/{id}")
     ResponseEntity<ServiceResponse> update(@RequestParam String clientToken,@PathVariable ObjectId id, @RequestBody UserCreatorDto user);
 
-    @GetMapping("/api/v1/users/all")
+    @GetMapping("/users/all")
     ResponseEntity<ServiceResponse> findAll(@RequestParam String clientToken);
 }

@@ -46,8 +46,9 @@ public class AuthTokenFilter implements Filter {
         String username = authService.getAuthSubject(token);
 
         if (username != null) {
-            //Save username in request parameters
+            //Save username in request attributes
             request.setAttribute("username", username);
+            request.setAttribute("authToken",token);
 
             //Check if the auth token is valid. Valid auth tokens are registered in auths collection
             if(!authTokenService.exists(ValidAuthsToken.builder().token(token).build())){
@@ -63,9 +64,12 @@ public class AuthTokenFilter implements Filter {
     }
 
     private void sendError(ServletResponse response) {
+        //Define headers
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setStatus(401);
         httpResponse.setContentType("application/json");
+
+        //Builds body error
         ObjectMapper map = new ObjectMapper();
         try {
             String msg = map.writeValueAsString(ServiceResponse.builder().status("401").result(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.unauthorizedAuth")).build());

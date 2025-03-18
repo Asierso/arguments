@@ -7,11 +7,13 @@ import com.asier.arguments.argumentsbackend.services.AuthService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.asier.arguments.argumentsbackend.services.UserService;
 
 @RestController
+@RequestMapping("/api/v1")
 @SuppressWarnings({"unused"})
 public class UserControllerImpl implements UserController {
     @Autowired

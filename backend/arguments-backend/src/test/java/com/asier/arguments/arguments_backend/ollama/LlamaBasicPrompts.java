@@ -1,6 +1,6 @@
 package com.asier.arguments.arguments_backend.ollama;
 
-import com.asier.arguments.argumentsbackend.utils.OllamaConnextionUtils;
+import com.asier.arguments.argumentsbackend.utils.LlamaConnectionUtils;
 import com.asierso.llamaapi.LlamaConnection;
 import com.asierso.llamaapi.builder.LlamaPromptsBuilder;
 import com.asierso.llamaapi.builder.LlamaSettingsBuilder;
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class LlamaBasicPrompts {
     @Test
     public void simplePrompt(){
-        LlamaConnection conn = OllamaConnextionUtils.getConnection();
+        LlamaConnection conn = LlamaConnectionUtils.getConnection();
         LlamaSettings settings = new LlamaSettingsBuilder().useModel("llama3.2:1b").build();
         LlamaStreamRequest lls = new LlamaPromptsBuilder(settings).appendPrompt("Capital de españa").build();
 
