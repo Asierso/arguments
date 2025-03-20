@@ -1,7 +1,8 @@
 services:
 # Mongo DB Service
   mongodb:
-    image: mongo:latest
+    image: mongo
+    restart: always
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -10,8 +11,9 @@ services:
     networks:
       - arguments-network
     environment:
-        MONGO_INITDB_ROOT_USERNAME: root
-        MONGO_INITDB_ROOT_PASSWORD: 1234
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: arguments
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -27,7 +29,11 @@ services:
       - "24833:8088"
     environment:
       - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=1234
+      - SPRING_DATA_MONGODB_PASSWORD=root
+      - SPRING_DATA_MONGODB_DATABASE=arguments
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
     depends_on:
       mongodb:
         condition: service_healthy

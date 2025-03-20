@@ -31,8 +31,8 @@
 	</properties>
 	<repositories>
 		<repository>
-			<id>asierso-repo</id>
-			<url>https://raw.githubusercontent.com/Asierso/llama-api/releases</url>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/Asierso/llama-api/releases</url>
 		</repository>
 	</repositories>
 	<dependencies>
