@@ -14,14 +14,11 @@ public interface UserController {
     @PostMapping("/users")
     ResponseEntity<ServiceResponse> insert(@RequestParam String clientToken, @RequestBody UserCreatorDto user);
 
-    @GetMapping("/users/{id}")
-    ResponseEntity<ServiceResponse> select(@RequestParam String clientToken, @PathVariable ObjectId id);
+    @GetMapping("/users/id/{id}")
+    ResponseEntity<ServiceResponse> selectById(@RequestParam String clientToken, @PathVariable ObjectId id);
 
-    @DeleteMapping("/users/{id}")
-    ResponseEntity<ServiceResponse> delete(@RequestParam String clientToken,@PathVariable ObjectId id);
-
-    @PatchMapping("/users/{id}")
-    ResponseEntity<ServiceResponse> update(@RequestParam String clientToken,@PathVariable ObjectId id, @RequestBody UserCreatorDto user);
+    @GetMapping("/users/username/{uname}")
+    ResponseEntity<ServiceResponse> selectByUsername(@RequestParam String clientToken, @PathVariable String uname);
 
     @GetMapping("/users/all")
     ResponseEntity<ServiceResponse> findAll(@RequestParam String clientToken);

@@ -1,10 +1,10 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.auth;
 
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -26,7 +26,11 @@ public class AuthService {
         return token.equals(Base64.getEncoder().encodeToString(clientKey.getEncoded()));
     }
     public String getAuthSubject(String token){
-        return Jwts.parserBuilder().setSigningKey(authKey).build().parseClaimsJws(token).getBody().getSubject();
+        try {
+            return Jwts.parserBuilder().setSigningKey(authKey).build().parseClaimsJws(token).getBody().getSubject();
+        } catch(MalformedJwtException e){
+            return null;
+        }
     }
     public String getClientKey(){
         return Base64.getEncoder().encodeToString(clientKey.getEncoded());

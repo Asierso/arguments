@@ -1,11 +1,10 @@
-package com.asier.arguments.argumentsbackend.services.impl;
+package com.asier.arguments.argumentsbackend.services;
 
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.User;
 import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
-import com.asier.arguments.argumentsbackend.services.UserService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
@@ -64,23 +63,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ServiceResponse> select(ObjectId id) {
+    public User select(ObjectId id) {
         //Try to find user
         if(id != null){
             Optional<User> user = userRepository.findById(id);
             if(user.isPresent())
-                return ResponseEntity.ok().body(ServiceResponse.builder()
-                        .status(statusProps.getProperty("status.done"))
-                        .result(user.get()).build());
+                return user.get();
         }
-
-        //Return not found
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.notFound")).build());
+        return null;
     }
 
     @Override
-    public ResponseEntity<ServiceResponse> delete(ObjectId id) {
+    public User select(String username) {
+        //Try to find user
+        if(username != null){
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).build()));
+            if(user.isPresent())
+                return user.get();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delete(ObjectId id) {
         //Delete user and credentials if exists
         if(id != null){
             Optional<User> user = userRepository.findById(id);
@@ -93,15 +98,31 @@ public class UserServiceImpl implements UserService {
                 userRepository.deleteById(id);
 
                 //Send affirmative answer
-                return ResponseEntity.ok().body(ServiceResponse.builder()
-                        .status(statusProps.getProperty("status.done"))
-                        .build());
+                return true;
             }
         }
 
         //Return not found
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.notFound")).build());
+        return false;
+    }
+
+    @Override
+    public boolean delete(String username) {
+        if(username != null){
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).build()));
+            if(user.isPresent()){
+                //Delete credentials if exists
+                userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
+                                .username(user.get().getUsername()).build()))
+                        .ifPresent(val -> userCredentialsRepository.deleteById(new ObjectId(val.getId())));
+                //Delete user
+                userRepository.deleteById(new ObjectId(user.get().getId()));
+
+                //Send affirmative answer
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

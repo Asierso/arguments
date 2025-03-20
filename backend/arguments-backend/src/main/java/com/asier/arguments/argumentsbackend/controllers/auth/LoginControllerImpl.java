@@ -1,15 +1,13 @@
-package com.asier.arguments.argumentsbackend.controllers.impl;
+package com.asier.arguments.argumentsbackend.controllers.auth;
 
-import com.asier.arguments.argumentsbackend.controllers.LoginController;
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.services.AuthService;
-import com.asier.arguments.argumentsbackend.services.ValidAuthsTokenService;
-import com.asier.arguments.argumentsbackend.services.CredentialsService;
+import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
+import com.asier.arguments.argumentsbackend.services.auth.CredentialsService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;

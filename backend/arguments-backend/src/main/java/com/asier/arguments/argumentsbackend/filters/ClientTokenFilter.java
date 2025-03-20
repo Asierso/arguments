@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.filters;
 
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.services.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,9 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -31,7 +28,7 @@ public class ClientTokenFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         //Check if the client is genuine
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        if(authService.validateClientToken(req.getParameter("clientToken"))){
+        if(req.getParameter("clientToken") != null && authService.validateClientToken(req.getParameter("clientToken"))){
             filterChain.doFilter(servletRequest,servletResponse);
         }else{
             //Define headers

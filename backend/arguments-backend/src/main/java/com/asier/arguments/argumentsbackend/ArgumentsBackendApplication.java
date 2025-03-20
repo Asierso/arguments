@@ -1,8 +1,7 @@
 package com.asier.arguments.argumentsbackend;
 
-import com.asier.arguments.argumentsbackend.services.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

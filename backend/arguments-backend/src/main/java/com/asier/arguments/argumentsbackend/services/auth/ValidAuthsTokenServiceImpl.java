@@ -1,13 +1,13 @@
-package com.asier.arguments.argumentsbackend.services.impl;
+package com.asier.arguments.argumentsbackend.services.auth;
 
 import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
 import com.asier.arguments.argumentsbackend.repositories.ValidAuthsTokenRepository;
-import com.asier.arguments.argumentsbackend.services.ValidAuthsTokenService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +42,9 @@ public class ValidAuthsTokenServiceImpl implements ValidAuthsTokenService {
             }
         }
         return false;
+    }
 
+    public List<ValidAuthsToken> findAll(){
+        return authsRepository.findAll();
     }
 }

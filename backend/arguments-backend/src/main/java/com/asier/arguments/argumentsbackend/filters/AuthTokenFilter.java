@@ -2,8 +2,8 @@ package com.asier.arguments.argumentsbackend.filters;
 
 import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.services.AuthService;
-import com.asier.arguments.argumentsbackend.services.ValidAuthsTokenService;
+import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
