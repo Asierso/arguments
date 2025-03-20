@@ -5,6 +5,7 @@ import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -28,7 +29,7 @@ public class AuthService {
     public String getAuthSubject(String token){
         try {
             return Jwts.parserBuilder().setSigningKey(authKey).build().parseClaimsJws(token).getBody().getSubject();
-        } catch(MalformedJwtException e){
+        } catch(MalformedJwtException | SignatureException e){
             return null;
         }
     }

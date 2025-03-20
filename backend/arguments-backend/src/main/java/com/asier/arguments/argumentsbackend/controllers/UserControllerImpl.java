@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.asier.arguments.argumentsbackend.services.UserService;
 
 import java.util.Properties;
-
 @RestController
 @RequestMapping("/api/v1")
 @SuppressWarnings({"unused"})

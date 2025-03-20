@@ -35,7 +35,7 @@ public class LoginControllerImpl implements LoginController {
             validAuthsTokenService.insert(ValidAuthsToken.toAuthToken(authService.generateAuthToken(credentials.getUsername())));
             return ResponseEntity.ok(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.done")).result(authToken).build());
         }else{
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.unauthorizedAuth")).build());
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.invalidCredentials")).build());
         }
     }
 
