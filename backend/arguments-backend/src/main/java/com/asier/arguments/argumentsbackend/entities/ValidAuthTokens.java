@@ -20,19 +20,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "auths")
-public class ValidAuthsToken implements Identify {
+@Document(collection = "auth_tokens")
+public class ValidAuthTokens implements Identify {
     @Id
     private ObjectId id;
     @Indexed
     private String token;
+    private String ip;
 
     @Override
     public String getId(){
         return BasicUtils.getIdentity(id);
     }
 
-    public static ValidAuthsToken toAuthToken(String token){
-        return ValidAuthsToken.builder().token(token).build();
+    public static ValidAuthTokens toAuthToken(String token){
+        return ValidAuthTokens.builder().token(token).build();
     }
 }

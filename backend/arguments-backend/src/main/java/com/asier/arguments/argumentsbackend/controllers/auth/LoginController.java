@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface LoginController {
     @PostMapping("/login")
-    ResponseEntity<ServiceResponse> login(@RequestParam String clientToken, @RequestBody UserCredentials credentials);
+    ResponseEntity<ServiceResponse> login(@RequestParam String clientToken, @RequestBody UserCredentials credentials, @RequestAttribute String remoteIp);
     @PostMapping("/auth/hello")
     String hello(@RequestParam String clientToken, @RequestAttribute String username);
     @PostMapping("/auth/logout")

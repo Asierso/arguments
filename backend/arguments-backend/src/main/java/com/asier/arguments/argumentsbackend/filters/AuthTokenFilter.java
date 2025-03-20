@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.filters;
 
-import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
+import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
@@ -51,7 +51,7 @@ public class AuthTokenFilter implements Filter {
             request.setAttribute("authToken",token);
 
             //Check if the auth token is valid. Valid auth tokens are registered in auths collection
-            if(!authTokenService.exists(ValidAuthsToken.builder().token(token).build())){
+            if(!authTokenService.exists(ValidAuthTokens.builder().token(token).build())){
                 sendError(servletResponse);
                 return;
             }

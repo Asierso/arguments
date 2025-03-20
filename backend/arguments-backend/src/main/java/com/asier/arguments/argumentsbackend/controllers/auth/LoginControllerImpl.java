@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.controllers.auth;
 
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
+import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
@@ -29,10 +29,12 @@ public class LoginControllerImpl implements LoginController {
     private ValidAuthsTokenService validAuthsTokenService;
 
     @Override
-    public ResponseEntity<ServiceResponse> login(String clientToken, UserCredentials credentials) {
+    public ResponseEntity<ServiceResponse> login(String clientToken, UserCredentials credentials, String remoteIp) {
         if(credentialsService.validate(credentials)){
             String authToken = authService.generateAuthToken(credentials.getUsername());
-            validAuthsTokenService.insert(ValidAuthsToken.toAuthToken(authService.generateAuthToken(credentials.getUsername())));
+            ValidAuthTokens token = ValidAuthTokens.toAuthToken(authService.generateAuthToken(credentials.getUsername()));
+            token.setIp(remoteIp);
+            validAuthsTokenService.insert(token);
             return ResponseEntity.ok(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.done")).result(authToken).build());
         }else{
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.invalidCredentials")).build());
@@ -41,7 +43,7 @@ public class LoginControllerImpl implements LoginController {
 
     @Override
     public ResponseEntity<ServiceResponse> logout(String clientToken, String authToken) {
-        if(validAuthsTokenService.delete(ValidAuthsToken.toAuthToken(authToken))){
+        if(validAuthsTokenService.delete(ValidAuthTokens.toAuthToken(authToken))){
             return ResponseEntity.ok(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.done")).build());
         }else{
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(ServiceResponse.builder().status(PropertiesUtils.getProperties(ResourceLocator.STATUS).getProperty("status.unauthorizedAuth")).build());

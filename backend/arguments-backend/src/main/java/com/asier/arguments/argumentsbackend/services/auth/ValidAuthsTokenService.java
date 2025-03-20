@@ -1,12 +1,12 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
+import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
 
 import java.util.List;
 
 public interface ValidAuthsTokenService {
-    boolean insert(ValidAuthsToken token);
-    boolean exists(ValidAuthsToken token);
-    boolean delete(ValidAuthsToken token);
-    List<ValidAuthsToken> findAll();
+    boolean insert(ValidAuthTokens token);
+    boolean exists(ValidAuthTokens token);
+    boolean delete(ValidAuthTokens token);
+    List<ValidAuthTokens> findAll();
 }

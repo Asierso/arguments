@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.tasks;
 
 import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.ValidAuthsToken;
+import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.services.auth.CredentialsService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
@@ -29,7 +29,7 @@ public class TokenRevokationTask {
     public void checkTokens(){
         List<String> userList = credentialsService.findAll().stream().map(UserCredentials::getUsername).toList();
         int unused = 0;
-        for(ValidAuthsToken token : validAuthsTokenService.findAll()){
+        for(ValidAuthTokens token : validAuthsTokenService.findAll()){
            String username = authService.getAuthSubject(token.getToken());
            if(username == null){
                continue;
@@ -39,6 +39,6 @@ public class TokenRevokationTask {
                unused++;
            }
         }
-        log.info("Deleted " + unused + " tokens from list");
+        log.info("Deleted {} tokens from list", unused);
     }
 }

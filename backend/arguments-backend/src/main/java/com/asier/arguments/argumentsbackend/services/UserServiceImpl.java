@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.asier.arguments.argumentsbackend.repositories.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -56,6 +57,9 @@ public class UserServiceImpl implements UserService {
         //Hash pwd
         entity.getCredentials().setPassword(BCrypt.hashpw(entity.getCredentials().getPassword(), BCrypt.gensalt()));
 
+        //Establish offline by default
+        entity.getUser().setIsActive(false);
+
         //Save entity and return result ok
         userRepository.save(entity.getUser());
         userCredentialsRepository.save(entity.getCredentials());
@@ -77,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public User select(String username) {
         //Try to find user
         if(username != null){
-            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).build()));
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
             if(user.isPresent())
                 return user.get();
         }
@@ -165,11 +169,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ServiceResponse> findAll() {
+    public List<User> findAll() {
         //Get all users
-        return ResponseEntity.ok().body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.done"))
-                .result(userRepository.findAll()).build());
+        return userRepository.findAll();
     }
 
 }

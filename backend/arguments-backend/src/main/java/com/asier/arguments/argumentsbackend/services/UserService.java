@@ -6,6 +6,8 @@ import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface UserService {
     ResponseEntity<ServiceResponse> insert(UserCreatorDto entity);
     User select(ObjectId id);
@@ -13,5 +15,5 @@ public interface UserService {
     boolean delete(ObjectId id);
     boolean delete(String username);
     ResponseEntity<ServiceResponse> update(ObjectId id, UserCreatorDto entity);
-    ResponseEntity<ServiceResponse> findAll();
+    List<User> findAll();
 }

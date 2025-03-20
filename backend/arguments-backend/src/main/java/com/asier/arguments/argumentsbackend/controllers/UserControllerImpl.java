@@ -60,7 +60,9 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<ServiceResponse> findAll(String clientToken) {
-        return userService.findAll();
+        return ResponseEntity.ok().body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.done"))
+                .result(userService.findAll()).build());
     }
 
 }
