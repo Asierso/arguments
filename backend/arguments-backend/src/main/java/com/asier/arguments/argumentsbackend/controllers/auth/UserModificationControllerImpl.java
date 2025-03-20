@@ -5,7 +5,6 @@ import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.services.UserService;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
-import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
