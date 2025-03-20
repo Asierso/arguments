@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface UserSyncController {
-    @GetMapping("/sync")
+    @PostMapping("/sync")
     ResponseEntity<ServiceResponse> userSync(@RequestParam String clientToken, @RequestAttribute String username);
 }
