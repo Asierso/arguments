@@ -38,13 +38,13 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     }
 
     @Override
-    public boolean update(ObjectId id, DiscussionThread discussion) {
+    public boolean update(ObjectId id, DiscussionThread changes) {
         if(id==null)
             return false;
 
         Optional<DiscussionThread> selected = discussionRepository.findById(id);
         if(selected.isPresent()){
-            AnnotationsUtils.modifyEntity(selected.get(),discussion);
+            AnnotationsUtils.modifyEntity(selected.get(),changes == null? DiscussionThread.builder().build() : changes);
             discussionRepository.save(selected.get());
             return true;
         }
