@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 
 /**
  * This is the public User. People can see that information in Arguments social network
+ * User entity represents all de non-critic data about the user
  */
 @Data
 @AllArgsConstructor
@@ -31,9 +32,11 @@ public class User implements Identify {
     private String firstname;
     @Modifiable
     private String lastname;
+    //Username cannot be modified because is used to join entities with login token and sync
     @Mandatory
     @Indexed
     private String username;
+    //Calculated by Backend
     @Modifiable
     private Boolean isActive;
     public String getId() {

@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserCredentials implements Identify {
     @Id
     private ObjectId id;
+    //Can't be modified because is used to join with the "public" user class
     @Mandatory
     @Indexed
     private String username;
