@@ -14,6 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+/**
+ * Every message posted inside a DiscussionThread by Users
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

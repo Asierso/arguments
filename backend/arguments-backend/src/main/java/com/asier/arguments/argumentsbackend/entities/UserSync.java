@@ -13,6 +13,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class is used to storage connection time updates in collection like a basic "ping"
+ * Server uses that collection to update "isActive" properties in users.
+ * If "ping" time doesn't enter in online thresholds, "isActive" will be set to false
+ */
 @Data
 @Document("users_sync")
 @NoArgsConstructor

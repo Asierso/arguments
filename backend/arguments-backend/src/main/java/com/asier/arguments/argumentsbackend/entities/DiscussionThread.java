@@ -14,6 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This class represents every discussion thread created by Users
+ */
 @Data
 @Document(collection = "discussions")
 @Builder
