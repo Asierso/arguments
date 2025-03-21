@@ -14,6 +14,6 @@ public interface UserService {
     User select(String username);
     boolean delete(ObjectId id);
     boolean delete(String username);
-    ResponseEntity<ServiceResponse> update(ObjectId id, UserCreatorDto entity);
+    boolean update(ObjectId id, UserCreatorDto entity);
     List<User> findAll();
 }

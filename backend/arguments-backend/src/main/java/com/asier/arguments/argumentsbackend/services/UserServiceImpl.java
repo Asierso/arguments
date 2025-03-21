@@ -129,6 +129,7 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    /* OLD
     @Override
     public ResponseEntity<ServiceResponse> update(ObjectId id,UserCreatorDto changes) {
         if(id != null){
@@ -166,6 +167,38 @@ public class UserServiceImpl implements UserService {
         //Return not found
         return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
                 .status(statusProps.getProperty("status.notFound")).build());
+    } */
+
+    public boolean update(ObjectId id, UserCreatorDto changes){
+        if(id==null)
+            return false;
+
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            //If there are users included in changes, change it
+            if(changes.getUser() != null) {
+                User userSource = user.get();
+                AnnotationsUtils.modifyEntity(userSource, changes.getUser());
+                userRepository.save(userSource);
+            }
+            //If there are credentials included in changes, change it
+            if(changes.getCredentials() != null) {
+                Optional<UserCredentials> credentials = userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
+                        .username(user.get().getUsername()).build()));
+                if(credentials.isPresent()){
+                    //Hash password
+                    changes.getCredentials().setPassword(BCrypt.hashpw(changes.getCredentials().getPassword(), BCrypt.gensalt()));
+
+                    //Apply changes
+                    UserCredentials credentialsSource = credentials.get();
+                    AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
+                    userCredentialsRepository.save(credentialsSource);
+                }
+            }
+
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -32,11 +32,11 @@ public class UserModificationControllerImpl implements UserModificationControlle
         User selected = userService.select(id);
 
         //Check if the user that wants to delete and user is the same
-        if(selected != null && username.equals(selected.getUsername())){
+        if (selected != null && username.equals(selected.getUsername())) {
             //Try to delete
             boolean action = userService.delete(id);
 
-            return action?
+            return action ?
                     ResponseEntity.ok().body(ServiceResponse.builder()
                             .status(statusProps.getProperty("status.done"))
                             .build()) :
@@ -45,7 +45,7 @@ public class UserModificationControllerImpl implements UserModificationControlle
                             .build());
         }
 
-        if(selected == null){
+        if (selected == null) {
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
                     .status(statusProps.getProperty("status.notFound"))
                     .build());
@@ -59,9 +59,9 @@ public class UserModificationControllerImpl implements UserModificationControlle
     @Override
     public ResponseEntity<ServiceResponse> deleteByUsername(String clientToken, String uname, String username) {
         //Check if the user that wants to delete and user is the same
-        if(username.equals(uname)) {
+        if (username.equals(uname)) {
             //Try to delete
-            return userService.delete(uname)? ResponseEntity.ok().body(ServiceResponse.builder()
+            return userService.delete(uname) ? ResponseEntity.ok().body(ServiceResponse.builder()
                     .status(statusProps.getProperty("status.done"))
                     .build()) :
                     ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
@@ -72,16 +72,24 @@ public class UserModificationControllerImpl implements UserModificationControlle
                 .status(statusProps.getProperty("status.unauthorizedAuth"))
                 .build());
     }
+
     @Override
     public ResponseEntity<ServiceResponse> updateById(String clientToken, ObjectId id, UserCreatorDto user, String username) {
         User selected = userService.select(id);
 
         //Check if the user that wants to update and user is the same
-        if(selected != null && username.equals(selected.getUsername())) {
-            return userService.update(id, user);
+        if (selected != null && username.equals(selected.getUsername())) {
+            return userService.update(id, user)?
+                    ResponseEntity.ok().body(ServiceResponse.builder()
+                            .status(statusProps.getProperty("status.done"))
+                            .build())
+                    :
+                    ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                            .status(statusProps.getProperty("status.notFound"))
+                            .build());
         }
 
-        if(selected == null){
+        if (selected == null) {
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
                     .status(statusProps.getProperty("status.notFound"))
                     .build());
@@ -97,11 +105,18 @@ public class UserModificationControllerImpl implements UserModificationControlle
         User selected = userService.select(uname);
 
         //Check if the user that wants to update and user is the same
-        if(selected != null && username.equals(uname)) {
-            return userService.update(new ObjectId(selected.getId()), user);
+        if (selected != null && username.equals(uname)) {
+            return userService.update(new ObjectId(selected.getId()), user) ?
+                    ResponseEntity.ok().body(ServiceResponse.builder()
+                            .status(statusProps.getProperty("status.done"))
+                            .build())
+                    :
+                    ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                            .status(statusProps.getProperty("status.notFound"))
+                            .build());
         }
 
-        if(selected == null){
+        if (selected == null) {
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
                     .status(statusProps.getProperty("status.notFound"))
                     .build());
