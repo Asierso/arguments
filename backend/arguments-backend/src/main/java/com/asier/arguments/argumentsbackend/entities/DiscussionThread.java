@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Document(collection = "discussions")
@@ -33,6 +34,8 @@ public class DiscussionThread implements Identify {
     @Mandatory
     @Modifiable
     private int maxUsers;
+    @Modifiable
+    private List<String> users;
 
     @Override
     public String getId() {
