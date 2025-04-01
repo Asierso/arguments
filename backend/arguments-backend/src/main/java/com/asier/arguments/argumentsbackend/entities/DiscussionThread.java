@@ -26,17 +26,14 @@ public class DiscussionThread implements Identify {
     @Id
     private ObjectId id;
     @Mandatory
-    private String subject;
-    @Mandatory
-    private ObjectId owner;
-    @Mandatory
-    private LocalDateTime startTime;
-    @Mandatory
+    private String title;
+    private String author;
+    private LocalDateTime createdAt;
     @Modifiable
     private LocalDateTime endTime;
     @Mandatory
     @Modifiable
-    private int maxUsers;
+    private Integer maxUsers;
     @Modifiable
     private List<String> users;
 

@@ -19,7 +19,7 @@ import java.util.Properties;
 public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     @Autowired
     private DiscussionThreadRepository discussionRepository;
-    private Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
+    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     @Override
     public void insert(DiscussionThread discussion) {
         discussionRepository.save(discussion);
