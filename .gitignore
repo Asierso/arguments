@@ -24,3 +24,7 @@
 /backend/arguments-backend/.settings/
 /backend/arguments-backend/*.iml
 /backend/arguments-backend/.idea/
+
+# General
+/.DS_Store
+/.$*
