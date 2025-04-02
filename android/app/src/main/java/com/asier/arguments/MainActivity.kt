@@ -20,10 +20,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ArgumentsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                   // PrimaryButton(text = "Prueba")
+                    Greeting("A", modifier = Modifier.padding(innerPadding))
                 }
             }
         }

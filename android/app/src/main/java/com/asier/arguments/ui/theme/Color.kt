@@ -9,3 +9,12 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+val Primary = Color(0xFF7B6CC1)
+val Secondary = Color(0xFF676767)
+val Disabled = Color(0xFF2F2F2F)
+
+val TextBoxBackground = Color(0xFF1A1A1C)
+val TextBoxBorder = Color(0xFF757575)
+val TextBoxTextColor = Color(0xFFADADAD)
+val TextBoxFocusedTextColor = Color(0xFFDCDCDC)

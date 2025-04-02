@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.asier.arguments"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.asier.arguments"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
