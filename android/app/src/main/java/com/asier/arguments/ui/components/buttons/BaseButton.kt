@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asier.arguments.ui.theme.Montserrat
+import com.asier.arguments.ui.theme.TextBright0
 
 @Composable
 fun BaseButton(
@@ -30,7 +31,7 @@ fun BaseButton(
         onClick = {
             onClick()
         }) {
-        Text(text = text, fontFamily = Montserrat, fontWeight = fontWeight)
+        Text(text = text, fontFamily = Montserrat, fontWeight = fontWeight, color = TextBright0)
     }
 }
 
