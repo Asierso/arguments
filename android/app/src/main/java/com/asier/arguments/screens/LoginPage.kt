@@ -1,5 +1,6 @@
 package com.asier.arguments.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,17 +28,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.asier.arguments.R
-import com.asier.arguments.entities.UserLoginDto
+import com.asier.arguments.api.ApiLoginService
+import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginPage(navController: NavController? = null) {
     //Introduced username and password
     val username by rememberSaveable { mutableStateOf("") }
     val password by rememberSaveable { mutableStateOf("") }
+
+    //Coroutine scope
+    val scope = rememberCoroutineScope()
+
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         //Welcome title
         Column(verticalArrangement = Arrangement.Center) {
@@ -64,10 +73,11 @@ fun LoginPage(navController: NavController? = null) {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             }, placeholder = "Contraseña")
         }
+        //Bottom buttons
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
                 text = "Iniciar Sesión",
-                onClick = { Login(UserLoginDto(username,password)) },
+                onClick = { Login(scope,UserCredentials(username,password)) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )
@@ -93,8 +103,12 @@ fun LoginPage(navController: NavController? = null) {
     }
 }
 
-fun Login(userLoginDto: UserLoginDto){
-    //TODO Login Ln
+fun Login(scope: CoroutineScope, userCredentials: UserCredentials){
+    scope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("deb",ApiLoginService.login(userCredentials).status)
+        }
+    }
 }
 
 @Composable
