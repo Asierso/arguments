@@ -26,12 +26,13 @@ import com.asier.arguments.ui.theme.TextBoxTextColor
 @Composable
 fun IconTextInput(
     placeholder: String,
+    text: String = "",
     leadingIcon: @Composable () -> Unit,
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var text by remember { mutableStateOf("") }
     BaseTextInput(
+        text = text,
         placeholder = placeholder,
         onValueChanged = onValueChanged,
         modifier=modifier,
