@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 import java.util.Objects
 
 @Composable
-fun LoginPage(navController: NavController? = null) {
+fun LoginPage(activityProperties: ActivityProperties? = null) {
     //Introduced username and password
     val username = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }

@@ -7,24 +7,29 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val snaackbarState = SnackbarHostState()
+
         enableEdgeToEdge()
 
         setContent {
             ArgumentsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snaackbarState) }) { innerPadding ->
                     Surface(color = Background) {
-                        MainScreen(modifier = Modifier.padding(innerPadding))
+                        MainScreen(modifier = Modifier.padding(innerPadding), snaackbarState)
                     }
 
 
@@ -36,9 +41,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState) {
+    //Define screen properties
     val navController = rememberNavController()
-    AppNavGraph(navController = navController,modifier=modifier)
+    val activityProperties = ActivityProperties(navController, snackbarHostState)
+
+    AppNavGraph(activityProperties = activityProperties,modifier=modifier)
 }
 
 @Preview(showBackground = true)
