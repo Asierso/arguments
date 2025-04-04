@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -78,7 +79,7 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
         //Bottom buttons
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
-                text = "Iniciar Sesión",
+                text = stringResource(R.string.login_button),
                 onClick = { Login(activityProperties,scope,UserCredentials(username.value,password.value)) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)

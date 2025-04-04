@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Arguments</string>
+    <string name="welcome_text">Bienvenido</string>
+    <string name="welcome_subtext">Arguments, la red social de la discordia</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="create_account_button">Crear cuenta</string>
+</resources>
