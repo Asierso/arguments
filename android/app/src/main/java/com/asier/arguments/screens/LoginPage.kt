@@ -28,13 +28,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.asier.arguments.R
 import com.asier.arguments.entities.UserLoginDto
+import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 
 @Composable
-fun LoginPage(navController: NavController? = null) {
+fun LoginPage(activityProperties: ActivityProperties? = null) {
     //Introduced username and password
     val username = rememberSaveable { mutableStateOf("yy") }
     val password = rememberSaveable { mutableStateOf("") }

@@ -20,13 +20,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.asier.arguments.R
 import com.asier.arguments.Screen
+import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.SecondaryButton
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 
 @Composable
-fun WelcomePage(navController: NavController? = null){
+fun WelcomePage(activityProperties: ActivityProperties? = null){
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         //Welcome title
         Column(verticalArrangement = Arrangement.Center) {
@@ -51,7 +52,7 @@ fun WelcomePage(navController: NavController? = null){
         Column(verticalArrangement = Arrangement.Center) {
             PrimaryButton(
                 text = "Iniciar Sesión",
-                onClick = { navController?.navigate(Screen.Login.route) },
+                onClick = { activityProperties?.navController?.navigate(Screen.Login.route) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp))
             SecondaryButton(
