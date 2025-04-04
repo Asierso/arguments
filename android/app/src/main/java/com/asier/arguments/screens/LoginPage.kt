@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.asier.arguments.R
 import com.asier.arguments.api.ApiLoginService
+import com.asier.arguments.utils.StatusCodes
 import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
@@ -37,6 +37,7 @@ import com.asier.arguments.ui.theme.TextBright0
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Objects
 
 @Composable
 fun LoginPage(navController: NavController? = null) {
@@ -106,7 +107,13 @@ fun LoginPage(navController: NavController? = null) {
 fun Login(scope: CoroutineScope, userCredentials: UserCredentials){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d("deb",ApiLoginService.login(userCredentials).status)
+            val result = ApiLoginService.login(userCredentials)
+            if(Objects.isNull(result)){
+                return@launch
+            }
+            if(StatusCodes.valueOf(result!!.status) == StatusCodes.SUCCESSFULLY){
+                Log.d("deb",result.result.toString())
+            }
         }
     }
 }
