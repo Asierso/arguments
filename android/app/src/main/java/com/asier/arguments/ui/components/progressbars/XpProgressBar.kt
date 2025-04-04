@@ -16,8 +16,8 @@ import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
 
 @Composable
-fun XpProgressBar(currentXp : Int, maxXp : Int){
-    Box(contentAlignment = Alignment.CenterEnd) {
+fun XpProgressBar(currentXp : Int, maxXp : Int, modifier: Modifier = Modifier){
+    Box(contentAlignment = Alignment.CenterEnd, modifier = modifier) {
         BaseProgressBar(
             progress = if(currentXp > maxXp) 1.0f  else currentXp.toFloat() /maxXp.toFloat(),
             modifier = Modifier.height(20.dp),

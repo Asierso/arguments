@@ -21,12 +21,13 @@ fun BaseButton(
     buttonColors : ButtonColors,
     modifier: Modifier = Modifier,
     enabled : Boolean = true,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    padding : PaddingValues = PaddingValues(50.dp,5.dp)
 ){
     Button(modifier = modifier,
         colors = buttonColors,
         shape = RoundedCornerShape(10.dp),
-        contentPadding = PaddingValues(50.dp,5.dp),
+        contentPadding = padding,
         enabled = enabled,
         onClick = {
             onClick()

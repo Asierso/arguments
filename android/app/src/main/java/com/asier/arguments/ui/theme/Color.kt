@@ -13,6 +13,9 @@ val Pink40 = Color(0xFF7D5260)
 
 
 //Arguments
+
+val Background = Color(0xFF242424)
+
 val Primary = Color(0xFF7B6CC1)
 val PrimaryDark = Color(0xFF2B2936)
 val Secondary = Color(0xFF676767)
