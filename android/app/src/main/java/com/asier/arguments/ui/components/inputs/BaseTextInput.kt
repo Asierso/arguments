@@ -26,13 +26,13 @@ import com.asier.arguments.ui.theme.TextBoxTextColor
 fun BaseTextInput(
     placeholder: String,
     onValueChanged: (String) -> Unit,
+    text : String = "",
     modifier: Modifier = Modifier,
     leadingIcon: @Composable (() -> Unit)? = null,
     readOnly : Boolean = false,
     minLines : Int = 1,
     maxLines : Int = 1
 ){
-    var text by remember { mutableStateOf("") }
 
     //Set common text input props
     val textPlaceholder = @Composable {
@@ -46,14 +46,16 @@ fun BaseTextInput(
         unfocusedContainerColor = TextBoxBackground,
         unfocusedIndicatorColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
+        focusedLeadingIconColor = TextBoxFocusedTextColor,
         unfocusedLeadingIconColor = TextBoxBorder,
-        focusedTextColor = TextBoxFocusedTextColor
+        focusedTextColor = TextBoxFocusedTextColor,
+        unfocusedTextColor = TextBoxBorder
     )
 
     if(leadingIcon == null){
         TextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
             shape = RoundedCornerShape(10.dp),
@@ -65,7 +67,7 @@ fun BaseTextInput(
     }else{
         TextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
             shape = RoundedCornerShape(10.dp),

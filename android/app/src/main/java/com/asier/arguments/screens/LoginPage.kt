@@ -41,8 +41,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginPage(navController: NavController? = null) {
     //Introduced username and password
-    val username by rememberSaveable { mutableStateOf("") }
-    val password by rememberSaveable { mutableStateOf("") }
+    val username = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("") }
 
     //Coroutine scope
     val scope = rememberCoroutineScope()
@@ -66,10 +66,10 @@ fun LoginPage(navController: NavController? = null) {
         }
         //Username and password fields
         Column(verticalArrangement = Arrangement.Center) {
-            IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {}, leadingIcon = {
+            IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {username.value = it}, text = username.value, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             }, placeholder = "Nombre de usuario")
-            IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = {}, leadingIcon = {
+            IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = {password.value = it}, text = password.value, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             }, placeholder = "Contraseña")
         }
@@ -77,7 +77,7 @@ fun LoginPage(navController: NavController? = null) {
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
                 text = "Iniciar Sesión",
-                onClick = { Login(scope,UserCredentials(username,password)) },
+                onClick = { Login(scope,UserCredentials(username.value,password.value)) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )
