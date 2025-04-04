@@ -24,7 +24,7 @@ import com.asier.arguments.ui.theme.TextBoxFocusedTextColor
 import com.asier.arguments.ui.theme.TextBoxTextColor
 
 @Composable
-fun TextInput(
+fun IconTextInput(
     placeholder: String,
     leadingIcon: @Composable () -> Unit,
     onValueChanged: (String) -> Unit,
@@ -42,8 +42,8 @@ fun TextInput(
 
 @Composable
 @Preview
-fun TextInputPreview(){
-    TextInput(placeholder = "Usuario", leadingIcon = {
+fun IconTextInputPreview(){
+    IconTextInput(placeholder = "Usuario", leadingIcon = {
         Icon(
             painter = painterResource(R.drawable.ic_person),
             tint = TextBoxTextColor,

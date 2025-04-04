@@ -1,8 +1,12 @@
 package com.asier.arguments
 
+/**
+ * Defines all the internal routes of ever screen
+ */
 sealed class Screen(val route: String) {
     data object Welcome : Screen("welcome")
     data object Login : Screen("login")
+    data object Register : Screen("register")
     /*
     object Perfil : Screen("perfil")
     object Ajustes : Screen("ajustes")
