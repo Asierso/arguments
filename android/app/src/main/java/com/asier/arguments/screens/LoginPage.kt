@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +26,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.asier.arguments.R
 import com.asier.arguments.api.ApiLoginService
-import com.asier.arguments.utils.StatusCodes
+import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.entities.UserCredentials
+import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
@@ -78,7 +79,7 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
                 text = "Iniciar Sesión",
-                onClick = { Login(scope,UserCredentials(username.value,password.value)) },
+                onClick = { Login(activityProperties,scope,UserCredentials(username.value,password.value)) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )
@@ -104,15 +105,20 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
     }
 }
 
-fun Login(scope: CoroutineScope, userCredentials: UserCredentials){
+fun Login(activityProperties: ActivityProperties? = null, scope: CoroutineScope, userCredentials: UserCredentials){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
             val result = ApiLoginService.login(userCredentials)
-            if(Objects.isNull(result)){
-                return@launch
-            }
-            if(StatusCodes.valueOf(result!!.status) == StatusCodes.SUCCESSFULLY){
-                Log.d("deb",result.result.toString())
+            if(result != null){
+                if(StatusCodes.valueOf(result.status) == StatusCodes.SUCCESSFULLY){
+                    activityProperties?.snackbarHostState?.showSnackbar(message = result.result.toString(), duration = SnackbarDuration.Long)
+                }
+                if(StatusCodes.valueOf(result.status) == StatusCodes.INVALID_CREDENTIALS){
+                    activityProperties?.snackbarHostState?.showSnackbar(message = "Usuario o contraseña incorrecto", duration = SnackbarDuration.Long)
+                }
+                if(StatusCodes.valueOf(result.status) == StatusCodes.UNAUTHORIZED_CLIENT){
+                    activityProperties?.snackbarHostState?.showSnackbar(message = "Client token not valid", duration = SnackbarDuration.Long)
+                }
             }
         }
     }
