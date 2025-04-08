@@ -7,7 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.screens.LoginPage
-import com.asier.arguments.screens.RegisterSecuencePage
+import com.asier.arguments.screens.RegisterSecuenceScreen
+import com.asier.arguments.screens.RegisterSecuenceViewModel
 import com.asier.arguments.screens.WelcomePage
 
 /**
@@ -23,7 +24,7 @@ fun AppNavGraph(activityProperties: ActivityProperties, modifier : Modifier) {
             LoginPage(activityProperties)
         }
         composable(Screen.Register.route){
-            RegisterSecuencePage()
+            RegisterSecuenceScreen(activityProperties, RegisterSecuenceViewModel())
         }
     }
 }

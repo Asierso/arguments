@@ -58,7 +58,7 @@ fun WelcomePage(activityProperties: ActivityProperties? = null){
                 padding = PaddingValues(5.dp,15.dp))
             SecondaryButton(
                 text = stringResource(R.string.create_account_button),
-                onClick = {},
+                onClick = { activityProperties?.navController?.navigate(Screen.Register.route) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )

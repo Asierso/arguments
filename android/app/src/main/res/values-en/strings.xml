@@ -5,4 +5,8 @@
     <string name="welcome_subtext">Arguments, the discordance social network</string>
     <string name="login_button">Login</string>
     <string name="create_account_button">Create account</string>
+    <string name="register_screen_title0">¡A new user!</string>
+    <string name="register_screen_subtitle0">Welcome to Arguments. Before start, we need to know some details about you</string>
+    <string name="alreado_registered_text">"¿Already registered?"</string>
+    <string name="next_button">Next</string>
 </resources>
