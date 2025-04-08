@@ -9,4 +9,8 @@
     <string name="register_screen_subtitle0">Bienvenido a Arguments. Antes de empezar, necesitamos saber algunos detalles sobre ti</string>
     <string name="alreado_registered_text">"¿Ya tienes una cuenta?"</string>
     <string name="next_button">Siguiente</string>
+    <string name="start_button">Inicio</string>
+    <string name="hello_text">Hola</string>
+    <string name="register_screen_title2">Identificación</string>
+    <string name="register_screen_subtitle1">Escoge el nombre con el cual interacturarás en Arguments. ¡Uno muy especial!</string>
 </resources>

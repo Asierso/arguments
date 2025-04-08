@@ -38,6 +38,7 @@ import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
+import org.apache.commons.lang3.StringUtils
 
 @Composable
 fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerViewModel : RegisterSecuenceViewModel) {
@@ -63,8 +64,8 @@ fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerView
             }
             1 -> { //Ask username
                 RegisterScreenHeader(
-                    title = "Hola, ${registerViewModel.firstname}",
-                    subtitle = "Escoge el nombre con el cual interacturarás en Arguments. ¡Uno muy especial!",
+                    title = "${stringResource(R.string.hello_text)}, ${ if (registerViewModel.firstname.isBlank()) "user" else  StringUtils.abbreviate(registerViewModel.firstname,7)}",
+                    subtitle = stringResource(R.string.register_screen_subtitle1),
                     icon = painterResource(R.drawable.ic_welcomeuser)
                 )
                 RegisterScreenBody1(registerViewModel)
@@ -75,14 +76,30 @@ fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerView
             }
             2 -> { //Ask password
                 RegisterScreenHeader(
-                    title = "Identificación",
+                    title = stringResource(R.string.register_screen_title2),
                     subtitle = "Protege tu cuenta de Arguments con una contraseña. ¡Más vale prevenir que lamentar!",
                     icon = painterResource(R.drawable.ic_identification)
                 )
                 RegisterScreenBody2()
                 RegisterScreenButtons{
-                    registerViewModel.step++
+                    registerViewModel.step = 3
                 }
+            }
+            3 -> { //Ask password
+                RegisterScreenHeader(
+                    title = "¡Todo listo!",
+                    subtitle = "Tu experiencia en Arguments acaba de comenzar",
+                    icon = painterResource(R.drawable.ic_whujuu)
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                PrimaryButton(
+                    text = stringResource(R.string.start_button),
+                    onClick = { },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(50.dp, 10.dp),
+                    padding = PaddingValues(5.dp, 15.dp)
+                )
             }
         }
     }
@@ -166,7 +183,7 @@ fun RegisterScreenButtons(nextButton : () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.alreado_registered_text),
+                text = "${stringResource(R.string.alreado_registered_text)} ",
                 fontFamily = Montserrat,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
@@ -206,5 +223,13 @@ fun RegisterSecuenceScreen1Preview(){
 fun RegisterSecuenceScreen2Preview(){
     RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
         step=2
+    })
+}
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
+fun RegisterSecuenceScreen3Preview(){
+    RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
+        step=3
     })
 }

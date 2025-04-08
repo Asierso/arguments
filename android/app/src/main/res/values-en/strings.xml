@@ -5,8 +5,12 @@
     <string name="welcome_subtext">Arguments, the discordance social network</string>
     <string name="login_button">Login</string>
     <string name="create_account_button">Create account</string>
-    <string name="register_screen_title0">¡A new user!</string>
+    <string name="register_screen_title0">A new user!</string>
     <string name="register_screen_subtitle0">Welcome to Arguments. Before start, we need to know some details about you</string>
-    <string name="alreado_registered_text">"¿Already registered?"</string>
+    <string name="alreado_registered_text">"Already registered?"</string>
     <string name="next_button">Next</string>
+    <string name="start_button">Start</string>
+    <string name="hello_text">Hello</string>
+    <string name="register_screen_title2">Identification</string>
+    <string name="register_screen_subtitle1">Choose the name you\'ll interact with in Arguments. A very special one!</string>
 </resources>
