@@ -25,6 +25,8 @@ val TextBoxBackground = Color(0xFF1A1A1C)
 val TextBoxBorder = Color(0xFF757575)
 val TextBoxTextColor = Color(0xFFADADAD)
 val TextBoxFocusedTextColor = Color(0xFFDCDCDC)
+val TextBoxErrorTextColor0 = Color(0xFFE16363)
+val TextBoxErrorTextColor1 = Color(0xFF7E3939)
 
 val TextBright0 = Color.White
 val TextBright1 = Color(0xFFCECECE)

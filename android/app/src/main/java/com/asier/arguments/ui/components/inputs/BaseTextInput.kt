@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBoxBackground
 import com.asier.arguments.ui.theme.TextBoxBorder
+import com.asier.arguments.ui.theme.TextBoxErrorTextColor0
+import com.asier.arguments.ui.theme.TextBoxErrorTextColor1
 import com.asier.arguments.ui.theme.TextBoxFocusedTextColor
 import com.asier.arguments.ui.theme.TextBoxTextColor
 
@@ -31,7 +33,8 @@ fun BaseTextInput(
     leadingIcon: @Composable (() -> Unit)? = null,
     readOnly : Boolean = false,
     minLines : Int = 1,
-    maxLines : Int = 1
+    maxLines : Int = 1,
+    isError: Boolean = false
 ){
 
     //Set common text input props
@@ -44,12 +47,16 @@ fun BaseTextInput(
     val textColors = TextFieldDefaults.colors(
         focusedContainerColor = TextBoxBackground,
         unfocusedContainerColor = TextBoxBackground,
+        errorContainerColor = TextBoxBackground,
         unfocusedIndicatorColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
+        errorIndicatorColor = Color.Transparent,
         focusedLeadingIconColor = TextBoxFocusedTextColor,
         unfocusedLeadingIconColor = TextBoxBorder,
         focusedTextColor = TextBoxFocusedTextColor,
-        unfocusedTextColor = TextBoxBorder
+        unfocusedTextColor = TextBoxBorder,
+        errorPlaceholderColor = TextBoxErrorTextColor1,
+        errorTextColor =  TextBoxErrorTextColor0
     )
 
     if(leadingIcon == null){
@@ -62,7 +69,8 @@ fun BaseTextInput(
             colors = textColors,
             readOnly = readOnly,
             singleLine = minLines <= 1,
-            minLines = minLines
+            minLines = minLines,
+            isError = isError
         )
     }else{
         TextField(
@@ -77,7 +85,8 @@ fun BaseTextInput(
             },
             readOnly = readOnly,
             singleLine = minLines <= 1,
-            minLines = minLines
+            minLines = minLines,
+            isError = isError
         )
     }
 }
