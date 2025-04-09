@@ -23,6 +23,7 @@ import com.asier.arguments.ui.theme.TextBoxErrorTextColor0
 import com.asier.arguments.ui.theme.TextBoxErrorTextColor1
 import com.asier.arguments.ui.theme.TextBoxFocusedTextColor
 import com.asier.arguments.ui.theme.TextBoxTextColor
+import org.apache.commons.lang3.StringUtils
 
 @Composable
 fun BaseTextInput(
@@ -34,7 +35,8 @@ fun BaseTextInput(
     readOnly : Boolean = false,
     minLines : Int = 1,
     maxLines : Int = 1,
-    isError: Boolean = false
+    isError: Boolean = false,
+    isPassword: Boolean = false
 ){
 
     //Set common text input props
@@ -61,7 +63,7 @@ fun BaseTextInput(
 
     if(leadingIcon == null){
         TextField(
-            value = text,
+            value = if(isPassword) StringUtils.join(text.map { o -> return@map "*" }) else text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
@@ -74,7 +76,7 @@ fun BaseTextInput(
         )
     }else{
         TextField(
-            value = text,
+            value = if(isPassword) StringUtils.join(text.map { o -> return@map "*" }) else text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
