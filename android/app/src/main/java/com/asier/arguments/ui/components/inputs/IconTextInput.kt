@@ -56,3 +56,15 @@ fun IconTextInputPreview(){
         )
     }, onValueChanged = {})
 }
+
+@Composable
+@Preview
+fun IconTextInputErrorPreview(){
+    IconTextInput(placeholder = "Usuario", leadingIcon = {
+        Icon(
+            painter = painterResource(R.drawable.ic_person),
+            tint = TextBoxTextColor,
+            contentDescription = null
+        )
+    }, onValueChanged = {}, isError = true)
+}

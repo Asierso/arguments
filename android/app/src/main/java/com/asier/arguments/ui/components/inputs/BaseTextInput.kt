@@ -45,7 +45,7 @@ fun BaseTextInput(
     }
     val textModifier = modifier
         .padding(4.dp)
-        .border(1.dp, TextBoxBorder, RoundedCornerShape(10.dp))
+        .border(1.dp, if(isError) TextBoxErrorTextColor0 else TextBoxBorder, RoundedCornerShape(10.dp))
     val textColors = TextFieldDefaults.colors(
         focusedContainerColor = TextBoxBackground,
         unfocusedContainerColor = TextBoxBackground,
@@ -97,4 +97,10 @@ fun BaseTextInput(
 @Preview
 fun BaseTextInputPreview(){
     BaseTextInput(placeholder = "Base", onValueChanged = {}, minLines = 1)
+}
+
+@Composable
+@Preview
+fun BaseTextInputErrorPreview(){
+    BaseTextInput(placeholder = "Base", onValueChanged = {}, minLines = 1, isError = true)
 }
