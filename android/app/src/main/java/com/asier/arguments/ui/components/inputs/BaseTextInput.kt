@@ -32,6 +32,7 @@ fun BaseTextInput(
     minLines : Int = 1,
     maxLines : Int = 1,
     isError: Boolean = false,
+    enabled: Boolean = true,
     isPassword: Boolean = false
 ){
 
@@ -50,11 +51,13 @@ fun BaseTextInput(
         focusedIndicatorColor = Color.Transparent,
         errorIndicatorColor = Color.Transparent,
         focusedLeadingIconColor = TextBoxFocusedText,
-        unfocusedLeadingIconColor = TextBoxBorder,
+        unfocusedLeadingIconColor = TextBoxFocusedText,
         focusedTextColor = TextBoxFocusedText,
-        unfocusedTextColor = TextBoxBorder,
+        unfocusedTextColor = TextBoxFocusedText,
         errorPlaceholderColor = TextError1,
-        errorTextColor =  TextError0
+        errorTextColor =  TextError0,
+        disabledTextColor = TextBoxBorder,
+        disabledIndicatorColor = TextBoxBorder
     )
 
     if(leadingIcon == null){
@@ -84,7 +87,8 @@ fun BaseTextInput(
             readOnly = readOnly,
             singleLine = minLines <= 1,
             minLines = minLines,
-            isError = isError
+            isError = isError,
+            enabled = enabled
         )
     }
 }
@@ -99,4 +103,10 @@ fun BaseTextInputPreview(){
 @Preview
 fun BaseTextInputErrorPreview(){
     BaseTextInput(placeholder = "Base", onValueChanged = {}, minLines = 1, isError = true)
+}
+
+@Composable
+@Preview
+fun BaseTextInputDisabledPreview(){
+    BaseTextInput(placeholder = "Base", onValueChanged = {}, minLines = 1, enabled = false)
 }
