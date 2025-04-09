@@ -12,6 +12,7 @@ class RegisterSecuenceViewModel : ViewModel() {
     var lastname by mutableStateOf("")
     var username by mutableStateOf("")
     var uniqueUsername by mutableStateOf(true)
+    var uniqueTry by mutableStateOf(true)
     var password1 by mutableStateOf("")
     var password2 by mutableStateOf("")
 }

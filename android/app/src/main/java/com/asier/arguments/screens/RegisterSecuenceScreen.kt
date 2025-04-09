@@ -61,6 +61,15 @@ fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerView
                 RegisterScreenBody0(registerViewModel)
                 Spacer(modifier = Modifier.height(30.dp))
                 RegisterScreenButtons{
+                    if(registerViewModel.firstname.isBlank()){
+                        registerViewModel.uniqueTry = false
+                        return@RegisterScreenButtons
+                    }
+                    if(registerViewModel.lastname.isBlank()){
+                        registerViewModel.uniqueTry = false
+                        return@RegisterScreenButtons
+                    }
+                    registerViewModel.uniqueTry = true
                     registerViewModel.step = 1
                 }
             }
@@ -139,10 +148,12 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
         IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = { registerViewModel.firstname = it}, text = registerViewModel.firstname, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
-        }, placeholder = "Nombre")
+        }, placeholder = "Nombre",
+            isError = !registerViewModel.uniqueTry && registerViewModel.firstname.isBlank())
         IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = { registerViewModel.lastname = it}, text = registerViewModel.lastname, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
-        }, placeholder = "Apellidos")
+        }, placeholder = "Apellidos",
+            isError = !registerViewModel.uniqueTry && registerViewModel.lastname.isBlank())
     }
 }
 
