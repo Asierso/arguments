@@ -13,4 +13,5 @@
     <string name="hello_text">Hola</string>
     <string name="register_screen_title2">Identificación</string>
     <string name="register_screen_subtitle1">Escoge el nombre con el cual interacturarás en Arguments. ¡Uno muy especial!</string>
+    <string name="connection_error_snackbar_text">Error al conectar con el servidor</string>
 </resources>
