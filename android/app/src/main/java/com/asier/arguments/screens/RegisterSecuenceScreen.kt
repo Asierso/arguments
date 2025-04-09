@@ -117,12 +117,11 @@ fun RegisterSecuenceScreen(
                 )
                 RegisterScreenBody2(registerViewModel)
                 RegisterScreenButtons {
-                    if(checkPasswords(registerViewModel) == PasswordPolicyCodes.STRONG) {
+                    if(registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG) {
                         registerViewModel.uniqueTry = true
-                        registerUser(
+                        registerViewModel.registerUser(
                             scope=scope,
-                            activityProperties=activityProperties,
-                            registerViewModel=registerViewModel)
+                            activityProperties=activityProperties)
                     }
                 }
             }
@@ -136,7 +135,9 @@ fun RegisterSecuenceScreen(
                 Spacer(modifier = Modifier.height(30.dp))
                 PrimaryButton(
                     text = stringResource(R.string.start_button),
-                    onClick = { },
+                    onClick = {
+                        //Goto home
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(50.dp, 10.dp),
@@ -147,6 +148,9 @@ fun RegisterSecuenceScreen(
     }
 }
 
+/**
+ * Header prints screen icon, title and subtitle
+ */
 @Composable
 fun RegisterScreenHeader(title: String, subtitle: String, icon: Painter) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -177,6 +181,9 @@ fun RegisterScreenHeader(title: String, subtitle: String, icon: Painter) {
     }
 }
 
+/**
+ * This body corresponds to name and surname input
+ */
 @Composable
 fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
@@ -203,6 +210,9 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
     }
 }
 
+/**
+ * This body corresponds to username input
+ */
 @Composable
 fun RegisterScreenBody1(
     registerViewModel: RegisterSecuenceViewModel,
@@ -216,9 +226,8 @@ fun RegisterScreenBody1(
                 registerViewModel.username = it
                 registerViewModel.uniqueTry = false
                 if (checkUsernamePolicy(registerViewModel.username))
-                    checkUserAvailable(
+                    registerViewModel.checkUserAvailable(
                         scope = scope,
-                        registerViewModel = registerViewModel,
                         activityProperties = activityProperties
                     )
             },
@@ -252,10 +261,13 @@ fun RegisterScreenBody1(
     }
 }
 
+/**
+ * This body corresponds to password input
+ */
 @Composable
 fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
-        //Password inputs
+        //Password input (pw1)
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
             onValueChanged = {
@@ -267,7 +279,8 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
             placeholder = "Contraseña",
-            isError = !registerViewModel.uniqueTry && checkPasswords(registerViewModel) != PasswordPolicyCodes.STRONG)
+            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG)
+        //Password input (pw2)
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
             onValueChanged = {
@@ -279,13 +292,13 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
             placeholder = "Repetir contraseña",
-            isError = !registerViewModel.uniqueTry && checkPasswords(registerViewModel) != PasswordPolicyCodes.STRONG)
+            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG)
         //Password check component (only show it if username field was edited)
         if (!registerViewModel.uniqueTry) {
             TextCheck(
-                isCorrect = checkPasswords(registerViewModel) == PasswordPolicyCodes.STRONG,
+                isCorrect = registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG,
                 reason =
-                when (checkPasswords(registerViewModel)) {
+                when (registerViewModel.checkPasswords()) {
                     PasswordPolicyCodes.NOT_EQUALS -> "Las contraseñas no coinciden"
                     PasswordPolicyCodes.WEAK -> "Contraseña débil"
                     PasswordPolicyCodes.TOO_SHORT -> "Contraseña demasiado corta"
@@ -296,89 +309,6 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
             )
         }
     }
-}
-
-/**
- * Make a request to the backend to get if there's some user with the same username
- */
-fun checkUserAvailable(
-    scope: CoroutineScope,
-    activityProperties: ActivityProperties?,
-    registerViewModel: RegisterSecuenceViewModel
-) {
-    scope.launch {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val res = UsersService.getByUsername(registerViewModel.username) ?: return@launch
-                registerViewModel.uniqueUsername =
-                    StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
-            } catch (error: Exception) {
-                activityProperties?.snackbarHostState?.showSnackbar(
-                    message = "Error de conexion con el servidor",
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true
-                )
-            }
-        }
-    }
-}
-
-/**
- * Creates user POJO and send it to server
- */
-fun registerUser(
-    scope: CoroutineScope,
-    activityProperties: ActivityProperties?,
-    registerViewModel: RegisterSecuenceViewModel
-) {
-    scope.launch {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val userCreator = UserCreatorDto(
-                    user = User(
-                        username = registerViewModel.username,
-                        firstname = registerViewModel.firstname,
-                        lastname = registerViewModel.lastname
-                    ),
-                    credentials = UserCredentials(
-                        username = registerViewModel.username,
-                        password = registerViewModel.password1
-                    )
-                )
-                val res = UsersService.register(userCreator) ?: throw Exception("Null response from server")
-
-                if(StatusCodes.valueOf(res.status) == StatusCodes.SUCCESSFULLY){
-                    registerViewModel.step = 3
-                }
-
-            } catch (error: Exception) {
-                activityProperties?.snackbarHostState?.showSnackbar(
-                    message = "Error de conexion con el servidor",
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true
-                )
-                activityProperties?.navController?.navigate(Screen.Welcome.route)
-            }
-        }
-    }
-}
-
-/**
- * Check if passwords inside viewmodel are valid
- */
-fun checkPasswords(registerViewModel: RegisterSecuenceViewModel): PasswordPolicyCodes {
-    if (registerViewModel.password1.length < 6)
-        return PasswordPolicyCodes.TOO_SHORT
-    if (StringUtils.containsAny(registerViewModel.password1, "*/$\"'?¿¡!·`[]{}()\\|"))
-        return PasswordPolicyCodes.INVALID
-    if (registerViewModel.password1 != registerViewModel.password2)
-        return PasswordPolicyCodes.NOT_EQUALS
-    if (StringUtils.isAllLowerCase(registerViewModel.password1) ||
-        StringUtils.isAllUpperCase(registerViewModel.password1) ||
-        StringUtils.isAlpha(registerViewModel.password1)
-    )
-        return PasswordPolicyCodes.WEAK
-    return PasswordPolicyCodes.STRONG
 }
 
 /**
