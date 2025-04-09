@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -147,10 +148,11 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
 
 @Composable
 fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
+    val scope = rememberCoroutineScope()
     Column(verticalArrangement = Arrangement.Center) {
         IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {
                 registerViewModel.username = it
-
+                checkUserAvaiable(scope = scope, registerViewModel= registerViewModel)
             },
             text = registerViewModel.username, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
@@ -161,7 +163,12 @@ fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
 fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuenceViewModel){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
+            val res = UsersService.getById(registerViewModel.username) ?: return@launch
 
+            if(StatusCodes.valueOf(res.status)==StatusCodes.SUCCESSFULLY)
+                registerViewModel.uniqueUsername = false
+            else
+                registerViewModel.uniqueUsername = true
         }
     }
 }
