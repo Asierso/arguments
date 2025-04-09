@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -27,17 +24,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
-import com.asier.arguments.entities.User
+import com.asier.arguments.api.users.UsersService
 import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 
 @Composable
@@ -147,9 +147,21 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
 @Composable
 fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
-        IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = { registerViewModel.username = it}, text = registerViewModel.username, leadingIcon = {
+        IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {
+                registerViewModel.username = it
+
+            },
+            text = registerViewModel.username, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
         }, placeholder = "Nombre de usuario")
+    }
+}
+
+fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuenceViewModel){
+    scope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = UsersService.existsUsername(registerViewModel.username)
+        }
     }
 }
 
