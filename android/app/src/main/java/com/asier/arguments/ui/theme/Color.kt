@@ -32,3 +32,4 @@ val TextCorrect1 = Color(0xFF3B8848)
 
 val TextBright0 = Color.White
 val TextBright1 = Color(0xFFCECECE)
+val TextBright2 = Color(0xFFB9B9B9)

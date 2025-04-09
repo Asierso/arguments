@@ -4,4 +4,5 @@
     <string name="welcome_subtext">Arguments, the discordance social network</string>
     <string name="login_button">Login</string>
     <string name="create_account_button">Create account</string>
+    <string name="connection_error_snackbar_text">Error at connect with server</string>
 </resources>
