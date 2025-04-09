@@ -1,4 +1,4 @@
-package com.asier.arguments.api
+package com.asier.arguments.api.login
 
 import com.asier.arguments.utils.Globals
 import com.asier.arguments.entities.ServiceResponse
