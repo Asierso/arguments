@@ -156,7 +156,7 @@ fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
             },
             text = registerViewModel.username, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
-        }, placeholder = "Nombre de usuario")
+        }, placeholder = "Nombre de usuario", isError = !registerViewModel.uniqueUsername)
     }
 }
 
@@ -164,11 +164,7 @@ fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuence
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
             val res = UsersService.getById(registerViewModel.username) ?: return@launch
-
-            if(StatusCodes.valueOf(res.status)==StatusCodes.SUCCESSFULLY)
-                registerViewModel.uniqueUsername = false
-            else
-                registerViewModel.uniqueUsername = true
+            registerViewModel.uniqueUsername = StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
         }
     }
 }
