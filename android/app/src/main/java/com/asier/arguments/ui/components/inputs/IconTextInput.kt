@@ -30,6 +30,7 @@ fun IconTextInput(
     leadingIcon: @Composable () -> Unit,
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isError: Boolean = false
 ) {
     BaseTextInput(
         text = text,
@@ -37,7 +38,8 @@ fun IconTextInput(
         onValueChanged = onValueChanged,
         modifier=modifier,
         leadingIcon = leadingIcon,
-        maxLines = 1
+        maxLines = 1,
+        isError = isError
     )
 }
 
