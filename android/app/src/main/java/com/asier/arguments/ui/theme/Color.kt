@@ -23,10 +23,12 @@ val Disabled = Color(0xFF2F2F2F)
 
 val TextBoxBackground = Color(0xFF1A1A1C)
 val TextBoxBorder = Color(0xFF757575)
-val TextBoxTextColor = Color(0xFFADADAD)
-val TextBoxFocusedTextColor = Color(0xFFDCDCDC)
-val TextBoxErrorTextColor0 = Color(0xFFE16363)
-val TextBoxErrorTextColor1 = Color(0xFF7E3939)
+val TextBoxText = Color(0xFFADADAD)
+val TextBoxFocusedText = Color(0xFFDCDCDC)
+val TextError0 = Color(0xFFE16363)
+val TextError1 = Color(0xFF7E3939)
+val TextCorrect0 = Color(0xFF6BE17E)
+val TextCorrect1 = Color(0xFF3B8848)
 
 val TextBright0 = Color.White
 val TextBright1 = Color(0xFFCECECE)

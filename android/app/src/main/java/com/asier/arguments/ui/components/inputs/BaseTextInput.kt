@@ -7,10 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -19,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBoxBackground
 import com.asier.arguments.ui.theme.TextBoxBorder
-import com.asier.arguments.ui.theme.TextBoxErrorTextColor0
-import com.asier.arguments.ui.theme.TextBoxErrorTextColor1
-import com.asier.arguments.ui.theme.TextBoxFocusedTextColor
-import com.asier.arguments.ui.theme.TextBoxTextColor
+import com.asier.arguments.ui.theme.TextError0
+import com.asier.arguments.ui.theme.TextError1
+import com.asier.arguments.ui.theme.TextBoxFocusedText
+import com.asier.arguments.ui.theme.TextBoxText
 import org.apache.commons.lang3.StringUtils
 
 @Composable
@@ -41,11 +37,11 @@ fun BaseTextInput(
 
     //Set common text input props
     val textPlaceholder = @Composable {
-        Text(text = placeholder, color = TextBoxTextColor, fontFamily = Montserrat, fontWeight = FontWeight.Medium)
+        Text(text = placeholder, color = TextBoxText, fontFamily = Montserrat, fontWeight = FontWeight.Medium)
     }
     val textModifier = modifier
         .padding(4.dp)
-        .border(1.dp, if(isError) TextBoxErrorTextColor0 else TextBoxBorder, RoundedCornerShape(10.dp))
+        .border(1.dp, if(isError) TextError0 else TextBoxBorder, RoundedCornerShape(10.dp))
     val textColors = TextFieldDefaults.colors(
         focusedContainerColor = TextBoxBackground,
         unfocusedContainerColor = TextBoxBackground,
@@ -53,12 +49,12 @@ fun BaseTextInput(
         unfocusedIndicatorColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
         errorIndicatorColor = Color.Transparent,
-        focusedLeadingIconColor = TextBoxFocusedTextColor,
+        focusedLeadingIconColor = TextBoxFocusedText,
         unfocusedLeadingIconColor = TextBoxBorder,
-        focusedTextColor = TextBoxFocusedTextColor,
+        focusedTextColor = TextBoxFocusedText,
         unfocusedTextColor = TextBoxBorder,
-        errorPlaceholderColor = TextBoxErrorTextColor1,
-        errorTextColor =  TextBoxErrorTextColor0
+        errorPlaceholderColor = TextError1,
+        errorTextColor =  TextError0
     )
 
     if(leadingIcon == null){
