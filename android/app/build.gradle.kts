@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
 
+    //Debug uris
+    implementation(libs.logging.interceptor)
+
     //Apache StringUtils
     implementation(libs.commons.lang3)
 }

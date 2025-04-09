@@ -15,8 +15,8 @@ interface ApiUsers {
     suspend fun register(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Body user: UserCreatorDto) : Response<ServiceResponse>
 
     @GET("users/username/{username}")
-    suspend fun getByName(@Path(value = "username") username : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    suspend fun getByName(@Path(value = "username", encoded = true) username : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 
     @GET("users/id/{userId}")
-    suspend fun getById(@Path(value = "userId") userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    suspend fun getById(@Path(value = "userId", encoded = true) userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

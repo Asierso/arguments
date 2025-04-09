@@ -1,5 +1,6 @@
 package com.asier.arguments.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
+import com.asier.arguments.ui.components.others.TextCheck
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 import kotlinx.coroutines.CoroutineScope
@@ -79,7 +81,7 @@ fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerView
                     subtitle = stringResource(R.string.register_screen_subtitle1),
                     icon = painterResource(R.drawable.ic_welcomeuser)
                 )
-                RegisterScreenBody1(registerViewModel)
+                RegisterScreenBody1(registerViewModel,activityProperties)
                 Spacer(modifier = Modifier.height(30.dp))
                 RegisterScreenButtons{
                     registerViewModel.step = 2
@@ -91,7 +93,7 @@ fun RegisterSecuenceScreen(activityProperties: ActivityProperties?, registerView
                     subtitle = "Protege tu cuenta de Arguments con una contraseña. ¡Más vale prevenir que lamentar!",
                     icon = painterResource(R.drawable.ic_identification)
                 )
-                RegisterScreenBody2()
+                RegisterScreenBody2(registerViewModel)
                 RegisterScreenButtons{
                     registerViewModel.step = 3
                 }
@@ -158,24 +160,41 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
 }
 
 @Composable
-fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
+fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel, activityProperties: ActivityProperties?) {
     val scope = rememberCoroutineScope()
     Column(verticalArrangement = Arrangement.Center) {
         IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {
                 registerViewModel.username = it
-                checkUserAvaiable(scope = scope, registerViewModel= registerViewModel)
+                checkUserAvaiable(scope = scope, registerViewModel= registerViewModel, activityProperties = activityProperties)
             },
             text = registerViewModel.username, leadingIcon = {
             Icon(painterResource(R.drawable.ic_person), contentDescription = null)
         }, placeholder = "Nombre de usuario", isError = !registerViewModel.uniqueUsername)
+        if(registerViewModel.username.isNotBlank()) {
+            TextCheck(
+                isCorrect = registerViewModel.uniqueUsername,
+                reason = if (registerViewModel.uniqueUsername) {
+                    "OOh! Buen nombre"
+                } else {
+                    "Este usuario ya existe"
+                },
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
     }
 }
 
-fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuenceViewModel){
+fun checkUserAvaiable(scope: CoroutineScope, activityProperties: ActivityProperties?,registerViewModel: RegisterSecuenceViewModel){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = UsersService.getById(registerViewModel.username) ?: return@launch
-            registerViewModel.uniqueUsername = StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
+            try {
+                val res = UsersService.getByUsername(registerViewModel.username) ?: return@launch
+                registerViewModel.uniqueUsername =
+                    StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
+            }catch (error: Exception){
+                Log.d("dep",error.stackTraceToString())
+                activityProperties?.snackbarHostState?.showSnackbar(message = "Error de conexion con el servidor", duration = SnackbarDuration.Short, withDismissAction = true)
+            }
         }
     }
 }
@@ -189,7 +208,7 @@ fun checkPasswords(registerViewModel: RegisterSecuenceViewModel) : PasswordPolic
 }
 
 @Composable
-fun RegisterScreenBody2() {
+fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
         IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {}, text = "", leadingIcon = {
             Icon(painterResource(R.drawable.ic_key), contentDescription = null)
