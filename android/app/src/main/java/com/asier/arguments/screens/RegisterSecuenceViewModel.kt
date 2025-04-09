@@ -1,7 +1,5 @@
 package com.asier.arguments.screens
 
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +13,8 @@ import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
+import com.asier.arguments.ui.components.snackbars.SnackbarType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,10 +115,7 @@ class RegisterSecuenceViewModel : ViewModel() {
      */
     suspend fun showServerError(activityProperties: ActivityProperties?){
         activityProperties?.snackbarHostState?.showSnackbar(
-            message = "Error de conexion con el servidor",
-            duration = SnackbarDuration.Short,
-
-            withDismissAction = true
+           message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build()
         )
     }
 }
