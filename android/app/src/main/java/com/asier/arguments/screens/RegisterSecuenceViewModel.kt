@@ -31,6 +31,7 @@ class RegisterSecuenceViewModel : ViewModel() {
     //Register sequence flow data
     var step by mutableIntStateOf(0)
     var uniqueUsername by mutableStateOf(true)
+    var uniqueVerificationError by mutableStateOf(true)
     var uniqueTry by mutableStateOf(true)
 
     /**
@@ -39,7 +40,7 @@ class RegisterSecuenceViewModel : ViewModel() {
     fun checkPasswords(): PasswordPolicyCodes {
         if (password1.length < 6)
             return PasswordPolicyCodes.TOO_SHORT
-        if (StringUtils.containsAny(password1, "*/$\"'?¿¡!·`[]{}()\\|"))
+        if (StringUtils.containsAny(password1, "*/$\"'?¿¡!·`[]{}()\\| "))
             return PasswordPolicyCodes.INVALID
         if (password1 != password2)
             return PasswordPolicyCodes.NOT_EQUALS
@@ -103,11 +104,22 @@ class RegisterSecuenceViewModel : ViewModel() {
                 try {
                     val res = UsersService.getByUsername(username) ?: return@launch
                     uniqueUsername = StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
+                    uniqueVerificationError = false
                 } catch (error: Exception) {
                     showServerError(activityProperties)
+                    uniqueVerificationError = true
                 }
             }
         }
+    }
+
+    /**
+     * Check if provided username is valid
+     */
+    fun checkUsernamePolicy(): Boolean {
+        return username.isNotBlank() &&
+                username.length > 2 &&
+                !StringUtils.containsAny(username, "*/$\"'?¿¡!·`[]{}()\\| ")
     }
 
     /**

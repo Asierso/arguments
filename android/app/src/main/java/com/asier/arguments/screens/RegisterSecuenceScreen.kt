@@ -1,6 +1,7 @@
 package com.asier.arguments.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,21 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
 import com.asier.arguments.Screen
-import com.asier.arguments.api.users.UsersService
-import com.asier.arguments.entities.User
-import com.asier.arguments.entities.UserCreatorDto
-import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
-import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.others.TextCheck
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 
 @Composable
@@ -72,18 +64,24 @@ fun RegisterSecuenceScreen(
                 )
                 RegisterScreenBody0(registerViewModel)
                 Spacer(modifier = Modifier.height(30.dp))
-                RegisterScreenButtons {
-                    if (registerViewModel.firstname.isBlank()) {
-                        registerViewModel.uniqueTry = false
-                        return@RegisterScreenButtons
-                    }
-                    if (registerViewModel.lastname.isBlank()) {
-                        registerViewModel.uniqueTry = false
-                        return@RegisterScreenButtons
-                    }
-                    registerViewModel.uniqueTry = true
-                    registerViewModel.step = 1
-                }
+
+                //Bottom buttons
+                RegisterScreenButtons(
+                    nextButtonActions = {
+                        if (registerViewModel.firstname.isBlank()) {
+                            registerViewModel.uniqueTry = false
+                            return@RegisterScreenButtons
+                        }
+                        if (registerViewModel.lastname.isBlank()) {
+                            registerViewModel.uniqueTry = false
+                            return@RegisterScreenButtons
+                        }
+                        registerViewModel.uniqueTry = true
+                        registerViewModel.step = 1
+                    },
+                    loginTextActions = {
+                        activityProperties?.navController?.navigate(Screen.Login.route)
+                    })
             }
 
             1 -> { //Ask username
@@ -99,31 +97,45 @@ fun RegisterSecuenceScreen(
                 )
                 RegisterScreenBody1(registerViewModel, activityProperties)
                 Spacer(modifier = Modifier.height(30.dp))
-                RegisterScreenButtons {
-                    if (registerViewModel.uniqueUsername && checkUsernamePolicy(registerViewModel.username)) {
-                        registerViewModel.uniqueTry = true
-                        registerViewModel.step = 2
-                    } else {
-                        registerViewModel.uniqueTry = false
-                    }
-                }
+
+                //Bottom buttons
+                RegisterScreenButtons(
+                    nextButtonActions = {
+                        if (registerViewModel.uniqueUsername && registerViewModel.checkUsernamePolicy() && !!registerViewModel.uniqueVerificationError) {
+                            registerViewModel.uniqueTry = true
+                            registerViewModel.step = 2
+                        } else {
+                            registerViewModel.uniqueTry = false
+                        }
+                    },
+                    loginTextActions = {
+                        activityProperties?.navController?.navigate(Screen.Login.route)
+                    })
             }
 
             2 -> { //Ask password
                 RegisterScreenHeader(
                     title = stringResource(R.string.register_screen_title2),
-                    subtitle = "Protege tu cuenta de Arguments con una contraseña. ¡Más vale prevenir que lamentar!",
+                    subtitle = stringResource(R.string.register_screen_subtitle2),
                     icon = painterResource(R.drawable.ic_identification)
                 )
                 RegisterScreenBody2(registerViewModel)
-                RegisterScreenButtons {
-                    if(registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG) {
-                        registerViewModel.uniqueTry = true
-                        registerViewModel.registerUser(
-                            scope=scope,
-                            activityProperties=activityProperties)
+
+                //Bottom buttons
+                RegisterScreenButtons(
+                    nextButtonActions = {
+                        if (registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG) {
+                            registerViewModel.uniqueTry = true
+                            registerViewModel.registerUser(
+                                scope = scope,
+                                activityProperties = activityProperties
+                            )
+                        }
+                    },
+                    loginTextActions = {
+                        activityProperties?.navController?.navigate(Screen.Login.route)
                     }
-                }
+                )
             }
 
             3 -> { //User created
@@ -136,7 +148,7 @@ fun RegisterSecuenceScreen(
                 PrimaryButton(
                     text = stringResource(R.string.start_button),
                     onClick = {
-                        //Goto home
+                        //TODO Goto home
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -182,11 +194,12 @@ fun RegisterScreenHeader(title: String, subtitle: String, icon: Painter) {
 }
 
 /**
- * This body corresponds to name and surname input
+ * This body corresponds to firstname and lastname input
  */
 @Composable
 fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
+        //Firstname input
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
             onValueChanged = { registerViewModel.firstname = it },
@@ -194,9 +207,10 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             },
-            placeholder = "Nombre",
+            placeholder = stringResource(R.string.register_firstname_field),
             isError = !registerViewModel.uniqueTry && registerViewModel.firstname.isBlank()
         )
+        //Lastname input
         IconTextInput(
             modifier = Modifier.padding(top = 5.dp),
             onValueChanged = { registerViewModel.lastname = it },
@@ -204,7 +218,7 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             },
-            placeholder = "Apellidos",
+            placeholder = stringResource(R.string.register_lastname_field),
             isError = !registerViewModel.uniqueTry && registerViewModel.lastname.isBlank()
         )
     }
@@ -225,7 +239,7 @@ fun RegisterScreenBody1(
             onValueChanged = {
                 registerViewModel.username = it
                 registerViewModel.uniqueTry = false
-                if (checkUsernamePolicy(registerViewModel.username))
+                if (registerViewModel.checkUsernamePolicy())
                     registerViewModel.checkUserAvailable(
                         scope = scope,
                         activityProperties = activityProperties
@@ -235,25 +249,32 @@ fun RegisterScreenBody1(
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             },
-            placeholder = "Nombre de usuario",
-            isError = !registerViewModel.uniqueTry && (!registerViewModel.uniqueUsername || !checkUsernamePolicy(
-                registerViewModel.username
-            ))
+            placeholder = stringResource(R.string.register_username_field),
+            /*
+            Should be painted life error if:
+            - Is empty but contained data before
+            - User not valid
+            - The user exists
+            - Server error
+             */
+            isError = (registerViewModel.uniqueVerificationError && !registerViewModel.uniqueTry) ||
+                    (!registerViewModel.uniqueTry && (!registerViewModel.uniqueUsername || !registerViewModel.checkUsernamePolicy()))
         )
         //Username check component (only show it if username field was edited)
         if (!registerViewModel.uniqueTry) {
             TextCheck(
-                isCorrect = registerViewModel.uniqueUsername && checkUsernamePolicy(
-                    registerViewModel.username
-                ),
+                isCorrect = !registerViewModel.uniqueVerificationError && registerViewModel.uniqueUsername && registerViewModel.checkUsernamePolicy(),
                 reason =
-                if (registerViewModel.uniqueUsername) {
-                    if (checkUsernamePolicy(registerViewModel.username))
-                        "Ooh! Buen nombre"
+                if(registerViewModel.uniqueVerificationError){
+                    stringResource(R.string.register_userpolicy_error)
+                }
+                else if (registerViewModel.uniqueUsername) {
+                    if (registerViewModel.checkUsernamePolicy())
+                        stringResource(R.string.register_userpolicy_ok)
                     else
-                        "Nombre no válido"
+                        stringResource(R.string.register_userpolicy_invalid)
                 } else {
-                    "Este usuario ya existe"
+                    stringResource(R.string.register_userpolicy_repeated)
                 },
                 modifier = Modifier.padding(start = 2.dp)
             )
@@ -278,8 +299,9 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
-            placeholder = "Contraseña",
-            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG)
+            placeholder = stringResource(R.string.register_password1_field),
+            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG
+        )
         //Password input (pw2)
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
@@ -291,19 +313,20 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
-            placeholder = "Repetir contraseña",
-            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG)
+            placeholder = stringResource(R.string.register_password2_field),
+            isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG
+        )
         //Password check component (only show it if username field was edited)
         if (!registerViewModel.uniqueTry) {
             TextCheck(
                 isCorrect = registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG,
                 reason =
                 when (registerViewModel.checkPasswords()) {
-                    PasswordPolicyCodes.NOT_EQUALS -> "Las contraseñas no coinciden"
-                    PasswordPolicyCodes.WEAK -> "Contraseña débil"
-                    PasswordPolicyCodes.TOO_SHORT -> "Contraseña demasiado corta"
-                    PasswordPolicyCodes.STRONG -> "Contraseña robusta"
-                    PasswordPolicyCodes.INVALID -> "Contraseña no válida"
+                    PasswordPolicyCodes.NOT_EQUALS -> stringResource(R.string.register_passwordpolicy_notequals)
+                    PasswordPolicyCodes.WEAK -> stringResource(R.string.register_passwordpolicy_weak)
+                    PasswordPolicyCodes.TOO_SHORT -> stringResource(R.string.register_passwordpolicy_tooshort)
+                    PasswordPolicyCodes.STRONG -> stringResource(R.string.register_passwordpolicy_strong)
+                    PasswordPolicyCodes.INVALID -> stringResource(R.string.register_passwordpolicy_invalid)
                 },
                 modifier = Modifier.padding(start = 2.dp)
             )
@@ -312,20 +335,14 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
 }
 
 /**
- * Check if provided username is valid
+ * Bottom buttons to go further in the registration process or go login
  */
-fun checkUsernamePolicy(username: String): Boolean {
-    return username.isNotBlank() &&
-            username.length > 2 &&
-            !StringUtils.containsAny(username, "*/$\"'?¿¡!·`[]{}()\\|")
-}
-
 @Composable
-fun RegisterScreenButtons(nextButton: () -> Unit) {
+fun RegisterScreenButtons(nextButtonActions: () -> Unit, loginTextActions: () -> Unit) {
     Column {
         PrimaryButton(
             text = stringResource(R.string.next_button),
-            onClick = { nextButton.invoke() },
+            onClick = { nextButtonActions.invoke() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(50.dp, 10.dp),
@@ -334,11 +351,12 @@ fun RegisterScreenButtons(nextButton: () -> Unit) {
         Row(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 20.dp),
+                .padding(top = 20.dp)
+                .clickable { loginTextActions.invoke() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${stringResource(R.string.alreado_registered_text)} ",
+                text = "${stringResource(R.string.already_registered_text)} ",
                 fontFamily = Montserrat,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
