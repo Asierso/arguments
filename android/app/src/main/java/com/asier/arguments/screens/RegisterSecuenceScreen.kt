@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
 import com.asier.arguments.api.users.UsersService
 import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
@@ -163,6 +164,14 @@ fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuence
             val result = UsersService.existsUsername(registerViewModel.username)
         }
     }
+}
+
+fun checkPasswords(registerViewModel: RegisterSecuenceViewModel) : PasswordPolicyCodes{
+    if(registerViewModel.password1.length < 3)
+        return PasswordPolicyCodes.TOO_SHORT
+    if(registerViewModel.password1 != registerViewModel.password2)
+        return PasswordPolicyCodes.NOT_EQUALS
+    return PasswordPolicyCodes.OK
 }
 
 @Composable
