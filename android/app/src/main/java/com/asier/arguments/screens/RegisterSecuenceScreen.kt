@@ -161,7 +161,7 @@ fun RegisterScreenBody1(registerViewModel: RegisterSecuenceViewModel) {
 fun checkUserAvaiable(scope: CoroutineScope, registerViewModel: RegisterSecuenceViewModel){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
-            val result = UsersService.existsUsername(registerViewModel.username)
+
         }
     }
 }

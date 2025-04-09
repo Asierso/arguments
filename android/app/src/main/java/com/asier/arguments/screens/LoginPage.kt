@@ -1,6 +1,5 @@
 package com.asier.arguments.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
-import com.asier.arguments.api.ApiLoginService
+import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.misc.ActivityProperties
@@ -39,7 +38,6 @@ import com.asier.arguments.ui.theme.TextBright0
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Objects
 
 @Composable
 fun LoginPage(activityProperties: ActivityProperties? = null) {
@@ -109,7 +107,7 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
 fun Login(activityProperties: ActivityProperties? = null, scope: CoroutineScope, userCredentials: UserCredentials){
     scope.launch {
         CoroutineScope(Dispatchers.IO).launch {
-            val result = ApiLoginService.login(userCredentials)
+            val result = LoginService.login(userCredentials)
             if(result != null){
                 if(StatusCodes.valueOf(result.status) == StatusCodes.SUCCESSFULLY){
                     activityProperties?.snackbarHostState?.showSnackbar(message = result.result.toString(), duration = SnackbarDuration.Long)
