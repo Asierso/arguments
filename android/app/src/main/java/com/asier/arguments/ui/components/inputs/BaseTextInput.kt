@@ -19,7 +19,6 @@ import com.asier.arguments.ui.theme.TextError0
 import com.asier.arguments.ui.theme.TextError1
 import com.asier.arguments.ui.theme.TextBoxFocusedText
 import com.asier.arguments.ui.theme.TextBoxText
-import org.apache.commons.lang3.StringUtils
 
 @Composable
 fun BaseTextInput(
@@ -62,7 +61,7 @@ fun BaseTextInput(
 
     if(leadingIcon == null){
         TextField(
-            value = if(isPassword) StringUtils.join(text.map { o -> return@map "*" }) else text,
+            value = if(isPassword) "*".repeat(text.length) else text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
@@ -75,7 +74,7 @@ fun BaseTextInput(
         )
     }else{
         TextField(
-            value = if(isPassword) StringUtils.join(text.map { o -> return@map "*" }) else text,
+            value = if(isPassword) "*".repeat(text.length) else text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,

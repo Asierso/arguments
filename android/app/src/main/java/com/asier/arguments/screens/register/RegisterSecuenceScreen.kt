@@ -1,4 +1,4 @@
-package com.asier.arguments.screens
+package com.asier.arguments.screens.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -101,7 +101,7 @@ fun RegisterSecuenceScreen(
                 //Bottom buttons
                 RegisterScreenButtons(
                     nextButtonActions = {
-                        if (registerViewModel.uniqueUsername && registerViewModel.checkUsernamePolicy() && !!registerViewModel.uniqueVerificationError) {
+                        if (registerViewModel.uniqueUsername && registerViewModel.checkUsernamePolicy() && !registerViewModel.uniqueVerificationError) {
                             registerViewModel.uniqueTry = true
                             registerViewModel.step = 2
                         } else {
@@ -249,7 +249,7 @@ fun RegisterScreenBody1(
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             },
-            placeholder = stringResource(R.string.register_username_field),
+            placeholder = stringResource(R.string.username_field),
             /*
             Should be painted life error if:
             - Is empty but contained data before
@@ -299,7 +299,8 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
-            placeholder = stringResource(R.string.register_password1_field),
+            placeholder = stringResource(R.string.password_field),
+            isPassword = true,
             isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG
         )
         //Password input (pw2)
@@ -314,6 +315,7 @@ fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             },
             placeholder = stringResource(R.string.register_password2_field),
+            isPassword = true,
             isError = !registerViewModel.uniqueTry && registerViewModel.checkPasswords() != PasswordPolicyCodes.STRONG
         )
         //Password check component (only show it if username field was edited)

@@ -2,14 +2,14 @@ package com.asier.arguments
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.asier.arguments.misc.ActivityProperties
-import com.asier.arguments.screens.LoginPage
-import com.asier.arguments.screens.RegisterSecuenceScreen
-import com.asier.arguments.screens.RegisterSecuenceViewModel
+import com.asier.arguments.screens.login.LoginPage
+import com.asier.arguments.screens.register.RegisterSecuenceScreen
+import com.asier.arguments.screens.register.RegisterSecuenceViewModel
 import com.asier.arguments.screens.WelcomePage
+import com.asier.arguments.screens.login.LoginViewModel
 
 /**
  * Manage all the navigation flow in the application
@@ -21,7 +21,7 @@ fun AppNavGraph(activityProperties: ActivityProperties, modifier : Modifier) {
             WelcomePage(activityProperties)
         }
         composable(Screen.Login.route){
-            LoginPage(activityProperties)
+            LoginPage(activityProperties, LoginViewModel())
         }
         composable(Screen.Register.route){
             RegisterSecuenceScreen(activityProperties, RegisterSecuenceViewModel())

@@ -7,7 +7,9 @@
     <string name="create_account_button">Crear cuenta</string>
     <string name="register_screen_title0">¡Un nuevo usuario!</string>
     <string name="register_screen_subtitle0">Bienvenido a Arguments. Antes de empezar, necesitamos saber algunos detalles sobre ti</string>
-    <string name="already_registered_text">"¿Ya tienes una cuenta?"</string>
+    <string name="already_registered_text">¿Ya tienes una cuenta?</string>
+    <string name="without_registered_text">¿No tienes una cuenta?</string>
+    <string name="without_account_register_text">Regístrate</string>
     <string name="next_button">Siguiente</string>
     <string name="start_button">Inicio</string>
     <string name="hello_text">Hola</string>
@@ -17,11 +19,11 @@
     <string name="register_screen_subtitle2">Protege tu cuenta de Arguments con una contraseña. ¡Más vale prevenir que lamentar!</string>
     <string name="register_firstname_field">Nombre</string>
     <string name="register_lastname_field">Apellidos</string>
-    <string name="register_username_field">Nombre de usuario</string>
+    <string name="username_field">Nombre de usuario</string>
     <string name="register_userpolicy_ok">Ooh! Buen nombre</string>
     <string name="register_userpolicy_invalid">Nombre no válido</string>
     <string name="register_userpolicy_repeated">Este usuario ya existe</string>
-    <string name="register_password1_field">Contraseña</string>
+    <string name="password_field">Contraseña</string>
     <string name="register_password2_field">Repetir contraseña</string>
     <string name="register_passwordpolicy_notequals">Las contraseñas no coinciden</string>
     <string name="register_passwordpolicy_weak">Contraseña débil</string>

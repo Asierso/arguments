@@ -1,4 +1,4 @@
-package com.asier.arguments.screens
+package com.asier.arguments.screens.register
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf

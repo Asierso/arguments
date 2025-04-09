@@ -1,5 +1,6 @@
-package com.asier.arguments.screens
+package com.asier.arguments.screens.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,20 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
-import com.asier.arguments.api.login.LoginService
-import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.Screen
 import com.asier.arguments.entities.UserCredentials
 import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
-fun LoginPage(activityProperties: ActivityProperties? = null) {
+fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: LoginViewModel) {
     //Introduced username and password
     val username = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
@@ -54,7 +51,9 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
             Icon(
                 painter = painterResource(R.drawable.ic_logo),
                 contentDescription = null,
-                modifier = Modifier.size(180.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .size(180.dp)
+                    .align(Alignment.CenterHorizontally),
                 tint = Color.White)
             Text(
                 text = "Arguments",
@@ -62,36 +61,44 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
                 fontSize = 50.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = TextBright0,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 20.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 20.dp)
             )
         }
         //Username and password fields
         Column(verticalArrangement = Arrangement.Center) {
             IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {username.value = it}, text = username.value, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
-            }, placeholder = "Nombre de usuario")
+            }, placeholder = stringResource(R.string.username_field))
             IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = {password.value = it}, text = password.value, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
-            }, placeholder = "Contraseña")
+            }, placeholder = stringResource(R.string.password_field), isPassword = true)
         }
         //Bottom buttons
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
                 text = stringResource(R.string.login_button),
-                onClick = { Login(activityProperties,scope,UserCredentials(username.value,password.value)) },
-                modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
+                onClick = { loginViewModel.Login(activityProperties,scope,UserCredentials(username.value,password.value)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(50.dp, 10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )
-            Row(modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 20.dp)
+                .clickable { activityProperties?.navController?.navigate(Screen.Register.route) },
+                verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "¿No tienes una cuenta? ",
+                    text = "${stringResource(R.string.without_registered_text)} ",
                     fontFamily = Montserrat,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = TextBright0,
                 )
                 Text(
-                    text = "Regístrate",
+                    text = stringResource(R.string.without_account_register_text),
                     fontFamily = Montserrat,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -104,27 +111,8 @@ fun LoginPage(activityProperties: ActivityProperties? = null) {
     }
 }
 
-fun Login(activityProperties: ActivityProperties? = null, scope: CoroutineScope, userCredentials: UserCredentials){
-    scope.launch {
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = LoginService.login(userCredentials)
-            if(result != null){
-                if(StatusCodes.valueOf(result.status) == StatusCodes.SUCCESSFULLY){
-                    activityProperties?.snackbarHostState?.showSnackbar(message = result.result.toString(), duration = SnackbarDuration.Long)
-                }
-                if(StatusCodes.valueOf(result.status) == StatusCodes.INVALID_CREDENTIALS){
-                    activityProperties?.snackbarHostState?.showSnackbar(message = "Usuario o contraseña incorrecto", duration = SnackbarDuration.Long)
-                }
-                if(StatusCodes.valueOf(result.status) == StatusCodes.UNAUTHORIZED_CLIENT){
-                    activityProperties?.snackbarHostState?.showSnackbar(message = "Client token not valid", duration = SnackbarDuration.Long)
-                }
-            }
-        }
-    }
-}
-
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun LoginPagePreview(){
-    LoginPage()
+    LoginPage(loginViewModel = LoginViewModel())
 }
