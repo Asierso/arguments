@@ -25,7 +25,7 @@ fun TextCheck(
     reason: String,
     modifier: Modifier = Modifier,
     size: Float = 15f) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(if(isCorrect) R.drawable.ic_check else R.drawable.ic_error),
             contentDescription = reason,
@@ -36,7 +36,7 @@ fun TextCheck(
             fontSize = size.sp,
             fontWeight = FontWeight.Medium,
             color = if(isCorrect) TextCorrect0 else TextError0,
-            modifier = Modifier.align(alignment = Alignment.CenterVertically).padding(start = 4.dp) )
+            modifier = Modifier.padding(start = 4.dp) )
     }
 }
 
