@@ -1,7 +1,9 @@
 package com.asier.arguments.utils
 
+import android.content.Context
 import com.asier.arguments.entities.ServiceResponse
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.utils.storage.LocalStorage
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -15,19 +17,33 @@ object RetrofitUtils {
         return Retrofit.Builder()
             .baseUrl(Globals.API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(getClient(false))
+            .build()
+    }
+
+    fun getAuthNew(context: Context) : Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(Globals.API_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getClient(true))
             .build()
     }
 
     //Uri logger
-    val logging = HttpLoggingInterceptor().apply {
+    private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    //Retrofit client
-    val client = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
+    //Retrofit auth client (uses bearer if authenticate is true)
+    private fun getClient(authenticate: Boolean, context: Context? = null) : OkHttpClient{
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+        if(authenticate)
+            client.addInterceptor(AuthInterceptor(tokenSource = {
+                LocalStorage(context!!).load("token")
+            }))
+        return client.build()
+    }
 
     //Make unification of body() and errorBody()
     fun getResponse(response: Response<ServiceResponse>) : ServiceResponse?{
