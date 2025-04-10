@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This DTO is for simplify the creation of discussions in client. The rest of the params will be assigned automatically
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
