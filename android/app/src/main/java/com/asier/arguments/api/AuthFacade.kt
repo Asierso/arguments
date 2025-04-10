@@ -36,4 +36,12 @@ object AuthFacade {
             }
         }
     }
+
+    suspend fun logout(activityProperties: ActivityProperties?){
+        LoginService.logout(activityProperties?.storage!!)
+        activityProperties.storage.delete("auth")
+        CoroutineScope(Dispatchers.Main).launch {
+            activityProperties.navController.navigate(Screen.Welcome.route)
+        }
+    }
 }

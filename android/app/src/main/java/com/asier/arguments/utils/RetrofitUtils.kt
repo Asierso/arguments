@@ -21,11 +21,11 @@ object RetrofitUtils {
             .build()
     }
 
-    fun getAuthNew(context: Context) : Retrofit{
+    fun getAuthNew(localStorage: LocalStorage) : Retrofit{
         return Retrofit.Builder()
             .baseUrl(Globals.API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getClient(true))
+            .client(getClient(true,localStorage))
             .build()
     }
 
@@ -35,12 +35,12 @@ object RetrofitUtils {
     }
 
     //Retrofit auth client (uses bearer if authenticate is true)
-    private fun getClient(authenticate: Boolean, context: Context? = null) : OkHttpClient{
+    private fun getClient(authenticate: Boolean, localStorage: LocalStorage? = null) : OkHttpClient{
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
         if(authenticate)
             client.addInterceptor(AuthInterceptor(tokenSource = {
-                LocalStorage(context!!).load("auth")!!
+                localStorage?.load("auth")!!
             }))
         return client.build()
     }

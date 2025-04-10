@@ -5,23 +5,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.asier.arguments.Screen
+import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
-import com.asier.arguments.utils.storage.LocalStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(activityProperties: ActivityProperties? = null){
-    val lc = LocalStorage(LocalContext.current)
+    //Scope to make fetch
+    val scope = rememberCoroutineScope()
+
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         Text(text = "Success", color = Color.White)
         PrimaryButton(text = "Logout", onClick = {
-            lc.delete("auth")
-            activityProperties?.navController?.navigate(Screen.Welcome.route)
+            scope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
+                    AuthFacade.logout(activityProperties)
+                }
+            }
         })
     }
 }
