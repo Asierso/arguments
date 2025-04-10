@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Arguments</string>
+    <string name="welcome_text">Welcome</string>
+    <string name="welcome_subtext">Arguments, the discordance social network</string>
+    <string name="login_button">Login</string>
+    <string name="create_account_button">Create account</string>
+    <string name="register_screen_title0">A new user!</string>
+    <string name="register_screen_subtitle0">Welcome to Arguments. Before start, we need to know some details about you</string>
+    <string name="already_registered_text">Already registered?</string>
+    <string name="without_registered_text">Without an account?</string>
+    <string name="without_account_register_text">Register</string>
+    <string name="next_button">Next</string>
+    <string name="start_button">Start</string>
+    <string name="hello_text">Hello</string>
+    <string name="register_screen_title2">Identification</string>
+    <string name="register_screen_subtitle1">Choose the name you\'ll interact with in Arguments. A very special one!</string>
+    <string name="connection_error_snackbar_text">Error at connect with server</string>
+    <string name="register_screen_subtitle2">Protect your Arguments account with a password. Better safe than sorry!</string>
+    <string name="register_firstname_field">Firstname</string>
+    <string name="register_lastname_field">Lastname</string>
+    <string name="username_field">Username</string>
+    <string name="register_userpolicy_ok">Ooh! Good name</string>
+    <string name="register_userpolicy_invalid">Name no valid</string>
+    <string name="register_userpolicy_repeated">That user exists already</string>
+    <string name="password_field">Password</string>
+    <string name="register_password2_field">Repeat password</string>
+    <string name="register_passwordpolicy_notequals">The passwords aren\'t the same</string>
+    <string name="register_passwordpolicy_weak">Weak password</string>
+    <string name="register_passwordpolicy_tooshort">Too short password</string>
+    <string name="register_passwordpolicy_strong">Strong password</string>
+    <string name="register_passwordpolicy_invalid">Invalid password</string>
+    <string name="register_userpolicy_error">Error verifying user</string>
+</resources>

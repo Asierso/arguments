@@ -1,14 +1,10 @@
 package com.asier.arguments.argumentsbackend.controllers;
 
-import java.util.List;
-
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.asier.arguments.argumentsbackend.entities.User;
 
 public interface UserController {
     @PostMapping("/users")

@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -26,19 +27,16 @@ public class DiscussionThread implements Identify {
     @Id
     private ObjectId id;
     @Mandatory
-    private String subject;
-    @Mandatory
-    private ObjectId owner;
-    @Mandatory
-    private LocalDateTime startTime;
+    private String title;
+    private String author;
+    private LocalDateTime createdAt;
+    @Modifiable
+    private LocalDateTime endAt;
     @Mandatory
     @Modifiable
-    private LocalDateTime endTime;
-    @Mandatory
+    private Integer maxUsers;
     @Modifiable
-    private int maxUsers;
-    @Modifiable
-    private List<String> users;
+    private HashSet<String> users;
 
     @Override
     public String getId() {
