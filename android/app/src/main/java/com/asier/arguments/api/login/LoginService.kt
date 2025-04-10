@@ -9,4 +9,8 @@ object LoginService : ApiLoginService {
     override suspend fun login(userCredentials: UserCredentials) : ServiceResponse?{
         return RetrofitUtils.getResponse(ApiServices.LoginService.login(userCredentials = userCredentials))
     }
+
+    override suspend fun logout(): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.LoginService.logout())
+    }
 }

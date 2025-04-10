@@ -12,4 +12,7 @@ import retrofit2.http.Query
 interface ApiLogin{
     @POST("login")
     suspend fun login(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Body userCredentials: UserCredentials) : Response<ServiceResponse>
+
+    @POST("auth/logout")
+    suspend fun logout(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

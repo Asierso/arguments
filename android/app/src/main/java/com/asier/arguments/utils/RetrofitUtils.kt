@@ -40,7 +40,7 @@ object RetrofitUtils {
             .addInterceptor(logging)
         if(authenticate)
             client.addInterceptor(AuthInterceptor(tokenSource = {
-                LocalStorage(context!!).load("token")
+                LocalStorage(context!!).load("auth")!!
             }))
         return client.build()
     }

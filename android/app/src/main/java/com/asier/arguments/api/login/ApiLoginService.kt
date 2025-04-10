@@ -5,4 +5,5 @@ import com.asier.arguments.entities.UserCredentials
 
 interface ApiLoginService {
     suspend fun login(userCredentials: UserCredentials) : ServiceResponse?
+    suspend fun logout() : ServiceResponse?
 }

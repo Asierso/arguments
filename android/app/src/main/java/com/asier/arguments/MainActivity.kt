@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.asier.arguments.misc.ActivityProperties
@@ -19,9 +20,9 @@ import com.asier.arguments.ui.components.snackbars.BaseSnackbar
 import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbar
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
-import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbarPreciew
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
+import com.asier.arguments.utils.storage.LocalStorage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,9 +65,13 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState) {
     //Define screen properties
     val navController = rememberNavController()
-    val activityProperties = ActivityProperties(navController, snackbarHostState)
+    val activityProperties = ActivityProperties(navController, snackbarHostState, LocalStorage(LocalContext.current))
 
-    AppNavGraph(activityProperties = activityProperties,modifier=modifier)
+    AppNavGraph(
+        activityProperties = activityProperties,
+        modifier = modifier,
+        start = if((activityProperties.storage.load("auth")?:"").isNotBlank()) Screen.Home else Screen.Welcome
+    )
 }
 
 @Preview(showBackground = true)

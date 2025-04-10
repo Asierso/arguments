@@ -13,8 +13,12 @@ class LocalStorage(context: Context) {
         db.insert(StorageEntity(key,value))
     }
 
-    fun load(key: String) : String {
-       return db.select(key).value
+    fun load(key: String) : String? {
+        return try{
+            db.select(key).value
+        }catch (e : IllegalStateException){
+            null
+        }
     }
 
     fun delete(key: String){
