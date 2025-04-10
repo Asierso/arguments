@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asier.arguments.ui.theme.Montserrat
@@ -61,7 +63,7 @@ fun BaseTextInput(
 
     if(leadingIcon == null){
         TextField(
-            value = if(isPassword) "*".repeat(text.length) else text,
+            value = text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
@@ -70,11 +72,12 @@ fun BaseTextInput(
             readOnly = readOnly,
             singleLine = minLines <= 1,
             minLines = minLines,
-            isError = isError
+            isError = isError,
+            visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None
         )
     }else{
         TextField(
-            value = if(isPassword) "*".repeat(text.length) else text,
+            value = text,
             onValueChange = onValueChanged,
             placeholder = textPlaceholder,
             modifier = textModifier,
@@ -87,7 +90,8 @@ fun BaseTextInput(
             singleLine = minLines <= 1,
             minLines = minLines,
             isError = isError,
-            enabled = enabled
+            enabled = enabled,
+            visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None
         )
     }
 }
