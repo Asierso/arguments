@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: mongodb
     ports:
-      - "${SPRING_DATA_MONGODB_PORT}:27017"
+      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
     networks:
@@ -22,18 +22,13 @@ services:
 # Arguments Backend Service
   arguments-backend:
     build:
-      context: .
+      context: ./backend/arguments-backend
       dockerfile: Dockerfile
     container_name: arguments-backend
     ports:
       - "${SPRING_PORT}:8088"
     environment:
-      - SPRING_DATA_MONGODB_USERNAME=${SPRING_DATA_MONGODB_USERNAME}
-      - SPRING_DATA_MONGODB_PASSWORD=${SPRING_DATA_MONGODB_PASSWORD}
-      - SPRING_DATA_MONGODB_DATABASE=${SPRING_DATA_MONGODB_DATABASE}
-      - SPRING_DATA_MONGODB_HOST=${SPRING_DATA_MONGODB_HOST}
-      - SPRING_DATA_MONGODB_PORT=${SPRING_DATA_MONGODB_PORT}
-      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=${SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE}
+      - SPRING_MONGODB_URI=${SPRING_MONGODB_URI}
     depends_on:
       mongodb:
         condition: service_healthy
