@@ -25,14 +25,10 @@ object AuthFacade {
 
             //Invoke error actions on mainthread
             if(StatusCodes.valueOf(result.status) == StatusCodes.INVALID_CREDENTIALS){
-                CoroutineScope(Dispatchers.Main).launch {
-                    onFailure.invoke(StatusCodes.valueOf(result.status))
-                }
+                onFailure.invoke(StatusCodes.valueOf(result.status))
             }
             if(StatusCodes.valueOf(result.status) == StatusCodes.UNAUTHORIZED_CLIENT){
-                CoroutineScope(Dispatchers.Main).launch {
-                    onFailure.invoke(StatusCodes.valueOf(result.status))
-                }
+                onFailure.invoke(StatusCodes.valueOf(result.status))
             }
         }
     }
