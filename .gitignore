@@ -28,3 +28,6 @@
 # General
 /.DS_Store
 /.$*
+
+# Env file
+/.env

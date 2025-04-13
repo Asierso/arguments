@@ -11,9 +11,9 @@ services:
     networks:
       - arguments-network
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: arguments
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -22,18 +22,13 @@ services:
 # Arguments Backend Service
   arguments-backend:
     build:
-      context: .
+      context: ./backend/arguments-backend
       dockerfile: Dockerfile
     container_name: arguments-backend
     ports:
-      - "24833:8088"
+      - "${SPRING_PORT}:8088"
     environment:
-      - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=root
-      - SPRING_DATA_MONGODB_DATABASE=arguments
-      - SPRING_DATA_MONGODB_HOST=mongodb
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
+      - SPRING_MONGODB_URI=${SPRING_MONGODB_URI}
     depends_on:
       mongodb:
         condition: service_healthy
@@ -44,7 +39,7 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     ports:
-      - "11434:11434"
+      - "${OLLAMA_PORT}:11434"
     volumes:
       - ollama_data:/root/.ollama
     networks:
