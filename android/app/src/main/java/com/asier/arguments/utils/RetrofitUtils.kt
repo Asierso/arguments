@@ -1,8 +1,8 @@
 package com.asier.arguments.utils
 
-import android.content.Context
 import com.asier.arguments.entities.ServiceResponse
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.utils.interceptors.AuthInterceptor
 import com.asier.arguments.utils.storage.LocalStorage
 import com.google.gson.Gson
 import okhttp3.OkHttpClient

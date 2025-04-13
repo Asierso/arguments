@@ -1,6 +1,7 @@
-package com.asier.arguments.misc
+package com.asier.arguments.screens
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.asier.arguments.utils.storage.LocalStorage
 

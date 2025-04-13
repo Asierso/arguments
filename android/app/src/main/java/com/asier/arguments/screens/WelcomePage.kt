@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
 import com.asier.arguments.Screen
-import com.asier.arguments.misc.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.SecondaryButton
 import com.asier.arguments.ui.theme.Montserrat

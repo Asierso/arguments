@@ -1,10 +1,9 @@
 package com.asier.arguments.api
 
-import androidx.compose.material3.SnackbarDuration
 import com.asier.arguments.Screen
 import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.entities.UserCredentials
-import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.StatusCodes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

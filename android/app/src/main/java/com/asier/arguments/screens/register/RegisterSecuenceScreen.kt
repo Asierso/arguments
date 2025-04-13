@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
 import com.asier.arguments.Screen
-import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
@@ -126,6 +126,7 @@ fun RegisterSecuenceScreen(
                     nextButtonActions = {
                         if (registerViewModel.checkPasswords() == PasswordPolicyCodes.STRONG) {
                             registerViewModel.uniqueTry = true
+                            //Try to register
                             registerViewModel.registerUser(
                                 scope = scope,
                                 activityProperties = activityProperties
@@ -148,7 +149,11 @@ fun RegisterSecuenceScreen(
                 PrimaryButton(
                     text = stringResource(R.string.start_button),
                     onClick = {
-                        //TODO Goto home
+                        //Login with created user credentials
+                        registerViewModel.login(
+                            scope = scope,
+                            activityProperties = activityProperties
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()

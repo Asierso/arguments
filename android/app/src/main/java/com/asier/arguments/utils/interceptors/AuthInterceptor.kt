@@ -1,4 +1,4 @@
-package com.asier.arguments.utils
+package com.asier.arguments.utils.interceptors
 
 import okhttp3.Interceptor
 import okhttp3.Response

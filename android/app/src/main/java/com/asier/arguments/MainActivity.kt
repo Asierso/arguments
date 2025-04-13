@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.snackbars.BaseSnackbar
 import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbar
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
@@ -27,13 +27,13 @@ import com.asier.arguments.utils.storage.LocalStorage
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val snaackbarState = SnackbarHostState()
-
+        val snackbarState = SnackbarHostState()
+        val topBar : @Composable () -> Unit = {}
         enableEdgeToEdge()
 
         setContent {
             ArgumentsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snaackbarState){
+                Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snackbarState){
                     //Build snackbar invoke
                     val builtInvoke = SnackbarInvoke.from(it.visuals.message)
 
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
                 } }) { innerPadding ->
                     Surface(color = Background) {
-                        MainScreen(modifier = Modifier.padding(innerPadding), snaackbarState)
+                        MainScreen(modifier = Modifier.padding(innerPadding), snackbarState)
                     }
                 }
             }
@@ -65,7 +65,11 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState) {
     //Define screen properties
     val navController = rememberNavController()
-    val activityProperties = ActivityProperties(navController, snackbarHostState, LocalStorage(LocalContext.current))
+    val activityProperties = ActivityProperties(
+        navController = navController,
+        snackbarHostState = snackbarHostState,
+        storage = LocalStorage(LocalContext.current)
+    )
 
     AppNavGraph(
         activityProperties = activityProperties,

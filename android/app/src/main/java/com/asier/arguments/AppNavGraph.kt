@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.asier.arguments.misc.ActivityProperties
-import com.asier.arguments.screens.HomeScreen
+import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.screens.home.HomeScreen
 import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
 import com.asier.arguments.screens.register.RegisterSecuenceViewModel
 import com.asier.arguments.screens.WelcomePage
+import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
 
 /**
@@ -28,7 +29,7 @@ fun AppNavGraph(activityProperties: ActivityProperties, modifier : Modifier, sta
             RegisterSecuenceScreen(activityProperties, RegisterSecuenceViewModel())
         }
         composable(Screen.Home.route){
-            HomeScreen(activityProperties)
+            HomeScreen(activityProperties, HomeScreenViewModel())
         }
     }
 }

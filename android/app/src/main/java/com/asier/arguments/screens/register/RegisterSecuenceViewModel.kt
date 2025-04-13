@@ -1,16 +1,18 @@
 package com.asier.arguments.screens.register
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
+import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.api.users.UsersService
 import com.asier.arguments.entities.User
 import com.asier.arguments.entities.UserCreatorDto
 import com.asier.arguments.entities.UserCredentials
-import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
@@ -89,6 +91,40 @@ class RegisterSecuenceViewModel : ViewModel() {
 
                     showServerError(activityProperties)
                 }
+            }
+        }
+    }
+
+    fun login(
+        scope: CoroutineScope,
+        activityProperties: ActivityProperties?
+    ){
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                AuthFacade.login(
+                    activityProperties = activityProperties,
+                    credentials = UserCredentials(
+                        username = username,
+                        password = password1
+                     ),
+                    onSucess = {
+                        //Go to home page
+                        CoroutineScope(Dispatchers.Main).launch {
+                            activityProperties?.navController?.navigate(Screen.Home.route)
+                        }
+                    },
+                    onFailure = {
+                        //Show failure text and go to welcome
+                        CoroutineScope(Dispatchers.Main).launch {
+                            activityProperties?.navController?.navigate(Screen.Welcome.route)
+                            activityProperties?.snackbarHostState?.showSnackbar(
+                                message = SnackbarInvoke(
+                                    SnackbarType.SERVER_ERROR
+                                ).build(), duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                )
             }
         }
     }

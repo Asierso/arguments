@@ -1,18 +1,14 @@
 package com.asier.arguments.screens.login
 
-import android.util.Log
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
 import com.asier.arguments.api.AuthFacade
-import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.entities.UserCredentials
-import com.asier.arguments.misc.ActivityProperties
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.utils.storage.LocalStorage
 import kotlinx.coroutines.CoroutineScope
