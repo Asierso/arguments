@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -35,13 +36,10 @@ import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
+import com.asier.arguments.utils.storage.LocalStorage
 
 @Composable
 fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: LoginViewModel) {
-    //Introduced username and password
-    val username = rememberSaveable { mutableStateOf("") }
-    val password = rememberSaveable { mutableStateOf("") }
-
     //Coroutine scope
     val scope = rememberCoroutineScope()
 
@@ -68,10 +66,10 @@ fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: Lo
         }
         //Username and password fields
         Column(verticalArrangement = Arrangement.Center) {
-            IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {username.value = it}, text = username.value, leadingIcon = {
+            IconTextInput(modifier = Modifier.padding(bottom = 5.dp), onValueChanged = {loginViewModel.username = it}, text = loginViewModel.username, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_person), contentDescription = null)
             }, placeholder = stringResource(R.string.username_field))
-            IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = {password.value = it}, text = password.value, leadingIcon = {
+            IconTextInput(modifier = Modifier.padding(top = 5.dp), onValueChanged = {loginViewModel.password = it}, text = loginViewModel.password, leadingIcon = {
                 Icon(painterResource(R.drawable.ic_key), contentDescription = null)
             }, placeholder = stringResource(R.string.password_field), isPassword = true)
         }
@@ -79,7 +77,7 @@ fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: Lo
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 10.dp)) {
             PrimaryButton(
                 text = stringResource(R.string.login_button),
-                onClick = { loginViewModel.Login(activityProperties,scope,UserCredentials(username.value,password.value)) },
+                onClick = { loginViewModel.login(activityProperties,scope) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(50.dp, 10.dp),
