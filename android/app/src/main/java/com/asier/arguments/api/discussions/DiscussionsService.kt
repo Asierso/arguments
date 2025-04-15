@@ -6,7 +6,7 @@ import com.asier.arguments.utils.RetrofitUtils
 import com.asier.arguments.utils.storage.LocalStorage
 
 object DiscussionsService : ApiDiscussionsService{
-    override suspend fun getDiscussion(localStorage: LocalStorage): ServiceResponse? {
-        return RetrofitUtils.getResponse(ApiServices.DiscussionsAuthService(localStorage).getDiscussion())
+    override suspend fun getDiscussionsByPage(localStorage: LocalStorage, page : Int): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.DiscussionsAuthService(localStorage).getDiscussionsByPage(page = page))
     }
 }

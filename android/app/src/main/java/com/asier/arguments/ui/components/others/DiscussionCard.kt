@@ -76,12 +76,5 @@ fun DiscussionCard(
 @Composable
 @Preview
 fun DiscussionCardPreview(){
-    DiscussionCard(DiscussionThread().apply {
-        users = listOf("o")
-        author = "dummy"
-        title = "New discussion"
-        maxUsers = 5
-        createdAt = LocalDateTime.now()
-        endAt = LocalDateTime.now().plusMinutes(5)
-    })
+
 }

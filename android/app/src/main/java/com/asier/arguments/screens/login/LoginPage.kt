@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -24,11 +26,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
+import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 
@@ -36,6 +40,17 @@ import com.asier.arguments.ui.theme.TextBright0
 fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: LoginViewModel) {
     //Coroutine scope
     val scope = rememberCoroutineScope()
+
+    //Change status bar color
+    if(activityProperties != null) {
+        activityProperties.window.let {
+            SideEffect {
+                WindowCompat.getInsetsController(it, it.decorView)
+                    .isAppearanceLightStatusBars = true
+                it.statusBarColor = Background.toArgb()
+            }
+        }
+    }
 
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         //Welcome title

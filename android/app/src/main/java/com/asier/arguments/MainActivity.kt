@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ArgumentsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(), snackbarHost = { SnackbarHost(snackbarState){
+                Scaffold(modifier = Modifier.fillMaxSize(),  snackbarHost = { SnackbarHost(snackbarState){
                     //Build snackbar invoke
                     val builtInvoke = SnackbarInvoke.from(it.visuals.message)
 

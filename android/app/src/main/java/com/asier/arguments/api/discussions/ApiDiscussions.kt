@@ -7,6 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiDiscussions {
-    @GET("/auth/discussions")
-    suspend fun getDiscussion(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    @GET("auth/discussions")
+    suspend fun getDiscussionsByPage(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Query("page") page : Int = 0) : Response<ServiceResponse>
 }

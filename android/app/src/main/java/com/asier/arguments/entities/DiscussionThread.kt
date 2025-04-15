@@ -9,7 +9,7 @@ data class DiscussionThread(
     var title: String = "",
     var author: String = "",
     var maxUsers: Int = 0,
+    var users: List<String> = emptyList(),
     var createdAt: LocalDateTime? = null,
-    var endAt: LocalDateTime? = null,
-    var users: List<String>? = null
+    var endAt: LocalDateTime? = null
 )

@@ -28,7 +28,6 @@ object RetrofitUtils {
             .client(getClient(true,localStorage))
             .build()
     }
-
     //Uri logger
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
