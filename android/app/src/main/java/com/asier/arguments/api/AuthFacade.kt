@@ -15,6 +15,7 @@ object AuthFacade {
         if(result != null){
             if(StatusCodes.valueOf(result.status) == StatusCodes.SUCCESSFULLY){
                 activityProperties?.storage?.save("auth",result.result.toString())
+                activityProperties?.storage?.save("user",credentials.username)
 
                 //Invoke success actions on mainthread
                 CoroutineScope(Dispatchers.Main).launch {
@@ -35,6 +36,7 @@ object AuthFacade {
     suspend fun logout(activityProperties: ActivityProperties?){
         LoginService.logout(activityProperties?.storage!!)
         activityProperties.storage.delete("auth")
+        activityProperties.storage.delete("user")
         CoroutineScope(Dispatchers.Main).launch {
             activityProperties.navController.navigate(Screen.Welcome.route)
         }
