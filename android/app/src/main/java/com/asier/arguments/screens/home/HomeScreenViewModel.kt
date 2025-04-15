@@ -10,6 +10,7 @@ class HomeScreenViewModel : ViewModel() {
     var storage by mutableStateOf<LocalStorage?>(null)
     var username by mutableStateOf("")
     var loaded by mutableStateOf(false)
+    var discussionPage by mutableStateOf(0)
 
     fun loadUsername(){
         if(username.isNotBlank())

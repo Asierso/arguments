@@ -20,6 +20,7 @@ val Primary = Color(0xFF7B6CC1)
 val PrimaryDark = Color(0xFF2B2936)
 val Secondary = Color(0xFF676767)
 val Disabled = Color(0xFF2F2F2F)
+val Tertiary = Color(0xFF655E88)
 
 val TextBoxBackground = Color(0xFF1A1A1C)
 val TextBoxBorder = Color(0xFF757575)
@@ -36,3 +37,4 @@ val TextBright2 = Color(0xFFB9B9B9)
 
 val TopBarBackground = Color(0xFF3B3B3B)
 val TopBarIcon = Color(0xFF949494)
+val CardBackground = Color(0xFF3B3B3B)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.screens.ActivityProperties
@@ -34,26 +36,26 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
     homeScreenViewModel.loadUsername()
 
     //Change status bar color
+    /*
     activityProperties?.window.let {
         SideEffect {
             WindowCompat.getInsetsController(it!!, it.decorView)
                 .isAppearanceLightStatusBars = true
             it.statusBarColor = TopBarBackground.toArgb()
         }
-    }
+    }*/
 
     ProfileTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),
         profile = {UserAlt(name = homeScreenViewModel.username) { }})
 
-    Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-        Text(text = "Success", color = Color.White)
-        PrimaryButton(text = "Logout", onClick = {
-            scope.launch {
-                CoroutineScope(Dispatchers.IO).launch {
-                    AuthFacade.logout(activityProperties)
-                }
-            }
-        })
+    LazyColumn(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
+
     }
+}
+
+@Composable
+@Preview(showSystemUi = true, showBackground = true)
+fun HomeScreenPreview(){
+    HomeScreen(homeScreenViewModel = HomeScreenViewModel())
 }
