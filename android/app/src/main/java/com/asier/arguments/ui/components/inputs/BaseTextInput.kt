@@ -25,13 +25,12 @@ import com.asier.arguments.ui.theme.TextBoxText
 @Composable
 fun BaseTextInput(
     placeholder: String,
-    onValueChanged: (String) -> Unit,
-    text : String = "",
     modifier: Modifier = Modifier,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    readOnly : Boolean = false,
-    minLines : Int = 1,
-    maxLines : Int = 1,
+    onValueChanged: (String) -> Unit,
+    text: String = "",
+    leadingIcon: @Composable() (() -> Unit)? = null,
+    readOnly: Boolean = false,
+    minLines: Int = 1,
     isError: Boolean = false,
     enabled: Boolean = true,
     isPassword: Boolean = false
