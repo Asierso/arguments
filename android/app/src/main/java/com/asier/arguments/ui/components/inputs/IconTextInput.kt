@@ -11,24 +11,23 @@ import com.asier.arguments.ui.theme.TextBoxText
 @Composable
 fun IconTextInput(
     placeholder: String,
+    modifier: Modifier = Modifier,
     text: String = "",
     leadingIcon: @Composable () -> Unit,
     onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
     isError: Boolean = false,
     isPassword: Boolean = false,
     enabled: Boolean = true
 ) {
     BaseTextInput(
-        text = text,
         placeholder = placeholder,
-        onValueChanged = onValueChanged,
         modifier=modifier,
+        onValueChanged = onValueChanged,
+        text = text,
         leadingIcon = leadingIcon,
-        maxLines = 1,
         isError = isError,
-        isPassword = isPassword,
-        enabled = enabled
+        enabled = enabled,
+        isPassword = isPassword
     )
 }
 

@@ -41,7 +41,7 @@ fun UserAlt(
 }
 
 fun getColorByName(name: String) : Color{
-    val hash = Objects.hash(name)
+    val hash = Objects.hash(name.toUpperCase(Locale.current))
     val rng = Random(hash)
     return Color(
         red = rng.nextInt(100,255),
