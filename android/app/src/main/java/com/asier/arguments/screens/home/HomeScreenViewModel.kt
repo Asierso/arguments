@@ -1,6 +1,7 @@
 package com.asier.arguments.screens.home
 
 import android.util.Log
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -8,10 +9,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.utils.storage.LocalStorage
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
@@ -27,6 +30,8 @@ class HomeScreenViewModel : ViewModel() {
     //Inherited elements
     var storage by mutableStateOf<LocalStorage?>(null)
     var username by mutableStateOf("")
+
+    var lazyList = LazyListState()
 
     //Loading flags
     var firstLoaded by mutableStateOf(false)
@@ -47,6 +52,14 @@ class HomeScreenViewModel : ViewModel() {
         storage?.load("user")?.let {
             username = it
         }
+    }
+
+    fun loadSelfProfile(activityProperties: ActivityProperties){
+        activityProperties.navController.navigate(Screen.Profile.route)
+        pageRefreshing = true
+        pageLoading = false
+        page = 0
+        loadedDiscussions.clear()
     }
 
     fun reloadDiscussionsPage(scope: CoroutineScope){
@@ -87,6 +100,7 @@ class HomeScreenViewModel : ViewModel() {
 
                         pageLoading = false
                         pageRefreshing = false
+                        Log.d("debug","Page ${page} of ${totalPages}")
                     }
                 }
             }

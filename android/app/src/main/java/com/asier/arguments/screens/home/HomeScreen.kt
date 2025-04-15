@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
@@ -37,7 +38,7 @@ import com.asier.arguments.ui.theme.TopBarBackground
 @Composable
 fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewModel: HomeScreenViewModel){
     //List state used to make infinity scroll
-    val listState = rememberLazyListState()
+    val listState = homeScreenViewModel.lazyList
 
     //Scope to make fetch
     val scope = rememberCoroutineScope()
@@ -49,19 +50,19 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
     }
 
     //Change status bar color
-    if(activityProperties != null) {
-        activityProperties.window.let {
-            SideEffect {
-                WindowCompat.getInsetsController(it, it.decorView)
-                    .isAppearanceLightStatusBars = true
-                it.statusBarColor = TopBarBackground.toArgb()
-            }
+    activityProperties?.window?.let {
+        SideEffect {
+            WindowCompat.getInsetsController(it, it.decorView)
+                .isAppearanceLightStatusBars = true
+            it.statusBarColor = TopBarBackground.toArgb()
         }
     }
 
     ProfileTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),
-        profile = {UserAlt(name = homeScreenViewModel.username) { }})
+        profile = {UserAlt(name = homeScreenViewModel.username) {
+            homeScreenViewModel.loadSelfProfile(activityProperties!!)
+        }})
 
     val pullState = rememberPullToRefreshState()
 

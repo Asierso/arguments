@@ -12,6 +12,8 @@ import com.asier.arguments.screens.register.RegisterSecuenceViewModel
 import com.asier.arguments.screens.WelcomePage
 import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
+import com.asier.arguments.screens.profile.ProfileScreen
+import com.asier.arguments.screens.profile.ProfileScreenViewModel
 
 /**
  * Manage all the navigation flow in the application
@@ -30,6 +32,9 @@ fun AppNavGraph(activityProperties: ActivityProperties, modifier : Modifier, sta
         }
         composable(Screen.Home.route){
             HomeScreen(activityProperties, HomeScreenViewModel())
+        }
+        composable(Screen.Profile.route){
+            ProfileScreen(activityProperties, ProfileScreenViewModel())
         }
     }
 }

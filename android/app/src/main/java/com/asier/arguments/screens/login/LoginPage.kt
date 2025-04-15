@@ -42,13 +42,11 @@ fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: Lo
     val scope = rememberCoroutineScope()
 
     //Change status bar color
-    if(activityProperties != null) {
-        activityProperties.window.let {
-            SideEffect {
-                WindowCompat.getInsetsController(it, it.decorView)
-                    .isAppearanceLightStatusBars = true
-                it.statusBarColor = Background.toArgb()
-            }
+    activityProperties?.window?.let {
+        SideEffect {
+            WindowCompat.getInsetsController(it, it.decorView)
+                .isAppearanceLightStatusBars = true
+            it.statusBarColor = Background.toArgb()
         }
     }
 
