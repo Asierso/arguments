@@ -1,6 +1,8 @@
 package com.asier.arguments
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,9 +13,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.snackbars.BaseSnackbar
@@ -22,13 +27,13 @@ import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
+import com.asier.arguments.ui.theme.TopBarBackground
 import com.asier.arguments.utils.storage.LocalStorage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val snackbarState = SnackbarHostState()
-        val topBar : @Composable () -> Unit = {}
         enableEdgeToEdge()
 
         setContent {
@@ -53,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
                 } }) { innerPadding ->
                     Surface(color = Background) {
-                        MainScreen(modifier = Modifier.padding(innerPadding), snackbarState)
+                        MainScreen(modifier = Modifier.padding(innerPadding), snackbarState, window)
                     }
                 }
             }
@@ -62,13 +67,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState) {
+fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostState, window : Window) {
     //Define screen properties
     val navController = rememberNavController()
     val activityProperties = ActivityProperties(
         navController = navController,
         snackbarHostState = snackbarHostState,
-        storage = LocalStorage(LocalContext.current)
+        storage = LocalStorage(LocalContext.current),
+        window = window
     )
 
     AppNavGraph(

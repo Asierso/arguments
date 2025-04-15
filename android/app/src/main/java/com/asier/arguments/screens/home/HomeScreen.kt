@@ -9,15 +9,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
 import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
+import com.asier.arguments.ui.theme.TopBarBackground
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +32,15 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
     val scope = rememberCoroutineScope()
     homeScreenViewModel.storage = activityProperties?.storage
     homeScreenViewModel.loadUsername()
+
+    //Change status bar color
+    activityProperties?.window.let {
+        SideEffect {
+            WindowCompat.getInsetsController(it!!, it.decorView)
+                .isAppearanceLightStatusBars = true
+            it.statusBarColor = TopBarBackground.toArgb()
+        }
+    }
 
     ProfileTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),

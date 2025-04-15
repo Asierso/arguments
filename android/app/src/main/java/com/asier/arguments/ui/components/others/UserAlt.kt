@@ -32,7 +32,7 @@ fun UserAlt(
 
         contentAlignment = Alignment.Center){
         Text(
-            text = name.substring(0,2).toUpperCase(Locale.current),
+            text = if(name.length >= 2) name.substring(0,2).toUpperCase(Locale.current) else "",
             fontSize = 20.sp,
             color = Color.White,
             fontFamily = Montserrat,
