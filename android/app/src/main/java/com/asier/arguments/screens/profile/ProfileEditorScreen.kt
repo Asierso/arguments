@@ -3,8 +3,6 @@ package com.asier.arguments.screens.profile
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,27 +30,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
-import com.asier.arguments.Screen
 import com.asier.arguments.entities.User
-import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
-import com.asier.arguments.ui.components.buttons.BaseButton
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.WarnedButton
 import com.asier.arguments.ui.components.inputs.BaseTextInput
 import com.asier.arguments.ui.components.inputs.IconTextInput
-import com.asier.arguments.ui.components.others.IconValue
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.others.UserCard
-import com.asier.arguments.ui.components.progressbars.XpProgressBar
-import com.asier.arguments.ui.components.topbars.ProfileEditableTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
-import org.apache.commons.lang3.StringUtils
-import java.time.Duration
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -108,7 +98,7 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
             .padding(top = 10.dp, start = 10.dp, end = 10.dp)
     ){
         Text(
-            text ="Tu tarjeta de usuario",
+            text = stringResource(R.string.profile_user_card_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -143,21 +133,21 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
             .padding(20.dp)
     ) {
         Text(
-            text ="Descripción",
+            text = stringResource(R.string.profile_description_card_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
             fontSize = 28.sp
         )
         BaseTextInput(
-            placeholder = "Descripcion...",
+            placeholder = stringResource(R.string.profile_description_card_title) + "...",
             text = profileEditorScreenViewModel.description,
             onValueChanged = {profileEditorScreenViewModel.description = it},
             readOnly = false,
             minLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
-        PrimaryButton(text = "Actualizar",
+        PrimaryButton(text = stringResource(R.string.profile_update_button),
             modifier = modifier.fillMaxWidth(),
             onClick = {
                 //TODO update description
@@ -175,7 +165,7 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
             .padding(20.dp)
     ) {
         Text(
-            text ="Cuenta y acciones",
+            text = stringResource(R.string.profile_actions_card_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -183,7 +173,9 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(top = 20.dp).fillMaxWidth()) {
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .fillMaxWidth()) {
             //Firstname input
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
@@ -204,7 +196,7 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
                 },
                 placeholder = stringResource(R.string.register_lastname_field)
             )
-            //Password input (pw1)
+            //Password input
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
                 onValueChanged = {
@@ -217,13 +209,17 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
                 isPassword = true
             )
         }
-        PrimaryButton(text = "Actualizar",
-            modifier = modifier.fillMaxWidth().padding(top = 10.dp),
+        PrimaryButton(text = stringResource(R.string.profile_update_button),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
             onClick = {
                 //TODO update description
             })
-        WarnedButton(text = "Borrar cuenta",
-            modifier = modifier.fillMaxWidth().padding(top = 5.dp),
+        WarnedButton(text = stringResource(R.string.profile_delete_account_button),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp),
             onClick = {
                 //TODO update description
             })

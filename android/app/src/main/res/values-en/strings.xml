@@ -31,4 +31,10 @@
     <string name="register_passwordpolicy_strong">Strong password</string>
     <string name="register_passwordpolicy_invalid">Invalid password</string>
     <string name="register_userpolicy_error">Error verifying user</string>
+    <string name="profile_update_button">Update</string>
+    <string name="profile_delete_account_button">Delete account</string>
+    <string name="profile_actions_card_title">Actions and settings</string>
+    <string name="profile_description_card_title">Description</string>
+    <string name="profile_user_card_title">Your user card</string>
+    <string name="profile_discussions_history_title">Discussions history</string>
 </resources>

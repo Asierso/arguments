@@ -31,4 +31,10 @@
     <string name="register_passwordpolicy_strong">Contraseña robusta</string>
     <string name="register_passwordpolicy_invalid">Contraseña no válida</string>
     <string name="register_userpolicy_error">Error al verificar el usuario</string>
+    <string name="profile_update_button">Actualizar</string>
+    <string name="profile_delete_account_button">Borrar cuenta</string>
+    <string name="profile_actions_card_title">Cuenta y acciones</string>
+    <string name="profile_description_card_title">Descripcion</string>
+    <string name="profile_user_card_title">Tu tarjeta de usuario</string>
+    <string name="profile_discussions_history_title">Historial de debates</string>
 </resources>

@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.entities.User
@@ -165,7 +167,7 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier) {
             )
         }
         BaseTextInput(
-            placeholder = "Descripcion...",
+            placeholder = stringResource(R.string.profile_description_card_title) + "...",
             text = user.description,
             onValueChanged = {},
             readOnly = true,
@@ -184,7 +186,7 @@ fun DiscussionsHistory(modifier: Modifier = Modifier) {
             .padding(10.dp)
     ) {
         Text(
-            text = "Historial de debates",
+            text = stringResource(R.string.profile_discussions_history_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
