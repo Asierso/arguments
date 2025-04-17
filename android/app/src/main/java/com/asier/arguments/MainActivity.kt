@@ -13,12 +13,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.snackbars.BaseSnackbar
@@ -27,8 +24,8 @@ import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
-import com.asier.arguments.ui.theme.TopBarBackground
 import com.asier.arguments.utils.storage.LocalStorage
+import java.util.HashMap
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +71,8 @@ fun MainScreen(modifier: Modifier = Modifier, snackbarHostState: SnackbarHostSta
         navController = navController,
         snackbarHostState = snackbarHostState,
         storage = LocalStorage(LocalContext.current),
-        window = window
+        window = window,
+        parameters = HashMap()
     )
 
     AppNavGraph(

@@ -10,5 +10,6 @@ data class ActivityProperties(
  var navController: NavHostController,
  var snackbarHostState: SnackbarHostState,
  var storage: LocalStorage,
- var window: Window
+ var window: Window,
+ var parameters: HashMap<String, Any>
 )

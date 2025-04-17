@@ -61,7 +61,10 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
     ProfileTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),
         profile = {UserAlt(name = homeScreenViewModel.username) {
-            homeScreenViewModel.loadSelfProfile(activityProperties!!)
+            if(activityProperties != null){
+                activityProperties.parameters["viewProfile"] = homeScreenViewModel.username
+                homeScreenViewModel.loadSelfProfile(activityProperties)
+            }
         }})
 
     val pullState = rememberPullToRefreshState()
