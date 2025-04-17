@@ -1,6 +1,7 @@
 package com.asier.arguments.ui.components.others
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,12 +24,14 @@ import com.asier.arguments.ui.theme.TextBright0
 @Composable
 fun UserCard(
     user: User,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: ((user: User) -> Unit)? = null
 ){
     Row(
         modifier = modifier.clip(RoundedCornerShape(22.dp))
             .background(Tertiary)
-            .padding(start = 10.dp, end = 15.dp, top = 7.dp, bottom = 7.dp),
+            .padding(start = 10.dp, end = 15.dp, top = 7.dp, bottom = 7.dp)
+            .clickable { onClick?.invoke(user) },
         verticalAlignment = Alignment.CenterVertically) {
         UserAlt(name = user.username) {
             //TODO User page

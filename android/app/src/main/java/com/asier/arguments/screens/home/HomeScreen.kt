@@ -78,7 +78,12 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
             state = listState,
             modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
             itemsIndexed(items = homeScreenViewModel.loadedDiscussions.toList()) { index, item ->
-                DiscussionCard(discussion = item, modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp))
+                DiscussionCard(
+                    discussion = item,
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+                    onUsernameClick = {
+                        //TODO implement profile screen
+                    })
             }
         }
     }
