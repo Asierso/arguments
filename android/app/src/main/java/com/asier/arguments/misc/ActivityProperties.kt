@@ -7,5 +7,6 @@ import com.asier.arguments.utils.storage.LocalStorage
 data class ActivityProperties(
  var navController: NavHostController,
  var snackbarHostState: SnackbarHostState,
- var storage: LocalStorage
+ var storage: LocalStorage,
+ var parameters: HashMap<String, Any>
 )
