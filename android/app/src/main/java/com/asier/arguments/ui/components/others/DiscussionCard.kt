@@ -1,13 +1,11 @@
 package com.asier.arguments.ui.components.others
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,12 +25,12 @@ import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
 import java.time.Duration
-import java.time.LocalDateTime
 
 @Composable
 fun DiscussionCard(
     discussion: DiscussionThread,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onUsernameClick: ((user: User) -> Unit)? = null
 ){
     Column(modifier = modifier
         .clip(RoundedCornerShape(17.dp))
@@ -50,7 +48,9 @@ fun DiscussionCard(
             //Discussion author
             UserCard(User().apply {
                 username = discussion.author
-            },modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp).weight(.5f))
+            }, modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp).weight(.5f),
+                onClick = onUsernameClick
+            )
 
             //Discussion properties
             Box(modifier = Modifier.weight(.5f), contentAlignment = Alignment.CenterEnd) {
