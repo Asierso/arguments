@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.entities.User
 import com.asier.arguments.screens.ActivityProperties
@@ -73,7 +74,7 @@ fun ProfileScreen(
     }
 
     if(profileScreenViewModel.isSelf()){
-        SelfProfileScreen(profileScreenViewModel)
+        SelfProfileScreen(activityProperties,profileScreenViewModel)
     }else{
         ForeignProfileScreen(profileScreenViewModel)
     }
@@ -82,13 +83,12 @@ fun ProfileScreen(
 }
 
 @Composable
-fun SelfProfileScreen(profileScreenViewModel: ProfileScreenViewModel){
+fun SelfProfileScreen(activityProperties: ActivityProperties, profileScreenViewModel: ProfileScreenViewModel){
     ProfileEditableTopBar(title = profileScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
-        onEdit = {},
+        onEdit = { activityProperties.navController.navigate(Screen.ProfileEdit.route)},
         profile = {
-            UserAlt(name = profileScreenViewModel.userData!!.username) {
-            }
+            UserAlt(name = profileScreenViewModel.userData!!.username) {}
         })
 
     Column(
@@ -134,7 +134,7 @@ fun ForeignProfileScreen(profileScreenViewModel: ProfileScreenViewModel){
 fun UserDetailCard(user: User, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(12.dp))
             .fillMaxWidth()
             .background(CardBackground)
             .padding(10.dp)

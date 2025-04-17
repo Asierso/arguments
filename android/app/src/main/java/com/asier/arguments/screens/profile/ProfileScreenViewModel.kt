@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.api.users.UsersService
 import com.asier.arguments.entities.User
@@ -29,9 +30,9 @@ class ProfileScreenViewModel : ViewModel() {
         return userData?.username == storage?.load("user")
     }
 
-    fun loadUserData(parameters : ActivityParameters, scope: CoroutineScope){
+    fun loadUserData(parameters: ActivityParameters, scope: CoroutineScope) {
         //Check if user data is already loaded
-        if(isAlreadyLoaded)
+        if (isAlreadyLoaded)
             return
         isAlreadyLoaded = true
 
@@ -41,18 +42,20 @@ class ProfileScreenViewModel : ViewModel() {
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 val response = UsersService.getByUsername(consultedUser.toString())
-                try{
-                if(StatusCodes.valueOf(response!!.status) == StatusCodes.SUCCESSFULLY){
-                    withContext(Dispatchers.Main){
-                        userData = GsonUtils.jsonToClass(response.result as LinkedTreeMap<*, *>)
-                    }
+                try {
+                    if (StatusCodes.valueOf(response!!.status) == StatusCodes.SUCCESSFULLY) {
+                        withContext(Dispatchers.Main) {
+                            userData = GsonUtils.jsonToClass(response.result as LinkedTreeMap<*, *>)
+                        }
 
-                    delay(500)
-                    withContext(Dispatchers.Main){
-                        parameters.isLoading = false
+                        delay(500)
+                        withContext(Dispatchers.Main) {
+                            parameters.isLoading = false
+                        }
                     }
-                }}catch (e : Exception){
-
+                } catch (e: Exception) {
+                    //Navigate to home
+                    parameters.properties.navController.navigate(Screen.Home.route)
                 }
             }
         }

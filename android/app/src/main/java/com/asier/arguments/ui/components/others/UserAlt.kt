@@ -25,9 +25,10 @@ import kotlin.random.Random
 @Composable
 fun UserAlt(
     name: String,
+    modifier: Modifier = Modifier,
     actions: () -> Unit){
     Box(
-        modifier = Modifier.clip(RoundedCornerShape(100.dp)).width(50.dp).height(50.dp).clickable { actions() }
+        modifier = modifier.clip(RoundedCornerShape(100.dp)).width(50.dp).height(50.dp).clickable { actions() }
             .background(getColorByName(name)),
 
         contentAlignment = Alignment.Center){
