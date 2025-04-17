@@ -1,5 +1,7 @@
 package com.asier.arguments.screens.login
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
@@ -36,13 +41,18 @@ import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 
+@SuppressLint("ContextCastToActivity")
 @Composable
-fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: LoginViewModel) {
+fun LoginPage(loginViewModel: LoginViewModel) {
     //Coroutine scope
     val scope = rememberCoroutineScope()
 
+    //Activity parameters vm load
+    val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
+    val activityProperties: ActivityProperties = parameters.properties
+
     //Change status bar color
-    activityProperties?.window?.let {
+    activityProperties.window.let {
         SideEffect {
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = true
@@ -93,7 +103,7 @@ fun LoginPage(activityProperties: ActivityProperties? = null, loginViewModel: Lo
             Row(modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 20.dp)
-                .clickable { activityProperties?.navController?.navigate(Screen.Register.route) },
+                .clickable { activityProperties.navController.navigate(Screen.Register.route) },
                 verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "${stringResource(R.string.without_registered_text)} ",

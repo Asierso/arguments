@@ -34,7 +34,6 @@ class HomeScreenViewModel : ViewModel() {
     var lazyList = LazyListState()
 
     //Loading flags
-    var firstLoaded by mutableStateOf(false)
     var pageLoading by mutableStateOf(false)
     var pageRefreshing by mutableStateOf(false)
 

@@ -1,5 +1,7 @@
 package com.asier.arguments.screens
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,12 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.ui.components.buttons.PrimaryButton
@@ -25,8 +29,12 @@ import com.asier.arguments.ui.components.buttons.SecondaryButton
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 
+@SuppressLint("ContextCastToActivity")
 @Composable
-fun WelcomePage(activityProperties: ActivityProperties? = null){
+fun WelcomePage(){
+    //Activity parameters vm load
+    val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
+
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         //Welcome title
         Column(verticalArrangement = Arrangement.Center) {
@@ -51,12 +59,12 @@ fun WelcomePage(activityProperties: ActivityProperties? = null){
         Column(verticalArrangement = Arrangement.Center) {
             PrimaryButton(
                 text = stringResource(R.string.login_button),
-                onClick = { activityProperties?.navController?.navigate(Screen.Login.route) },
+                onClick = { parameters.properties.navController.navigate(Screen.Login.route) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp))
             SecondaryButton(
                 text = stringResource(R.string.create_account_button),
-                onClick = { activityProperties?.navController?.navigate(Screen.Register.route) },
+                onClick = { parameters.properties.navController.navigate(Screen.Register.route) },
                 modifier = Modifier.fillMaxWidth().padding(50.dp,10.dp),
                 padding = PaddingValues(5.dp,15.dp)
             )

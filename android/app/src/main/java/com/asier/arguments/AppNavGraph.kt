@@ -1,10 +1,14 @@
 package com.asier.arguments
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.home.HomeScreen
 import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
@@ -18,23 +22,27 @@ import com.asier.arguments.screens.profile.ProfileScreenViewModel
 /**
  * Manage all the navigation flow in the application
  */
+@SuppressLint("ContextCastToActivity")
 @Composable
-fun AppNavGraph(activityProperties: ActivityProperties, modifier : Modifier, start: Screen = Screen.Welcome) {
-    NavHost(navController = activityProperties.navController, startDestination = start.route, modifier = modifier){
+fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
+    //Activity parameters vm load
+    val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
+
+    NavHost(navController = parameters.properties.navController, startDestination = start.route, modifier = modifier){
         composable(Screen.Welcome.route){
-            WelcomePage(activityProperties)
+            WelcomePage()
         }
         composable(Screen.Login.route){
-            LoginPage(activityProperties, LoginViewModel())
+            LoginPage(LoginViewModel())
         }
         composable(Screen.Register.route){
-            RegisterSecuenceScreen(activityProperties, RegisterSecuenceViewModel())
+            RegisterSecuenceScreen(RegisterSecuenceViewModel())
         }
         composable(Screen.Home.route){
-            HomeScreen(activityProperties, HomeScreenViewModel())
+            HomeScreen(HomeScreenViewModel())
         }
         composable(Screen.Profile.route){
-            ProfileScreen(activityProperties, ProfileScreenViewModel())
+            ProfileScreen(ProfileScreenViewModel())
         }
     }
 }

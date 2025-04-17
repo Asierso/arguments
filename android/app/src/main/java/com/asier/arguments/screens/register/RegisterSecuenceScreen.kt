@@ -1,5 +1,7 @@
 package com.asier.arguments.screens.register
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
@@ -43,16 +48,20 @@ import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright0
 import org.apache.commons.lang3.StringUtils
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun RegisterSecuenceScreen(
-    activityProperties: ActivityProperties?,
     registerViewModel: RegisterSecuenceViewModel
 ) {
     //Scope to make fetch
     val scope = rememberCoroutineScope()
 
+    //Activity parameters vm load
+    val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
+    val activityProperties: ActivityProperties = parameters.properties
+
     //Change status bar color
-    activityProperties?.window?.let {
+    activityProperties.window.let {
         SideEffect {
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = true
@@ -93,7 +102,7 @@ fun RegisterSecuenceScreen(
                         registerViewModel.step = 1
                     },
                     loginTextActions = {
-                        activityProperties?.navController?.navigate(Screen.Login.route)
+                        activityProperties.navController.navigate(Screen.Login.route)
                     })
             }
 
@@ -122,7 +131,7 @@ fun RegisterSecuenceScreen(
                         }
                     },
                     loginTextActions = {
-                        activityProperties?.navController?.navigate(Screen.Login.route)
+                        activityProperties.navController.navigate(Screen.Login.route)
                     })
             }
 
@@ -147,7 +156,7 @@ fun RegisterSecuenceScreen(
                         }
                     },
                     loginTextActions = {
-                        activityProperties?.navController?.navigate(Screen.Login.route)
+                        activityProperties.navController.navigate(Screen.Login.route)
                     }
                 )
             }
@@ -195,9 +204,9 @@ fun RegisterScreenHeader(title: String, subtitle: String, icon: Painter) {
             text = title,
             fontWeight = FontWeight.SemiBold,
             fontFamily = Montserrat,
-            fontSize = 36.sp,
+            fontSize = 30.sp,
             color = TextBright0,
-            modifier = Modifier.padding(top = 20.dp)
+            modifier = Modifier.padding(top = 10.dp)
         )
         Text(
             text = subtitle,
@@ -398,7 +407,7 @@ fun RegisterScreenButtons(nextButtonActions: () -> Unit, loginTextActions: () ->
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen0Preview() {
-    RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
         step = 0
     })
 }
@@ -406,7 +415,7 @@ fun RegisterSecuenceScreen0Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen1Preview() {
-    RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
         step = 1
     })
 }
@@ -414,7 +423,7 @@ fun RegisterSecuenceScreen1Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen2Preview() {
-    RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen(registerViewModel = RegisterSecuenceViewModel().apply {
         step = 2
     })
 }
@@ -422,7 +431,7 @@ fun RegisterSecuenceScreen2Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen3Preview() {
-    RegisterSecuenceScreen(null, registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
         step = 3
     })
 }

@@ -1,10 +1,11 @@
 package com.asier.arguments.screens.profile
 
+import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,11 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.entities.User
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.BaseTextInput
@@ -34,13 +38,23 @@ import com.asier.arguments.ui.theme.TextBright1
 import com.asier.arguments.ui.theme.TopBarBackground
 import org.apache.commons.lang3.StringUtils
 
+@SuppressLint("ContextCastToActivity")
 @Composable
-fun ProfileScreen(activityProperties: ActivityProperties? = null, profileScreenViewModel: ProfileScreenViewModel){
+fun ProfileScreen(
+    profileScreenViewModel: ProfileScreenViewModel
+) {
     //Scope to make fetch
     val scope = rememberCoroutineScope()
-    profileScreenViewModel.storage = activityProperties?.storage
-    profileScreenViewModel.loadUsername()
-    profileScreenViewModel.loadUserData(activityProperties!!,scope)
+
+    //Activity parameters vm load
+    val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
+    val activityProperties: ActivityProperties = parameters.properties
+
+    //Load storage in screen view model
+    profileScreenViewModel.storage = activityProperties.storage
+
+    //Try to load user data
+    profileScreenViewModel.loadUserData(parameters, scope)
 
     //Change status bar color
     activityProperties.window.let {
@@ -51,27 +65,41 @@ fun ProfileScreen(activityProperties: ActivityProperties? = null, profileScreenV
         }
     }
 
-    ProfileTopBar(title = profileScreenViewModel.username,
+    //Deny to charge ui if userdata is null
+    if(profileScreenViewModel.userData == null){
+        parameters.isLoading = true
+        return
+    }
+
+
+    ProfileTopBar(title = profileScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
         profile = {
-            UserAlt(name = profileScreenViewModel.username) {
-        }
+            UserAlt(name = profileScreenViewModel.userData!!.username) {
+            }
         })
 
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-            .padding(top = 90.dp)) {
-        UserDetailCard(user = profileScreenViewModel.userData?: User(), modifier = Modifier.padding(10.dp))
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 90.dp)
+    ) {
+        UserDetailCard(
+            user = profileScreenViewModel.userData ?: User(),
+            modifier = Modifier.padding(10.dp)
+        )
         DiscussionsHistory()
     }
+
 }
 
 @Composable
-fun UserDetailCard(user: User, modifier: Modifier = Modifier){
+fun UserDetailCard(user: User, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.clip(RoundedCornerShape(10.dp))
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
             .fillMaxWidth()
             .background(CardBackground)
             .padding(10.dp)
@@ -79,7 +107,7 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier){
         //Name and level
         Column(modifier = Modifier.padding(start = 5.dp)) {
             Text(
-                text = StringUtils.join(listOf(user.firstname,user.lastname)," "),
+                text = StringUtils.join(listOf(user.firstname, user.lastname), " "),
                 fontFamily = Montserrat,
                 fontWeight = FontWeight.SemiBold,
                 color = TextBright1,
@@ -113,10 +141,13 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun DiscussionsHistory(modifier: Modifier = Modifier){
-    Column(modifier = modifier.fillMaxWidth()
-        .background(CardBackground)
-        .padding(10.dp)) {
+fun DiscussionsHistory(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(CardBackground)
+            .padding(10.dp)
+    ) {
         Text(
             text = "Historial de debates",
             fontFamily = Montserrat,
@@ -130,26 +161,28 @@ fun DiscussionsHistory(modifier: Modifier = Modifier){
 
 @Composable
 @Preview
-fun DiscussionsHistoryPreview(){
+fun DiscussionsHistoryPreview() {
     DiscussionsHistory()
 }
 
 @Composable
 @Preview
-fun UserDetailCardPreview(){
-    UserDetailCard(User(
-        firstname = "Dummy",
-        lastname = "Dummy",
-        username = "dummy",
-        level = 12,
-        xp = 60,
-        description = "Hello world, I'm dummy"
-    ))
+fun UserDetailCardPreview() {
+    UserDetailCard(
+        User(
+            firstname = "Dummy",
+            lastname = "Dummy",
+            username = "dummy",
+            level = 12,
+            xp = 60,
+            description = "Hello world, I'm dummy"
+        )
+    )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun ProfileScreenPreview(){
+fun ProfileScreenPreview() {
     ProfileScreen(profileScreenViewModel = ProfileScreenViewModel())
 }
 
