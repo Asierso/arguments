@@ -82,7 +82,10 @@ fun HomeScreen(activityProperties: ActivityProperties? = null, homeScreenViewMod
                     discussion = item,
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
-                        //TODO implement profile screen
+                        if(activityProperties != null){
+                            activityProperties.parameters["viewProfile"] = homeScreenViewModel.username
+                            homeScreenViewModel.loadSelfProfile(activityProperties)
+                        }
                     })
             }
         }

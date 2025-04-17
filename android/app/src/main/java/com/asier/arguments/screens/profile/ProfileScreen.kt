@@ -43,7 +43,7 @@ fun ProfileScreen(activityProperties: ActivityProperties? = null, profileScreenV
     profileScreenViewModel.loadUserData(activityProperties!!,scope)
 
     //Change status bar color
-    activityProperties?.window?.let {
+    activityProperties.window.let {
         SideEffect {
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = true
@@ -64,6 +64,7 @@ fun ProfileScreen(activityProperties: ActivityProperties? = null, profileScreenV
         modifier = Modifier.fillMaxSize()
             .padding(top = 90.dp)) {
         UserDetailCard(user = profileScreenViewModel.userData?: User(), modifier = Modifier.padding(10.dp))
+        DiscussionsHistory()
     }
 }
 
@@ -108,10 +109,29 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier){
             minLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
-
-
-
     }
+}
+
+@Composable
+fun DiscussionsHistory(modifier: Modifier = Modifier){
+    Column(modifier = modifier.fillMaxWidth()
+        .background(CardBackground)
+        .padding(10.dp)) {
+        Text(
+            text = "Historial de debates",
+            fontFamily = Montserrat,
+            fontWeight = FontWeight.SemiBold,
+            color = TextBright1,
+            fontSize = 20.sp
+        )
+        Text(text = "Work in progress...")
+    }
+}
+
+@Composable
+@Preview
+fun DiscussionsHistoryPreview(){
+    DiscussionsHistory()
 }
 
 @Composable
