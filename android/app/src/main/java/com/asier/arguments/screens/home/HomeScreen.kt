@@ -48,12 +48,12 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
 
     //Scope to make fetch
     val scope = rememberCoroutineScope()
-    homeScreenViewModel.storage = activityProperties?.storage
+    homeScreenViewModel.storage = activityProperties.storage
 
     homeScreenViewModel.loadUsername()
 
     //Change status bar color
-    activityProperties?.window?.let {
+    activityProperties.window.let {
         SideEffect {
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = true
@@ -65,7 +65,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
         modifier = Modifier.fillMaxWidth(),
         profile = {UserAlt(name = homeScreenViewModel.username) {
                 parameters.viewProfile = homeScreenViewModel.username
-                homeScreenViewModel.loadSelfProfile(activityProperties!!)
+                homeScreenViewModel.loadProfile(activityProperties)
         }})
 
     val pullState = rememberPullToRefreshState()
@@ -83,10 +83,8 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                     discussion = item,
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
-                        if(activityProperties != null){
-                            parameters.viewProfile = homeScreenViewModel.username
-                            homeScreenViewModel.loadSelfProfile(activityProperties)
-                        }
+                        parameters.viewProfile = it.username
+                        homeScreenViewModel.loadProfile(activityProperties)
                     })
             }
         }

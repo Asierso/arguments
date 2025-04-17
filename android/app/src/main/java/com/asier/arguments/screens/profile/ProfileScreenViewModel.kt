@@ -20,11 +20,14 @@ import kotlinx.coroutines.withContext
 class ProfileScreenViewModel : ViewModel() {
     //Inherited elements
     var storage by mutableStateOf<LocalStorage?>(null)
-    var username by mutableStateOf("")
     var isAlreadyLoaded by mutableStateOf(false)
 
     //Consulted user data
     var userData by mutableStateOf<User?>(null)
+
+    fun isSelf() : Boolean{
+        return userData?.username == storage?.load("user")
+    }
 
     fun loadUserData(parameters : ActivityParameters, scope: CoroutineScope){
         //Check if user data is already loaded

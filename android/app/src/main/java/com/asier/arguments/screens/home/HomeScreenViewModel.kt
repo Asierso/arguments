@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.entities.DiscussionThread
+import com.asier.arguments.entities.User
 import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.screens.ActivityProperties
@@ -52,8 +53,8 @@ class HomeScreenViewModel : ViewModel() {
             username = it
         }
     }
-
-    fun loadSelfProfile(activityProperties: ActivityProperties){
+    
+    fun loadProfile(activityProperties: ActivityProperties){
         activityProperties.navController.navigate(Screen.Profile.route)
         pageRefreshing = true
         pageLoading = false

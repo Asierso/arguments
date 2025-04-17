@@ -34,7 +34,7 @@ fun UserCard(
             .clickable { onClick?.invoke(user) },
         verticalAlignment = Alignment.CenterVertically) {
         UserAlt(name = user.username) {
-            //TODO User page
+            onClick?.invoke(user)
         }
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             Text(

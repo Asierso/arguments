@@ -31,6 +31,7 @@ import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.BaseTextInput
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.progressbars.XpProgressBar
+import com.asier.arguments.ui.components.topbars.ProfileEditableTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
@@ -71,7 +72,42 @@ fun ProfileScreen(
         return
     }
 
+    if(profileScreenViewModel.isSelf()){
+        SelfProfileScreen(profileScreenViewModel)
+    }else{
+        ForeignProfileScreen(profileScreenViewModel)
+    }
 
+
+}
+
+@Composable
+fun SelfProfileScreen(profileScreenViewModel: ProfileScreenViewModel){
+    ProfileEditableTopBar(title = profileScreenViewModel.userData!!.username,
+        modifier = Modifier.fillMaxWidth(),
+        onEdit = {},
+        profile = {
+            UserAlt(name = profileScreenViewModel.userData!!.username) {
+            }
+        })
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 90.dp)
+    ) {
+        UserDetailCard(
+            user = profileScreenViewModel.userData ?: User(),
+            modifier = Modifier.padding(10.dp)
+        )
+        DiscussionsHistory()
+    }
+}
+
+@Composable
+fun ForeignProfileScreen(profileScreenViewModel: ProfileScreenViewModel){
     ProfileTopBar(title = profileScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
         profile = {
@@ -92,7 +128,6 @@ fun ProfileScreen(
         )
         DiscussionsHistory()
     }
-
 }
 
 @Composable
@@ -179,10 +214,3 @@ fun UserDetailCardPreview() {
         )
     )
 }
-
-@Composable
-@Preview(showSystemUi = true)
-fun ProfileScreenPreview() {
-    ProfileScreen(profileScreenViewModel = ProfileScreenViewModel())
-}
-
