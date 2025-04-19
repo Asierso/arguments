@@ -113,7 +113,7 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
-            fontSize = 28.sp
+            fontSize = 24.sp
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             //Discussion author
@@ -149,7 +149,7 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
-            fontSize = 28.sp
+            fontSize = 24.sp
         )
         BaseTextInput(
             placeholder = stringResource(R.string.profile_description_card_title) + "...",
@@ -186,12 +186,12 @@ fun UserEditableActionsCard(
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
-            fontSize = 28.sp,
+            fontSize = 24.sp,
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(top = 10.dp)
                 .fillMaxWidth()) {
             //Firstname input
             IconTextInput(
