@@ -8,5 +8,5 @@ import retrofit2.http.Query
 
 interface ApiSync {
     @POST("auth/sync")
-    fun sync(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    suspend fun sync(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

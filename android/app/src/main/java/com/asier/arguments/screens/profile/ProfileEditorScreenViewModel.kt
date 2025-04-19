@@ -61,4 +61,13 @@ class ProfileEditorScreenViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateUserData(parameters: ActivityParameters, scope: CoroutineScope){
+        scope.launch {
+
+            CoroutineScope(Dispatchers.IO).launch {
+                
+            }
+        }
+    }
 }

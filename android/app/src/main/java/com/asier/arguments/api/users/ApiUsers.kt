@@ -6,6 +6,7 @@ import com.asier.arguments.utils.Globals
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -19,4 +20,7 @@ interface ApiUsers {
 
     @GET("users/id/{userId}")
     suspend fun getById(@Path(value = "userId", encoded = true) userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+
+    @PATCH("auth/users/username/{username}")
+    suspend fun updateByName(@Path(value = "username", encoded = true) username : String, @Body user: UserCreatorDto, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

@@ -8,4 +8,5 @@ interface ApiUsersService {
     suspend fun register(user: UserCreatorDto) : ServiceResponse?
     suspend fun getByUsername(username : String) : ServiceResponse?
     suspend fun getById(userId : String) : ServiceResponse?
+    suspend fun updateByName(username: String, user: UserCreatorDto) : ServiceResponse?
 }

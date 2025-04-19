@@ -14,6 +14,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +33,8 @@ import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.utils.storage.LocalStorage
+import com.asier.arguments.utils.tasks.SyncTask
+import com.asier.arguments.utils.tasks.TasksUtils
 
 class MainActivity : ComponentActivity() {
     private lateinit var parameters: ActivityParameters
@@ -80,6 +84,7 @@ class MainActivity : ComponentActivity() {
     ) {
         //Define screen properties
         val navController = rememberNavController()
+        val scope = rememberCoroutineScope()
 
         //This properties are for composable stuff and utils that works as singleton (just one per app instance)
         val activityProperties = ActivityProperties(
@@ -102,6 +107,15 @@ class MainActivity : ComponentActivity() {
         //Load overlay
         if (parameters.isLoading) {
             LoadingOverlay()
+        }
+
+        //Load cron tasks just once
+        LaunchedEffect(Unit) {
+            TasksUtils.executeAtCron(
+                action = SyncTask(),
+                parameters = activityProperties.storage,
+                scope = scope,
+                delay = 10)
         }
     }
 

@@ -20,4 +20,8 @@ object UsersService : ApiUsersService {
     override suspend fun getById(userId: String): ServiceResponse? {
         return RetrofitUtils.getResponse(ApiServices.UsersService.getById(userId = userId))
     }
+
+    override suspend fun updateByName(username: String, user: UserCreatorDto): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.UsersService.updateByName(username = username, user = user))
+    }
 }
