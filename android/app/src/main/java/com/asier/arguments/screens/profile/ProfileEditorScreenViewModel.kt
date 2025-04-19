@@ -82,23 +82,26 @@ class ProfileEditorScreenViewModel : ViewModel() {
                 //Build user modifiable POJO with wrote data
                 val userDto = UserModifiableDto(
                     user = UserModifiable(
-                        firstname = if(firstname.isBlank()) null else firstname,
-                        lastname = if(lastname.isBlank()) null else lastname,
+                        firstname = if (firstname.isBlank()) null else firstname,
+                        lastname = if (lastname.isBlank()) null else lastname,
                         description = null
                     ),
-                    credentials = if(password.isBlank()) null else UserModifiableCredentials(
+                    credentials = if (password.isBlank()) null else UserModifiableCredentials(
                         password = password
                     )
                 )
 
-                //Make update
-                val result = UsersService.updateByName(
-                    localStorage = storage!!,
-                    user = userDto,
-                    username = storage!!.load("user").toString())
+                if (password.isBlank() || checkPasswords() == PasswordPolicyCodes.STRONG) {
+                    //Make update
+                    val result = UsersService.updateByName(
+                        localStorage = storage!!,
+                        user = userDto,
+                        username = storage!!.load("user").toString()
+                    )
 
-                //Process response to show correspond snackbar
-                showResponseMessage(StatusCodes.valueOf(result!!.status), parameters.properties)
+                    //Process response to show correspond snackbar
+                    showResponseMessage(StatusCodes.valueOf(result!!.status), parameters.properties)
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.utils.storage.LocalStorage
 import com.google.gson.GsonBuilder
@@ -63,22 +64,25 @@ class HomeScreenViewModel : ViewModel() {
         loadedDiscussions.clear()
     }
 
-    fun reloadDiscussionsPage(activityProperties: ActivityProperties, scope: CoroutineScope){
+    fun reloadDiscussionsPage(parameters: ActivityParameters, scope: CoroutineScope){
         pageRefreshing = true
         pageLoading = false
         page = 0
 
         loadedDiscussions.clear()
 
-        loadNextDiscussionsPage(activityProperties, scope)
+        loadNextDiscussionsPage(parameters, scope)
     }
 
-    fun loadNextDiscussionsPage(activityProperties: ActivityProperties, scope: CoroutineScope){
+    fun loadNextDiscussionsPage(parameters: ActivityParameters, scope: CoroutineScope){
         //Stop loading if is loading or page limit reached
         if(pageLoading || page >= totalPages)
             return
 
         pageLoading = true
+
+        val activityProperties = parameters.properties
+
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 //If there's no bearer token, omit load (avoid null pointer at logout)
@@ -120,6 +124,7 @@ class HomeScreenViewModel : ViewModel() {
 
                             pageLoading = false
                             pageRefreshing = false
+
                             Log.d("debug", "Page ${page} of ${totalPages}")
                         }
                     }

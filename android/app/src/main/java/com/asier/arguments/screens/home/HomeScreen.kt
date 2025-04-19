@@ -39,6 +39,10 @@ import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.TopBarBackground
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +60,17 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
     homeScreenViewModel.storage = activityProperties.storage
 
     homeScreenViewModel.loadUsername()
+
+    //Show overlay for few time when screen is changing
+    LaunchedEffect(Unit) {
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                parameters.isLoading = true
+                delay(500)
+                parameters.isLoading = false
+            }
+        }
+    }
 
     //Change status bar color
     activityProperties.window.let {
@@ -81,7 +96,14 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
     val pullState = rememberPullToRefreshState()
 
     PullToRefreshBox(state = pullState, isRefreshing = homeScreenViewModel.pageRefreshing, onRefresh = {
-        homeScreenViewModel.reloadDiscussionsPage(activityProperties,scope)
+        homeScreenViewModel.reloadDiscussionsPage(parameters,scope)
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                parameters.isLoading = true
+                delay(600)
+                parameters.isLoading = false
+            }
+        }
     }) {
         LazyColumn(
             verticalArrangement = Arrangement.Top,
@@ -108,7 +130,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                 val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
 
                 if (lastVisibleIndex >= totalItems - 1) {
-                   homeScreenViewModel.loadNextDiscussionsPage(activityProperties, scope)
+                   homeScreenViewModel.loadNextDiscussionsPage(parameters, scope)
                 }
             }
     }

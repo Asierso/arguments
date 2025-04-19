@@ -223,6 +223,7 @@ fun UserEditableActionsCard(
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_key), contentDescription = null)
                 },
+                isError = profileEditorScreenViewModel.password.isNotBlank() && profileEditorScreenViewModel.checkPasswords() != PasswordPolicyCodes.STRONG,
                 placeholder = stringResource(R.string.password_field),
                 isPassword = true
             )
