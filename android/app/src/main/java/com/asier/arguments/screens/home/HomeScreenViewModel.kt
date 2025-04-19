@@ -10,9 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
+import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.api.discussions.DiscussionsService
+import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.entities.DiscussionThread
-import com.asier.arguments.entities.User
 import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.screens.ActivityProperties
@@ -62,15 +63,17 @@ class HomeScreenViewModel : ViewModel() {
         loadedDiscussions.clear()
     }
 
-    fun reloadDiscussionsPage(scope: CoroutineScope){
+    fun reloadDiscussionsPage(activityProperties: ActivityProperties, scope: CoroutineScope){
         pageRefreshing = true
         pageLoading = false
         page = 0
+
         loadedDiscussions.clear()
-        loadNextDiscussionsPage(scope)
+
+        loadNextDiscussionsPage(activityProperties, scope)
     }
 
-    fun loadNextDiscussionsPage(scope: CoroutineScope){
+    fun loadNextDiscussionsPage(activityProperties: ActivityProperties, scope: CoroutineScope){
         //Stop loading if is loading or page limit reached
         if(pageLoading || page >= totalPages)
             return
@@ -78,31 +81,57 @@ class HomeScreenViewModel : ViewModel() {
         pageLoading = true
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                val result = DiscussionsService.getDiscussionsByPage(storage!!,page)
+                //If there's no bearer token, omit load (avoid null pointer at logout)
+                if(storage!!.load("auth") != null) {
+                    val result = DiscussionsService.getDiscussionsByPage(storage!!, page)
 
-                if(result?.status?.let { StatusCodes.valueOf(it) } == StatusCodes.SUCCESSFULLY){
-                    //Parse pagination to get discussions
-                    val gson =  GsonBuilder()
-                        .registerTypeAdapter(LocalDateTime::class.java, JsonDeserializer { json, _, _ ->
-                            LocalDateTime.parse(json.asString)
-                        })
-                        .create()
-                    val resultJson = gson.toJson(result.result as LinkedTreeMap<*,*>)
-                    val type = object : TypeToken<PageResponse<DiscussionThread>>() {}.type
-                    val resultPage = gson.fromJson<PageResponse<DiscussionThread>>(resultJson, type)
+                    when (result?.status?.let { StatusCodes.valueOf(it) }) {
+                        StatusCodes.UNAUTHORIZED_AUTH -> {
+                            storage!!.delete("auth")
+                            storage!!.delete("user")
+                            withContext(Dispatchers.Main) {
+                                activityProperties.navController.navigate(Screen.Login.route)
+                            }
+                        }
 
-                    //Update states
-                    withContext(Dispatchers.Main) {
-                        totalElements = resultPage.totalElements
-                        totalPages = resultPage.totalPages
-                        page += 1
-                        loadedDiscussions.addAll(resultPage.content)
+                        else -> {}
+                    }
 
-                        pageLoading = false
-                        pageRefreshing = false
-                        Log.d("debug","Page ${page} of ${totalPages}")
+                    if (result?.status?.let { StatusCodes.valueOf(it) } == StatusCodes.SUCCESSFULLY) {
+                        //Parse pagination to get discussions
+                        val gson = GsonBuilder()
+                            .registerTypeAdapter(
+                                LocalDateTime::class.java,
+                                JsonDeserializer { json, _, _ ->
+                                    LocalDateTime.parse(json.asString)
+                                })
+                            .create()
+                        val resultJson = gson.toJson(result.result as LinkedTreeMap<*, *>)
+                        val type = object : TypeToken<PageResponse<DiscussionThread>>() {}.type
+                        val resultPage =
+                            gson.fromJson<PageResponse<DiscussionThread>>(resultJson, type)
+
+                        //Update states
+                        withContext(Dispatchers.Main) {
+                            totalElements = resultPage.totalElements
+                            totalPages = resultPage.totalPages
+                            page += 1
+                            loadedDiscussions.addAll(resultPage.content)
+
+                            pageLoading = false
+                            pageRefreshing = false
+                            Log.d("debug", "Page ${page} of ${totalPages}")
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    fun logout(activityProperties: ActivityProperties, scope: CoroutineScope){
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                AuthFacade.logout(activityProperties)
             }
         }
     }

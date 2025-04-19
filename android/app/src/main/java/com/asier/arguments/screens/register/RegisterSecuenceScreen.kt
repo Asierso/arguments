@@ -51,7 +51,7 @@ import org.apache.commons.lang3.StringUtils
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun RegisterSecuenceScreen(
-    registerViewModel: RegisterSecuenceViewModel
+    registerViewModel: RegisterSequenceViewModel
 ) {
     //Scope to make fetch
     val scope = rememberCoroutineScope()
@@ -224,7 +224,7 @@ fun RegisterScreenHeader(title: String, subtitle: String, icon: Painter) {
  * This body corresponds to firstname and lastname input
  */
 @Composable
-fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
+fun RegisterScreenBody0(registerViewModel: RegisterSequenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
         //Firstname input
         IconTextInput(
@@ -256,7 +256,7 @@ fun RegisterScreenBody0(registerViewModel: RegisterSecuenceViewModel) {
  */
 @Composable
 fun RegisterScreenBody1(
-    registerViewModel: RegisterSecuenceViewModel,
+    registerViewModel: RegisterSequenceViewModel,
     activityProperties: ActivityProperties?
 ) {
     val scope = rememberCoroutineScope()
@@ -313,7 +313,7 @@ fun RegisterScreenBody1(
  * This body corresponds to password input
  */
 @Composable
-fun RegisterScreenBody2(registerViewModel: RegisterSecuenceViewModel) {
+fun RegisterScreenBody2(registerViewModel: RegisterSequenceViewModel) {
     Column(verticalArrangement = Arrangement.Center) {
         //Password input (pw1)
         IconTextInput(
@@ -407,7 +407,7 @@ fun RegisterScreenButtons(nextButtonActions: () -> Unit, loginTextActions: () ->
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen0Preview() {
-    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSequenceViewModel().apply {
         step = 0
     })
 }
@@ -415,7 +415,7 @@ fun RegisterSecuenceScreen0Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen1Preview() {
-    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSequenceViewModel().apply {
         step = 1
     })
 }
@@ -423,7 +423,7 @@ fun RegisterSecuenceScreen1Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen2Preview() {
-    RegisterSecuenceScreen(registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen(registerViewModel = RegisterSequenceViewModel().apply {
         step = 2
     })
 }
@@ -431,7 +431,7 @@ fun RegisterSecuenceScreen2Preview() {
 @Composable
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF242424)
 fun RegisterSecuenceScreen3Preview() {
-    RegisterSecuenceScreen( registerViewModel = RegisterSecuenceViewModel().apply {
+    RegisterSecuenceScreen( registerViewModel = RegisterSequenceViewModel().apply {
         step = 3
     })
 }

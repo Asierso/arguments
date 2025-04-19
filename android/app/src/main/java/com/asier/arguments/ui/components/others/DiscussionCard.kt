@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.R
 import com.asier.arguments.entities.DiscussionThread
-import com.asier.arguments.entities.User
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
@@ -46,7 +46,8 @@ fun DiscussionCard(
             modifier = Modifier.padding(start = 10.dp, end = 10.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             //Discussion author
-            UserCard(User().apply {
+            UserCard(
+                User().apply {
                 username = discussion.author
             }, modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp).weight(.5f),
                 onClick = onUsernameClick

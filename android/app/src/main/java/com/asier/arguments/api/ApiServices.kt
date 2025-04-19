@@ -19,6 +19,9 @@ object ApiServices {
     fun SyncAuthService(localStorage: LocalStorage) : ApiSync {
         return RetrofitUtils.getAuthNew(localStorage).create(ApiSync::class.java)
     }
+    fun UsersAuthService(localStorage: LocalStorage) : ApiUsers {
+        return RetrofitUtils.getAuthNew(localStorage).create(ApiUsers::class.java)
+    }
     val LoginService: ApiLogin = RetrofitUtils.getNew().create(ApiLogin::class.java)
     val UsersService = RetrofitUtils.getNew().create(ApiUsers::class.java)
     fun DiscussionsAuthService(localStorage: LocalStorage) : ApiDiscussions {

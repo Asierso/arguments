@@ -2,11 +2,10 @@ package com.asier.arguments.api.users
 
 import com.asier.arguments.api.ApiServices
 import com.asier.arguments.entities.ServiceResponse
-import com.asier.arguments.entities.UserCreatorDto
+import com.asier.arguments.entities.user.UserCreatorDto
+import com.asier.arguments.entities.user.UserModifiableDto
 import com.asier.arguments.utils.RetrofitUtils
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody.Companion.toResponseBody
-import retrofit2.Response
+import com.asier.arguments.utils.storage.LocalStorage
 
 object UsersService : ApiUsersService {
     override suspend fun register(user: UserCreatorDto): ServiceResponse? {
@@ -21,7 +20,7 @@ object UsersService : ApiUsersService {
         return RetrofitUtils.getResponse(ApiServices.UsersService.getById(userId = userId))
     }
 
-    override suspend fun updateByName(username: String, user: UserCreatorDto): ServiceResponse? {
-        return RetrofitUtils.getResponse(ApiServices.UsersService.updateByName(username = username, user = user))
+    override suspend fun updateByName(localStorage: LocalStorage, username: String, user: UserModifiableDto): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.UsersAuthService(localStorage).updateByName(username = username, user = user))
     }
 }

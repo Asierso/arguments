@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -23,15 +24,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.R
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
+import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.TopBarBackground
 
@@ -61,17 +65,22 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
         }
     }
 
-    ProfileTopBar(title = "Discusiones",
+    ProfileActionTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),
         profile = {UserAlt(name = homeScreenViewModel.username) {
                 parameters.viewProfile = homeScreenViewModel.username
                 homeScreenViewModel.loadProfile(activityProperties)
-        }})
+        }},
+        onAction = {
+            homeScreenViewModel.logout(activityProperties,scope)
+        }){
+        Icon(painterResource(R.drawable.ic_logout), contentDescription = "logout")
+    }
 
     val pullState = rememberPullToRefreshState()
 
     PullToRefreshBox(state = pullState, isRefreshing = homeScreenViewModel.pageRefreshing, onRefresh = {
-        homeScreenViewModel.reloadDiscussionsPage(scope)
+        homeScreenViewModel.reloadDiscussionsPage(activityProperties,scope)
     }) {
         LazyColumn(
             verticalArrangement = Arrangement.Top,
@@ -98,7 +107,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                 val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
 
                 if (lastVisibleIndex >= totalItems - 1) {
-                   homeScreenViewModel.loadNextDiscussionsPage(scope)
+                   homeScreenViewModel.loadNextDiscussionsPage(activityProperties, scope)
                 }
             }
     }

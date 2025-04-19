@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.api.users.UsersService
-import com.asier.arguments.entities.User
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.utils.GsonUtils
 import com.asier.arguments.utils.storage.LocalStorage

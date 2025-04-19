@@ -1,7 +1,8 @@
 package com.asier.arguments.api.users
 
 import com.asier.arguments.entities.ServiceResponse
-import com.asier.arguments.entities.UserCreatorDto
+import com.asier.arguments.entities.user.UserCreatorDto
+import com.asier.arguments.entities.user.UserModifiableDto
 import com.asier.arguments.utils.Globals
 import retrofit2.Response
 import retrofit2.http.Body
@@ -22,5 +23,5 @@ interface ApiUsers {
     suspend fun getById(@Path(value = "userId", encoded = true) userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 
     @PATCH("auth/users/username/{username}")
-    suspend fun updateByName(@Path(value = "username", encoded = true) username : String, @Body user: UserCreatorDto, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    suspend fun updateByName(@Path(value = "username", encoded = true) username : String, @Body user: UserModifiableDto, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

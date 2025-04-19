@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
 import com.asier.arguments.api.AuthFacade
-import com.asier.arguments.entities.UserCredentials
+import com.asier.arguments.entities.user.UserCredentials
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.utils.storage.LocalStorage

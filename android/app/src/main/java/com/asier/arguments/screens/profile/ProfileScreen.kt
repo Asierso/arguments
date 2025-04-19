@@ -29,12 +29,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
-import com.asier.arguments.entities.User
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.BaseTextInput
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.progressbars.XpProgressBar
-import com.asier.arguments.ui.components.topbars.ProfileEditableTopBar
+import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
@@ -86,9 +86,9 @@ fun ProfileScreen(
 
 @Composable
 fun SelfProfileScreen(activityProperties: ActivityProperties, profileScreenViewModel: ProfileScreenViewModel){
-    ProfileEditableTopBar(title = profileScreenViewModel.userData!!.username,
+    ProfileActionTopBar(title = profileScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
-        onEdit = { activityProperties.navController.navigate(Screen.ProfileEdit.route)},
+        onAction = { activityProperties.navController.navigate(Screen.ProfileEdit.route)},
         profile = {
             UserAlt(name = profileScreenViewModel.userData!!.username) {}
         })

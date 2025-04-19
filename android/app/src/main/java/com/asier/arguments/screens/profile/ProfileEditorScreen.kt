@@ -30,15 +30,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
-import com.asier.arguments.entities.User
+import com.asier.arguments.entities.user.User
+import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.WarnedButton
 import com.asier.arguments.ui.components.inputs.BaseTextInput
 import com.asier.arguments.ui.components.inputs.IconTextInput
+import com.asier.arguments.ui.components.others.TextCheck
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.others.UserCard
+import com.asier.arguments.ui.components.others.hideKeyboard
+import com.asier.arguments.ui.components.others.hideKeyboardOnClick
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
@@ -49,6 +53,7 @@ import com.asier.arguments.ui.theme.TextBright1
 fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewModel){
     //Scope to make fetch
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val scrollState = rememberScrollState()
 
@@ -83,8 +88,14 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
             .padding(top = 100.dp, start = 10.dp, end = 10.dp)
     ) {
         UserExtendedCard(user = profileEditorScreenViewModel.userData!!)
-        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp))
-        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp))
+        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+            profileEditorScreenViewModel.updateUserDescription(parameters,scope)
+            hideKeyboard(context)
+        }
+        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+            profileEditorScreenViewModel.updateUserData(parameters,scope)
+            hideKeyboard(context)
+        }
     }
 }
 
@@ -106,7 +117,8 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             //Discussion author
-            UserCard(User().apply {
+            UserCard(
+                User().apply {
                 username = user.username
             }, modifier = Modifier
                 .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
@@ -124,7 +136,7 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
 }
 
 @Composable
-fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScreenViewModel,modifier: Modifier = Modifier) {
+fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScreenViewModel,modifier: Modifier = Modifier, updateAction: () -> Unit) {
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
@@ -147,16 +159,21 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
             minLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
+        //Update description button
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().hideKeyboardOnClick(),
             onClick = {
-                //TODO update description
-            })
+                updateAction()
+            }
+        )
     }
 }
 
 @Composable
-fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenViewModel,modifier: Modifier = Modifier) {
+fun UserEditableActionsCard(
+    profileEditorScreenViewModel: ProfileEditorScreenViewModel,
+    modifier: Modifier = Modifier,
+    updateAction: () -> Unit) {
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
@@ -179,8 +196,8 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
             //Firstname input
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
-                onValueChanged = {},
-                text = "",
+                onValueChanged = {profileEditorScreenViewModel.firstname = it},
+                text = profileEditorScreenViewModel.firstname,
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_person), contentDescription = null)
                 },
@@ -189,8 +206,8 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
             //Lastname input
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
-                onValueChanged = { },
-                text = "",
+                onValueChanged = { profileEditorScreenViewModel.lastname = it},
+                text = profileEditorScreenViewModel.lastname,
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_person), contentDescription = null)
                 },
@@ -200,26 +217,44 @@ fun UserEditableActionsCard(profileEditorScreenViewModel: ProfileEditorScreenVie
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
                 onValueChanged = {
+                    profileEditorScreenViewModel.password = it
                 },
-                text = "",
+                text = profileEditorScreenViewModel.password,
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_key), contentDescription = null)
                 },
                 placeholder = stringResource(R.string.password_field),
                 isPassword = true
             )
+            //Password check component (only show it if username field was edited)
+            if (profileEditorScreenViewModel.password.isNotBlank()) {
+                TextCheck(
+                    isCorrect = profileEditorScreenViewModel.checkPasswords() == PasswordPolicyCodes.STRONG,
+                    reason =
+                    when (profileEditorScreenViewModel.checkPasswords()) {
+                        PasswordPolicyCodes.NOT_EQUALS -> stringResource(R.string.register_passwordpolicy_notequals)
+                        PasswordPolicyCodes.WEAK -> stringResource(R.string.register_passwordpolicy_weak)
+                        PasswordPolicyCodes.TOO_SHORT -> stringResource(R.string.register_passwordpolicy_tooshort)
+                        PasswordPolicyCodes.STRONG -> stringResource(R.string.register_passwordpolicy_strong)
+                        PasswordPolicyCodes.INVALID -> stringResource(R.string.register_passwordpolicy_invalid)
+                    },
+                    modifier = Modifier.padding(start = 2.dp)
+                )
+            }
         }
         PrimaryButton(text = stringResource(R.string.profile_update_button),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp),
+                .padding(top = 10.dp)
+                .hideKeyboardOnClick(),
             onClick = {
-                //TODO update description
+                updateAction()
             })
         WarnedButton(text = stringResource(R.string.profile_delete_account_button),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 5.dp),
+                .padding(top = 5.dp)
+                .hideKeyboardOnClick(),
             onClick = {
                 //TODO update description
             })
@@ -235,5 +270,5 @@ fun UserExtendedCardPreview(){
 @Composable
 @Preview
 fun UserEditableActionsCard(){
-    UserEditableActionsCard(ProfileEditorScreenViewModel())
+    UserEditableActionsCard(ProfileEditorScreenViewModel()){}
 }

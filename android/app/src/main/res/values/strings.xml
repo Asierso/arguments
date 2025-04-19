@@ -36,4 +36,5 @@
     <string name="profile_description_card_title">Description</string>
     <string name="profile_user_card_title">Your user card</string>
     <string name="profile_discussions_history_title">Discussions history</string>
+    <string name="success_snackbar_text">Action made successfully</string>
 </resources>

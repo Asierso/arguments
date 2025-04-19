@@ -2,7 +2,7 @@ package com.asier.arguments.api.login
 
 import com.asier.arguments.utils.Globals
 import com.asier.arguments.entities.ServiceResponse
-import com.asier.arguments.entities.UserCredentials
+import com.asier.arguments.entities.user.UserCredentials
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

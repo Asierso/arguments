@@ -2,12 +2,13 @@ package com.asier.arguments.api
 
 import com.asier.arguments.Screen
 import com.asier.arguments.api.login.LoginService
-import com.asier.arguments.entities.UserCredentials
+import com.asier.arguments.entities.user.UserCredentials
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.StatusCodes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object AuthFacade {
     suspend fun login(activityProperties: ActivityProperties?, credentials: UserCredentials, onSucess: () -> Unit, onFailure : (status: StatusCodes) -> Unit){
@@ -37,8 +38,8 @@ object AuthFacade {
         LoginService.logout(activityProperties?.storage!!)
         activityProperties.storage.delete("auth")
         activityProperties.storage.delete("user")
-        CoroutineScope(Dispatchers.Main).launch {
-            activityProperties.navController.navigate(Screen.Welcome.route)
+        withContext(Dispatchers.Main) {
+            activityProperties.navController.navigate(Screen.Login.route)
         }
     }
 }

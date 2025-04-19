@@ -30,6 +30,7 @@ import com.asier.arguments.ui.components.snackbars.BaseSnackbar
 import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbar
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
+import com.asier.arguments.ui.components.snackbars.SucessSnackbar
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.utils.storage.LocalStorage
@@ -59,6 +60,11 @@ class MainActivity : ComponentActivity() {
                                         ConnectionErrorSnackbar(message = builtInvoke.message)
                                     else
                                         ConnectionErrorSnackbar()
+                                SnackbarType.SUCCESS ->
+                                    if(builtInvoke.message.isNotBlank())
+                                        SucessSnackbar(message = builtInvoke.message)
+                                    else
+                                        SucessSnackbar()
                             }
                         } else {
                             //Show generic snackbar

@@ -9,20 +9,21 @@ import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
 import com.asier.arguments.api.AuthFacade
 import com.asier.arguments.api.users.UsersService
-import com.asier.arguments.entities.User
-import com.asier.arguments.entities.UserCreatorDto
-import com.asier.arguments.entities.UserCredentials
+import com.asier.arguments.entities.user.User
+import com.asier.arguments.entities.user.UserCreatorDto
+import com.asier.arguments.entities.user.UserCredentials
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
+import com.asier.arguments.utils.ValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils
 
-class RegisterSecuenceViewModel : ViewModel() {
+class RegisterSequenceViewModel : ViewModel() {
     //Plain user data
     var firstname by mutableStateOf("")
     var lastname by mutableStateOf("")
@@ -40,19 +41,7 @@ class RegisterSecuenceViewModel : ViewModel() {
      * Check if passwords inside viewmodel are valid
      */
     fun checkPasswords(): PasswordPolicyCodes {
-        if (password1.length < 6)
-            return PasswordPolicyCodes.TOO_SHORT
-        if (StringUtils.containsAny(password1, "/$\"'?¿¡!·`[]{}()\\| "))
-            return PasswordPolicyCodes.INVALID
-        if (password1 != password2)
-            return PasswordPolicyCodes.NOT_EQUALS
-        if (StringUtils.isAllLowerCase(password1) ||
-            StringUtils.isAllUpperCase(password1) ||
-            StringUtils.isAlpha(password1) ||
-            StringUtils.isNumeric(password1)
-        )
-            return PasswordPolicyCodes.WEAK
-        return PasswordPolicyCodes.STRONG
+        return ValidationUtils.checkPasswords(password1,password2)
     }
 
     /**
@@ -138,13 +127,20 @@ class RegisterSecuenceViewModel : ViewModel() {
     ) {
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val res = UsersService.getByUsername(username) ?: return@launch
-                    uniqueUsername = StatusCodes.valueOf(res.status) != StatusCodes.SUCCESSFULLY
-                    uniqueVerificationError = false
-                } catch (error: Exception) {
-                    showServerError(activityProperties)
-                    uniqueVerificationError = true
+                val res = UsersService.getByUsername(username) ?: return@launch
+                when(StatusCodes.valueOf(res.status)) {
+                    StatusCodes.SUCCESSFULLY -> {
+                        uniqueUsername = false
+                        uniqueVerificationError = false
+                    }
+                    StatusCodes.NOT_FOUND -> {
+                        uniqueUsername = true
+                        uniqueVerificationError = false
+                    }
+                    else -> {
+                        showServerError(activityProperties)
+                        uniqueVerificationError = true
+                    }
                 }
             }
         }

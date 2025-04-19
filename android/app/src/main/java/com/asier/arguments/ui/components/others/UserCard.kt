@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.asier.arguments.entities.User
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.Tertiary
 import com.asier.arguments.ui.theme.TextBright0

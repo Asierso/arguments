@@ -12,7 +12,7 @@ import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.home.HomeScreen
 import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
-import com.asier.arguments.screens.register.RegisterSecuenceViewModel
+import com.asier.arguments.screens.register.RegisterSequenceViewModel
 import com.asier.arguments.screens.WelcomePage
 import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
@@ -38,7 +38,7 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
             LoginPage(LoginViewModel())
         }
         composable(Screen.Register.route){
-            RegisterSecuenceScreen(RegisterSecuenceViewModel())
+            RegisterSecuenceScreen(RegisterSequenceViewModel())
         }
         composable(Screen.Home.route){
             HomeScreen(HomeScreenViewModel())

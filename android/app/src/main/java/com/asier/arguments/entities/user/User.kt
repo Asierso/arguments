@@ -1,4 +1,4 @@
-package com.asier.arguments.entities
+package com.asier.arguments.entities.user
 
 data class User(
     var firstname : String = "",

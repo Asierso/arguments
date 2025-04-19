@@ -54,7 +54,11 @@ object RetrofitUtils {
         return try{
             if(res == null)
                 throw Exception()
-            Gson().fromJson(res.string(),ServiceResponse::class.java)
+            val swapper = Gson().fromJson(res.string(),ServiceResponse::class.java)
+            if(swapper.result != null)
+                ServiceResponse(swapper.result.toString(),null)
+            else
+                swapper
         }catch (e: Exception){
             ServiceResponse(StatusCodes.UNKNOWN.toString(),null)
         }

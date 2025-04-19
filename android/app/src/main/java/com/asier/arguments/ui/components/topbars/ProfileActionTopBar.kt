@@ -22,15 +22,18 @@ import com.asier.arguments.R
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
-import com.asier.arguments.ui.theme.TopBarIcon
 
 @Composable
-fun ProfileEditableTopBar(
+fun ProfileActionTopBar(
     title: String,
-    onEdit: () -> Unit,
+    onAction: () -> Unit,
     modifier: Modifier = Modifier,
     profile: @Composable () -> Unit,
-    leadingIcon: @Composable() ((modifier : Modifier) -> Unit)? = null) {
+    actionIcon: @Composable ((modifier : Modifier) -> Unit) = { Icon(
+        painter = painterResource(R.drawable.ic_edit),
+        contentDescription = "edit",
+        modifier = modifier)
+    }) {
     BaseTopBar(
         content = {
             Row(
@@ -40,10 +43,7 @@ fun ProfileEditableTopBar(
                 }
                 Row(modifier = Modifier.weight(.70f),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = if(leadingIcon != null) Arrangement.Start else Arrangement.Center) {
-                    if(leadingIcon != null){
-                        leadingIcon(Modifier.width(50.dp).height(50.dp).padding(end = 20.dp))
-                    }
+                    horizontalArrangement = Arrangement.Center) {
                     Text(
                         text = title,
                         textAlign = TextAlign.Center,
@@ -53,11 +53,8 @@ fun ProfileEditableTopBar(
                         color = TextBright1
                     )
                 }
-                IconButton(onClick = { onEdit() },modifier = Modifier.weight(.15f)) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_edit),
-                        contentDescription = "edit",
-                        modifier = Modifier.width(30.dp).height(30.dp))
+                IconButton(onClick = { onAction() },modifier = Modifier.weight(.15f)) {
+                    actionIcon(Modifier.width(30.dp).height(30.dp))
                 }
 
             }
@@ -68,7 +65,7 @@ fun ProfileEditableTopBar(
 @Composable
 @Preview(showSystemUi = true)
 fun ProfileEditableTopBarPreview(){
-    ProfileEditableTopBar(title = "Profile name", onEdit = {}, profile = {
+    ProfileActionTopBar(title = "Profile name", onAction = {}, profile = {
         UserAlt("asier") { }
     })
 }
