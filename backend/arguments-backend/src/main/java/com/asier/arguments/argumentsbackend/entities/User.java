@@ -39,6 +39,13 @@ public class User implements Identify {
     //Calculated by Backend
     @Modifiable
     private Boolean isActive;
+    //Another user data
+    @Modifiable
+    private String description;
+    @Modifiable
+    private Integer level;
+    @Modifiable
+    private Integer xp;
     public String getId() {
         return id != null ? id.toHexString() : null;
     }
