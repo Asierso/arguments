@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
+import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.others.DiscussionCard
@@ -118,7 +119,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 30.dp, end = 20.dp),
             onClick = {
-                //TODO New discussion
+                activityProperties.navController.navigate(Screen.DiscussionCreate.route)
             }) {
             Text(
                 text = "+",

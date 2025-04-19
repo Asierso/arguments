@@ -17,7 +17,8 @@ fun IconTextInput(
     onValueChanged: (String) -> Unit,
     isError: Boolean = false,
     isPassword: Boolean = false,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    upDown: OnUpDown? = null
 ) {
     BaseTextInput(
         placeholder = placeholder,
@@ -27,7 +28,8 @@ fun IconTextInput(
         leadingIcon = leadingIcon,
         isError = isError,
         enabled = enabled,
-        isPassword = isPassword
+        isPassword = isPassword,
+        upDown = upDown
     )
 }
 
