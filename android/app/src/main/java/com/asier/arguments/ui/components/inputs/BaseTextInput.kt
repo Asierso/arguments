@@ -48,6 +48,7 @@ fun BaseTextInput(
     modifier: Modifier = Modifier,
     onValueChanged: (String) -> Unit,
     text: String = "",
+    suffix: String = "",
     leadingIcon: @Composable() (() -> Unit)? = null,
     readOnly: Boolean = false,
     minLines: Int = 1,
@@ -91,7 +92,7 @@ fun BaseTextInput(
     Box {
         if (leadingIcon == null) {
             TextField(
-                value = text,
+                value = if(text.isNotBlank()) {"${text}${suffix}"} else "",
                 onValueChange = onValueChanged,
                 placeholder = textPlaceholder,
 
@@ -113,7 +114,7 @@ fun BaseTextInput(
             )
         } else {
             TextField(
-                value = text,
+                value = if(text.isNotBlank()) {"${text}${suffix}"} else "",
                 onValueChange = onValueChanged,
                 placeholder = textPlaceholder,
 

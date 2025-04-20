@@ -31,11 +31,13 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
+import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.inputs.OnUpDown
+import com.asier.arguments.ui.components.others.TextCheck
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.BaseTopBar
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
@@ -80,23 +82,28 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
     }
 
     TitleTopBar(
-        title = "Discusiones",
+        title = "Nueva discusión",
         modifier = Modifier.fillMaxWidth())
 
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
-        DiscussionThink(modifier = Modifier.fillMaxWidth())
-        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp))
-        Spacer(modifier = Modifier.height(60.dp))
-        PrimaryButton(text = "Crear", modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp), onClick = {
 
+        //Rule modification
+        DiscussionThink(modifier = Modifier.fillMaxWidth(), dtcViewModel = dtcViewModel)
+        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp))
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        //Create discussion button
+        PrimaryButton(text = "Crear", modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp), onClick = {
+            dtcViewModel.createDiscussion(activityProperties,scope)
         })
     }
 }
 
 @Composable
-fun DiscussionThink(modifier: Modifier = Modifier){
+fun DiscussionThink(dtcViewModel: DiscussionThreadCreationViewModel, modifier: Modifier = Modifier){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier) {
@@ -109,13 +116,24 @@ fun DiscussionThink(modifier: Modifier = Modifier){
         )
         IconTextInput(
             modifier = Modifier.padding(top = 10.dp),
-            onValueChanged = { },
-            text = "",
+            onValueChanged = {
+                dtcViewModel.title = it
+                dtcViewModel.titleModified = true
+            },
+            text = dtcViewModel.title,
+            isError = dtcViewModel.titleModified && !dtcViewModel.titlePolicy(),
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_focus), contentDescription = null)
             },
             placeholder = "Tema del debate"
         )
+        if(dtcViewModel.titleModified) {
+            TextCheck(
+                isCorrect = dtcViewModel.titlePolicy(),
+                reason = dtcViewModel.titleType(),
+                modifier = Modifier
+            )
+        }
     }
 }
 
@@ -148,6 +166,8 @@ fun DiscussionRules(
                 modifier = Modifier.padding(top = 5.dp),
                 onValueChanged = { },
                 text = if(dtcViewModel.maxTime < 0) "" else dtcViewModel.maxTime.toString(),
+                suffix = " min",
+                isError = dtcViewModel.maxTime != -1 && !dtcViewModel.timePolicy(),
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_time), contentDescription = null)
                 },
@@ -165,14 +185,25 @@ fun DiscussionRules(
                     }
                 }
             )
+            //If time was modified, show discussion type by time
+            if(dtcViewModel.maxTime != -1) {
+                TextCheck(
+                    isCorrect = dtcViewModel.timePolicy(),
+                    reason = dtcViewModel.timeType(),
+                    modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)
+                )
+            }
+
             //Max users
             IconTextInput(
                 modifier = Modifier.padding(top = 5.dp),
                 onValueChanged = { },
                 text = if(dtcViewModel.maxUsers < 0) "" else dtcViewModel.maxUsers.toString(),
+                suffix = " p",
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_person), contentDescription = null)
                 },
+                isError = dtcViewModel.maxUsers != -1 && !dtcViewModel.userPolicy(),
                 placeholder = "Usuarios máximos",
                 upDown = object:OnUpDown{
                     override fun onUp(value: Int) {
@@ -187,6 +218,15 @@ fun DiscussionRules(
                     }
                 }
             )
+
+            //If users was modified, show discussion type by user amount
+            if(dtcViewModel.maxUsers != -1) {
+                TextCheck(
+                    isCorrect = dtcViewModel.userPolicy(),
+                    reason = dtcViewModel.userType(),
+                    modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)
+                )
+            }
         }
     }
 }

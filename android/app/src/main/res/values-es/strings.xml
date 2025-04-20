@@ -38,4 +38,5 @@
     <string name="profile_user_card_title">Tu tarjeta de usuario</string>
     <string name="profile_discussions_history_title">Historial de debates</string>
     <string name="success_snackbar_text">Acción realizada satisfactoriamente</string>
+    <string name="closed_discussion_text">Cerrado</string>
 </resources>

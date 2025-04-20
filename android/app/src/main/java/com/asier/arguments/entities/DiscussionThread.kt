@@ -1,6 +1,6 @@
 package com.asier.arguments.entities
 
-import java.time.ZonedDateTime
+import java.time.Instant
 
 
 data class DiscussionThread(
@@ -9,6 +9,6 @@ data class DiscussionThread(
     var author: String = "",
     var maxUsers: Int = 0,
     var users: List<String> = emptyList(),
-    var createdAt: ZonedDateTime? = null,
-    var endAt: ZonedDateTime? = null
+    var createdAt: Instant? = null,
+    var endAt: Instant? = null
 )
