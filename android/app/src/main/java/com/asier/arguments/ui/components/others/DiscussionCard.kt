@@ -42,20 +42,17 @@ import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.TextBright1
 import com.asier.arguments.ui.theme.TextError0
-import com.asier.arguments.ui.theme.TextError1
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @Composable
 fun DiscussionCard(
     discussion: DiscussionThread,
     modifier: Modifier = Modifier,
     onUsernameClick: ((user: User) -> Unit)? = null
-){
+) {
     var redraw by remember { mutableStateOf(0) }
 
     //Launch redraw key
@@ -88,7 +85,9 @@ fun DiscussionCard(
                 val progressWidth =
                     size.width - (size.width * (elapsedDuration.toFloat() / duration.toFloat()))
                 drawRoundRect(
-                    color = if(1f - (elapsedDuration.toFloat() / duration.toFloat()) > .15f) Primary.copy(alpha = 0.3f) else TextError0.copy(alpha = 0.3f),
+                    color = if (1f - (elapsedDuration.toFloat() / duration.toFloat()) > .15f) Primary.copy(
+                        alpha = 0.3f
+                    ) else TextError0.copy(alpha = 0.3f),
                     size = Size(progressWidth, size.height),
                     topLeft = Offset(0f, 0f),
                     cornerRadius = CornerRadius.Zero
@@ -120,7 +119,7 @@ fun DiscussionCard(
                             .padding(start = 5.dp, top = 10.dp, bottom = 10.dp)
                             .weight(.6f),
                         onClick = {
-                            if(!expired)
+                            if (!expired)
                                 onUsernameClick?.invoke(it)
                         }
                     )
@@ -190,33 +189,39 @@ fun DiscussionCard(
 
 @Composable
 @Preview
-fun DiscussionCardPreview(){
+fun DiscussionCardPreview() {
     DiscussionCard(
         DiscussionThread(
-        title = "Lorem ipsum",
-        author = "asierso",
-        createdAt = Instant.now().minusSeconds(5*60),
-            endAt = Instant.now().plusSeconds(10*60)))
+            title = "Lorem ipsum",
+            author = "asierso",
+            createdAt = Instant.now().minusSeconds(5 * 60),
+            endAt = Instant.now().plusSeconds(10 * 60)
+        )
+    )
 }
 
 @Composable
 @Preview
-fun DiscussionCard2Preview(){
+fun DiscussionCard2Preview() {
     DiscussionCard(
         DiscussionThread(
             title = "Lorem ipsum",
             author = "asierso",
             createdAt = Instant.now().minusSeconds(9),
-            endAt = Instant.now().plusSeconds(1)))
+            endAt = Instant.now().plusSeconds(1)
+        )
+    )
 }
 
 @Composable
 @Preview
-fun DiscussionCardExpiredPreview(){
+fun DiscussionCardExpiredPreview() {
     DiscussionCard(
         DiscussionThread(
             title = "Lorem ipsum",
             author = "asierso",
             createdAt = Instant.now(),
-            endAt = Instant.now()))
+            endAt = Instant.now()
+        )
+    )
 }
