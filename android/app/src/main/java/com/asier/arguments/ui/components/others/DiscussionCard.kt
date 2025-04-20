@@ -162,7 +162,7 @@ fun DiscussionCard(
                         .background(Color.Black)
                         .matchParentSize()
                         .padding(start = 10.dp, top = 15.dp, end = 10.dp, bottom = 5.dp),
-                    contentAlignment = Alignment.TopCenter
+                    contentAlignment = Alignment.Center
 
                 ) {
                     Icon(
@@ -171,6 +171,7 @@ fun DiscussionCard(
                         tint = TextBright1,
                         modifier = Modifier
                             .rotate(45f)
+                            .padding(bottom = 30.dp)
                             .size(70.dp)
                     )
                     Text(
@@ -179,7 +180,7 @@ fun DiscussionCard(
                         fontFamily = Montserrat,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 25.sp,
-                        modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 60.dp)
+                        modifier = Modifier.padding(start = 20.dp, end = 10.dp, top = 50.dp)
                     )
                 }
             }
@@ -219,6 +220,19 @@ fun DiscussionCardExpiredPreview() {
     DiscussionCard(
         DiscussionThread(
             title = "Lorem ipsum",
+            author = "asierso",
+            createdAt = Instant.now(),
+            endAt = Instant.now()
+        )
+    )
+}
+
+@Composable
+@Preview
+fun DiscussionCardExpired2Preview() {
+    DiscussionCard(
+        DiscussionThread(
+            title = "Lorem ipsum dolor sit amet Lorem ipsum",
             author = "asierso",
             createdAt = Instant.now(),
             endAt = Instant.now()

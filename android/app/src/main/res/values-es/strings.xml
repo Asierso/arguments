@@ -39,4 +39,24 @@
     <string name="profile_discussions_history_title">Historial de debates</string>
     <string name="success_snackbar_text">Acción realizada satisfactoriamente</string>
     <string name="closed_discussion_text">Cerrado</string>
+    <string name="register_screen_title3">¡Todo listo!</string>
+    <string name="register_screen_subtitle3">Tu experiencia en Arguments acaba de comenzar</string>
+    <string name="discussion_creation_maxusers_field">Usuarios máximos</string>
+    <string name="discussion_creation_maxtime_field">Tiempo máximo</string>
+    <string name="discussion_creation_rules_text">Reglas del debate</string>
+    <string name="discussion_creation_subject_field">Tema del debate</string>
+    <string name="discussion_creation_subject_title">¿En que estás pensando?</string>
+    <string name="discussion_creation_create_button">Crear</string>
+    <string name="discussion_creation_topbar_title">Nueva discusión</string>
+    <string name="discussion_creation_titlepolicy_tooshort">Titulo demasiado corto</string>
+    <string name="discussion_creation_titlepolicy_toolarge">Titulo demasiado largo</string>
+    <string name="discussion_creation_titlepolicy_ok">¡Buen tema!</string>
+    <string name="discussion_creation_maxuserspolicy_toofew">No puedes autodebatir</string>
+    <string name="discussion_creation_maxuserspolicy_few">Pocas personas</string>
+    <string name="discussion_creation_maxuserspolicy_standart">Debate estándar</string>
+    <string name="discussion_creation_maxuserspolicy_standart2">Debate multitudinario</string>
+    <string name="discussion_creation_maxtimepolicy_tooshort">Muy poco tiempo</string>
+    <string name="discussion_creation_maxtimepolicy_short">Debate corto</string>
+    <string name="discussion_creation_maxtimepolicy_mid">Debate mediano</string>
+    <string name="discussion_creation_maxtimepolicy_large">Debate largo</string>
 </resources>

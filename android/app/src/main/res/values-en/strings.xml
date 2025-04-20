@@ -39,4 +39,24 @@
     <string name="profile_discussions_history_title">Discussions history</string>
     <string name="success_snackbar_text">Action made successfully</string>
     <string name="closed_discussion_text">Closed</string>
+    <string name="register_screen_title3">¡All ready!</string>
+    <string name="register_screen_subtitle3">Your experience in Arguments begins</string>
+    <string name="discussion_creation_maxusers_field">Max users</string>
+    <string name="discussion_creation_maxtime_field">Max time</string>
+    <string name="discussion_creation_rules_text">Discussion rules</string>
+    <string name="discussion_creation_subject_field">Discussion topic</string>
+    <string name="discussion_creation_subject_title">¿What are you thinking?</string>
+    <string name="discussion_creation_create_button">Create</string>
+    <string name="discussion_creation_topbar_title">New discussion</string>
+    <string name="discussion_creation_titlepolicy_tooshort">Title too short</string>
+    <string name="discussion_creation_titlepolicy_toolarge">Title too large</string>
+    <string name="discussion_creation_titlepolicy_ok">¡Good topic!</string>
+    <string name="discussion_creation_maxuserspolicy_toofew">You can\'t self-argue</string>
+    <string name="discussion_creation_maxuserspolicy_few">Few personas</string>
+    <string name="discussion_creation_maxuserspolicy_standart">Standart discussion</string>
+    <string name="discussion_creation_maxuserspolicy_standart2">Large-scale discussion</string>
+    <string name="discussion_creation_maxtimepolicy_tooshort">Very few time</string>
+    <string name="discussion_creation_maxtimepolicy_short">Few time</string>
+    <string name="discussion_creation_maxtimepolicy_mid">Medium discussion</string>
+    <string name="discussion_creation_maxtimepolicy_large">Long discussion</string>
 </resources>

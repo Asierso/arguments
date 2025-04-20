@@ -1,22 +1,20 @@
 package com.asier.arguments.screens.discussions
 
-import android.util.Log
+import android.content.Context
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.entities.DiscussionCreatorDto
-import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
-import com.asier.arguments.utils.GsonUtils
-import com.google.gson.internal.LinkedTreeMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,37 +73,37 @@ class DiscussionThreadCreationViewModel : ViewModel() {
         }
     }
 
-    fun timeType() : String{
+    fun timeType(context: Context) : String{
         return if(maxTime < 5) {
-            "Muy poco tiempo"
+            context.getString(R.string.discussion_creation_maxtimepolicy_tooshort)
         } else if(maxTime < 10){
-            "Debate corto"
+            context.getString(R.string.discussion_creation_maxtimepolicy_short)
         } else if(maxTime < 30){
-            "Debate mediano"
+            context.getString(R.string.discussion_creation_maxtimepolicy_mid)
         } else{
-            "Debate largo"
+            context.getString(R.string.discussion_creation_maxtimepolicy_large)
         }
     }
 
-    fun userType() : String{
+    fun userType(context: Context) : String{
         return if(maxUsers <= 1) {
-            "No puedes autodebatir"
+            context.getString(R.string.discussion_creation_maxuserspolicy_toofew)
         } else if(maxUsers < 5){
-            "Pocas personas"
+            context.getString(R.string.discussion_creation_maxuserspolicy_few)
         } else if(maxUsers < 10){
-            "Debate estándar"
+            context.getString(R.string.discussion_creation_maxuserspolicy_standart)
         } else{
-            "Debate multitudinario"
+            context.getString(R.string.discussion_creation_maxuserspolicy_standart2)
         }
     }
 
-    fun titleType() : String{
+    fun titleType(context: Context) : String{
         return if(title.length < 5)
-            "Titulo demasiado corto"
+            context.getString(R.string.discussion_creation_titlepolicy_tooshort)
         else if(title.length > 30)
-            "Titulo demasiado largo"
+            context.getString(R.string.discussion_creation_titlepolicy_toolarge)
         else
-            "¡Buen tema!"
+            context.getString(R.string.discussion_creation_titlepolicy_ok)
     }
 
     fun userPolicy() : Boolean{

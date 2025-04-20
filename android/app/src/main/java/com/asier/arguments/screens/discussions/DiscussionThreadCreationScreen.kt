@@ -82,12 +82,14 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
     }
 
     TitleTopBar(
-        title = "Nueva discusión",
+        title = stringResource(R.string.discussion_creation_topbar_title),
         modifier = Modifier.fillMaxWidth())
 
     Column(
         verticalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
 
         //Rule modification
         DiscussionThink(modifier = Modifier.fillMaxWidth(), dtcViewModel = dtcViewModel)
@@ -96,7 +98,9 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
         Spacer(modifier = Modifier.height(60.dp))
 
         //Create discussion button
-        PrimaryButton(text = "Crear", modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp), onClick = {
+        PrimaryButton(text = stringResource(R.string.discussion_creation_create_button), modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp), onClick = {
             dtcViewModel.createDiscussion(activityProperties,scope)
         })
     }
@@ -108,7 +112,7 @@ fun DiscussionThink(dtcViewModel: DiscussionThreadCreationViewModel, modifier: M
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier) {
         Text(
-            text = "¿En que estás pensando?",
+            text = stringResource(R.string.discussion_creation_subject_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -125,12 +129,12 @@ fun DiscussionThink(dtcViewModel: DiscussionThreadCreationViewModel, modifier: M
             leadingIcon = {
                 Icon(painterResource(R.drawable.ic_focus), contentDescription = null)
             },
-            placeholder = "Tema del debate"
+            placeholder = stringResource(R.string.discussion_creation_subject_field)
         )
         if(dtcViewModel.titleModified) {
             TextCheck(
                 isCorrect = dtcViewModel.titlePolicy(),
-                reason = dtcViewModel.titleType(),
+                reason = dtcViewModel.titleType(LocalContext.current),
                 modifier = Modifier
             )
         }
@@ -149,7 +153,7 @@ fun DiscussionRules(
             .padding(top = 15.dp, start = 10.dp, end = 10.dp, bottom = 20.dp)
     ) {
         Text(
-            text = "Reglas del debate",
+            text = stringResource(R.string.discussion_creation_rules_text),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -171,7 +175,7 @@ fun DiscussionRules(
                 leadingIcon = {
                     Icon(painterResource(R.drawable.ic_time), contentDescription = null)
                 },
-                placeholder = "Tiempo maximo",
+                placeholder = stringResource(R.string.discussion_creation_maxtime_field),
                 upDown = object:OnUpDown{
                     override fun onUp(value: Int) {
                         dtcViewModel.maxTime = value
@@ -189,8 +193,10 @@ fun DiscussionRules(
             if(dtcViewModel.maxTime != -1) {
                 TextCheck(
                     isCorrect = dtcViewModel.timePolicy(),
-                    reason = dtcViewModel.timeType(),
-                    modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)
+                    reason = dtcViewModel.timeType(LocalContext.current),
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .align(Alignment.Start)
                 )
             }
 
@@ -204,7 +210,7 @@ fun DiscussionRules(
                     Icon(painterResource(R.drawable.ic_person), contentDescription = null)
                 },
                 isError = dtcViewModel.maxUsers != -1 && !dtcViewModel.userPolicy(),
-                placeholder = "Usuarios máximos",
+                placeholder = stringResource(R.string.discussion_creation_maxusers_field),
                 upDown = object:OnUpDown{
                     override fun onUp(value: Int) {
                         dtcViewModel.maxUsers = value
@@ -223,8 +229,10 @@ fun DiscussionRules(
             if(dtcViewModel.maxUsers != -1) {
                 TextCheck(
                     isCorrect = dtcViewModel.userPolicy(),
-                    reason = dtcViewModel.userType(),
-                    modifier = Modifier.padding(start = 10.dp).align(Alignment.Start)
+                    reason = dtcViewModel.userType(LocalContext.current),
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .align(Alignment.Start)
                 )
             }
         }

@@ -163,8 +163,8 @@ fun RegisterSecuenceScreen(
 
             3 -> { //User created
                 RegisterScreenHeader(
-                    title = "¡Todo listo!",
-                    subtitle = "Tu experiencia en Arguments acaba de comenzar",
+                    title = stringResource(R.string.register_screen_title3),
+                    subtitle = stringResource(R.string.register_screen_subtitle3),
                     icon = painterResource(R.drawable.ic_whujuu)
                 )
                 Spacer(modifier = Modifier.height(30.dp))
