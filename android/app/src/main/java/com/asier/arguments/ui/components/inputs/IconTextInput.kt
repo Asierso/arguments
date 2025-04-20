@@ -13,21 +13,25 @@ fun IconTextInput(
     placeholder: String,
     modifier: Modifier = Modifier,
     text: String = "",
+    suffix: String = "",
     leadingIcon: @Composable () -> Unit,
     onValueChanged: (String) -> Unit,
     isError: Boolean = false,
     isPassword: Boolean = false,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    upDown: OnUpDown? = null
 ) {
     BaseTextInput(
         placeholder = placeholder,
         modifier=modifier,
         onValueChanged = onValueChanged,
         text = text,
+        suffix = suffix,
         leadingIcon = leadingIcon,
         isError = isError,
         enabled = enabled,
-        isPassword = isPassword
+        isPassword = isPassword,
+        upDown = upDown
     )
 }
 

@@ -8,12 +8,13 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
+import java.time.Instant
 import java.time.LocalDateTime
 
 object GsonUtils {
     val gson = GsonBuilder()
-        .registerTypeAdapter(LocalDateTime::class.java, JsonDeserializer { json, _, _ ->
-            LocalDateTime.parse(json.asString)
+        .registerTypeAdapter(Instant::class.java, JsonDeserializer { json, _, _ ->
+            Instant.parse(json.asString)
         }).create()
 
     inline fun <reified T> jsonToClass(result: LinkedTreeMap<*, *>) : T{

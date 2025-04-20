@@ -14,6 +14,8 @@ import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
 import com.asier.arguments.screens.register.RegisterSequenceViewModel
 import com.asier.arguments.screens.WelcomePage
+import com.asier.arguments.screens.discussions.DiscussionThreadCreationScreen
+import com.asier.arguments.screens.discussions.DiscussionThreadCreationViewModel
 import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
 import com.asier.arguments.screens.profile.ProfileEditorScreen
@@ -31,6 +33,7 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
     val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
 
     NavHost(navController = parameters.properties.navController, startDestination = start.route, modifier = modifier){
+        //Start point and user auth
         composable(Screen.Welcome.route){
             WelcomePage()
         }
@@ -40,14 +43,20 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
         composable(Screen.Register.route){
             RegisterSecuenceScreen(RegisterSequenceViewModel())
         }
+        //Home
         composable(Screen.Home.route){
             HomeScreen(HomeScreenViewModel())
         }
+        //Profiles
         composable(Screen.Profile.route){
             ProfileScreen(ProfileScreenViewModel())
         }
         composable(Screen.ProfileEdit.route){
             ProfileEditorScreen(ProfileEditorScreenViewModel())
+        }
+        //Discussions
+        composable(Screen.DiscussionCreate.route){
+            DiscussionThreadCreationScreen(DiscussionThreadCreationViewModel())
         }
     }
 }
