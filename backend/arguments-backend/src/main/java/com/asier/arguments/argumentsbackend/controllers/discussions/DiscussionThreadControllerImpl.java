@@ -36,9 +36,9 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
         DiscussionThread discussion = DiscussionThread.builder()
                 .title(discussionDto.getTitle())
                 .author(username)
-                .createdAt(LocalDateTime.now().atZone(ZoneOffset.UTC))
+                .createdAt(LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant())
                 .maxUsers(discussionDto.getMaxUsers())
-                .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()))
+                .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<String>())
                 .build();
 

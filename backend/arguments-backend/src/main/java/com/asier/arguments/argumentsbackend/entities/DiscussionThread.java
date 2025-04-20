@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -30,9 +32,9 @@ public class DiscussionThread implements Identify {
     @Mandatory
     private String title;
     private String author;
-    private ZonedDateTime createdAt;
+    private Instant createdAt;
     @Modifiable
-    private ZonedDateTime endAt;
+    private Instant endAt;
     @Mandatory
     @Modifiable
     private Integer maxUsers;
