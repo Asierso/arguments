@@ -76,7 +76,9 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
     ProfileTopBar(title = profileEditorScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
         profile = {
-            UserAlt(name = profileEditorScreenViewModel.userData!!.username) {}
+            UserAlt(
+                name = profileEditorScreenViewModel.userData!!.username,
+                isOnline = profileEditorScreenViewModel.userData!!.isActive) {}
         })
 
     Column(

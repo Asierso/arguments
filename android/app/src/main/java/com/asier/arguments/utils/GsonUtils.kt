@@ -15,7 +15,9 @@ object GsonUtils {
     val gson = GsonBuilder()
         .registerTypeAdapter(Instant::class.java, JsonDeserializer { json, _, _ ->
             Instant.parse(json.asString)
-        }).create()
+        })
+        .create()
+
 
     inline fun <reified T> jsonToClass(result: LinkedTreeMap<*, *>) : T{
         val resultJson = gson.toJson(result)

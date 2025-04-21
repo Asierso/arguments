@@ -90,7 +90,9 @@ fun SelfProfileScreen(activityProperties: ActivityProperties, profileScreenViewM
         modifier = Modifier.fillMaxWidth(),
         onAction = { activityProperties.navController.navigate(Screen.ProfileEdit.route)},
         profile = {
-            UserAlt(name = profileScreenViewModel.userData!!.username) {}
+            UserAlt(
+                name = profileScreenViewModel.userData!!.username,
+                isOnline = profileScreenViewModel.userData!!.isActive) {}
         })
 
     Column(
@@ -113,7 +115,9 @@ fun ForeignProfileScreen(profileScreenViewModel: ProfileScreenViewModel){
     ProfileTopBar(title = profileScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
         profile = {
-            UserAlt(name = profileScreenViewModel.userData!!.username) {
+            UserAlt(
+                name = profileScreenViewModel.userData!!.username,
+                isOnline = profileScreenViewModel.userData!!.isActive) {
             }
         })
 
