@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
+import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
 import com.asier.arguments.argumentsbackend.repositories.ValidAuthTokensRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.filters;
 
-import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;

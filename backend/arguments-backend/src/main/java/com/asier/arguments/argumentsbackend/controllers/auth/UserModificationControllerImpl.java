@@ -1,8 +1,8 @@
 package com.asier.arguments.argumentsbackend.controllers.auth;
 
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.entities.user.User;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.services.UserService;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;

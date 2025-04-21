@@ -1,0 +1,32 @@
+package com.asier.arguments.argumentsbackend.utils.velocity;
+
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.stereotype.Component;
+
+import java.io.StringWriter;
+import java.util.Properties;
+
+@Component
+public class VelocityUtils {
+    private final VelocityEngine engine;
+    private final StringWriter writer = new StringWriter();
+
+    public VelocityUtils(){
+        Properties props = new Properties();
+        props.setProperty("resource.loader", "class");
+        props.setProperty("class.resource.loader.class",
+                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+
+        engine = new VelocityEngine(props);
+    }
+
+    public String applyTemplate(VelocityTemplate template){
+        //Process template with velocity context data
+        VelocityResource resource = template.build(new VelocityContext());
+        engine.getTemplate(resource.getResource()).merge(resource.getContext(),writer);
+
+        //Return processed data
+        return writer.toString();
+    }
+}

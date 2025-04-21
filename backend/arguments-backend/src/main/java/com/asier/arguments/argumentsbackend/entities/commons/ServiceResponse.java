@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.entities.dtos;
+package com.asier.arguments.argumentsbackend.entities.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

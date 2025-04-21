@@ -1,9 +1,9 @@
 package com.asier.arguments.argumentsbackend.services;
 
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.user.User;
+import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -128,46 +128,6 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
-
-    /* OLD
-    @Override
-    public ResponseEntity<ServiceResponse> update(ObjectId id,UserCreatorDto changes) {
-        if(id != null){
-            Optional<User> user = userRepository.findById(id);
-            if(user.isPresent()){
-                //If there are users included in changes, change it
-                if(changes.getUser() != null) {
-                    User userSource = user.get();
-                    AnnotationsUtils.modifyEntity(userSource, changes.getUser());
-                    userRepository.save(userSource);
-                }
-
-                //If there are credentials included in changes, change it
-                if(changes.getCredentials() != null){
-                    Optional<UserCredentials> credentials = userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
-                                    .username(user.get().getUsername()).build()));
-                    if(credentials.isPresent()){
-                        //Hash password
-                        changes.getCredentials().setPassword(BCrypt.hashpw(changes.getCredentials().getPassword(), BCrypt.gensalt()));
-
-                        //Apply changes
-                        UserCredentials credentialsSource = credentials.get();
-                        AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
-                        userCredentialsRepository.save(credentialsSource);
-                    }
-                }
-
-                //Send affirmative answer
-                return ResponseEntity.ok().body(ServiceResponse.builder()
-                        .status(statusProps.getProperty("status.done"))
-                        .build());
-            }
-        }
-
-        //Return not found
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.notFound")).build());
-    } */
 
     public boolean update(ObjectId id, UserCreatorDto changes){
         if(id==null)

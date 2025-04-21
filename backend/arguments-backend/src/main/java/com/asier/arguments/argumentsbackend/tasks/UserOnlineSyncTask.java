@@ -1,8 +1,8 @@
 package com.asier.arguments.argumentsbackend.tasks;
 
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.UserSync;
-import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.entities.user.User;
+import com.asier.arguments.argumentsbackend.entities.user.UserSync;
+import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.services.UserService;
 import com.asier.arguments.argumentsbackend.services.auth.UserSyncService;
 import lombok.extern.slf4j.Slf4j;

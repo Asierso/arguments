@@ -1,8 +1,8 @@
 package com.asier.arguments.argumentsbackend.controllers.discussions;
 
-import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
-import com.asier.arguments.argumentsbackend.entities.dtos.DiscussionDto;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionDto;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;

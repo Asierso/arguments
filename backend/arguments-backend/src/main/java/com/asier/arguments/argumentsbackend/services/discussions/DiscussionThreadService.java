@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.discussions;
 
-import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 

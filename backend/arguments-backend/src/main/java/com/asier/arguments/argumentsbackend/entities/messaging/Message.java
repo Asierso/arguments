@@ -1,6 +1,6 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.messaging;
 
-import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.entities.Identify;
 import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;
@@ -10,39 +10,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
 
 /**
- * This class represents every discussion thread created by Users
+ * Every message posted inside a DiscussionThread by Users
  */
 @Data
-@Document(collection = "discussions")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiscussionThread implements Identify {
+@Builder
+@Document(collection = "messages")
+public class Message implements Identify {
     @Id
     private ObjectId id;
+    @Indexed
+    private ObjectId discussionId;
     @Mandatory
-    private String title;
-    private String author;
-    private Instant createdAt;
-    @Modifiable
-    private Instant endAt;
+    @Indexed
+    private String sender;
     @Mandatory
+    private String message;
+    private Instant sendTime;
     @Modifiable
-    private Integer maxUsers;
-    @Modifiable
-    private HashSet<String> users;
-
+    private String feedback;
     @Override
-    public String getId() {
+    public String getId(){
         return BasicUtils.getIdentity(id);
     }
 }
