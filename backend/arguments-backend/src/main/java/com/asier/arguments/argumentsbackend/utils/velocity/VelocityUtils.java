@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import java.io.StringWriter;
 import java.util.Properties;
 
+/**
+ * Allows to instantiate templates using .vm files
+ * Velocity replaces ${text} using the properties saved in velocity context
+ */
 @Component
 public class VelocityUtils {
     private final VelocityEngine engine;
@@ -21,6 +25,11 @@ public class VelocityUtils {
         engine = new VelocityEngine(props);
     }
 
+    /**
+     * Applies .vm template to the provided template interface
+     * @param template Template building interface
+     * @return String of the result of apply the template
+     */
     public String applyTemplate(VelocityTemplate template){
         //Process template with velocity context data
         VelocityResource resource = template.build(new VelocityContext());

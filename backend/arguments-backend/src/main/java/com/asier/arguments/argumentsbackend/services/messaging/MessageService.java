@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
 public interface MessageService {
-    void insert(Message message);
+    int insert(Message message);
     boolean update(ObjectId id, Message changes);
     Page<Message> findInDiscussion(String discussionId, int page);
 }

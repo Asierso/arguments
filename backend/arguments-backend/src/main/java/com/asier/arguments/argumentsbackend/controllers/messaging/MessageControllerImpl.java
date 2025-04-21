@@ -32,10 +32,30 @@ public class MessageControllerImpl implements MessageController {
             return ResponseEntity.status(400).body(ServiceResponse.builder().status(statusProps.getProperty("status.incompleteData")).build());
         }
 
-        messageService.insert(message);
+        //Try to insert message and return the result of insertion
+        switch(messageService.insert(message)){
+            case 0 -> {
+                return ResponseEntity.ok().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.done"))
+                        .build());
+            }
+            case 1 -> {
+                return ResponseEntity.status(404).body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.notFound"))
+                        .build());
+            }
+            case 2 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.expiredDiscussion"))
+                        .build());
+            }
+            default -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.notValidRequest"))
+                        .build());
+            }
+        }
 
-        return ResponseEntity.ok().body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.done"))
-                .build());
+
     }
 }
