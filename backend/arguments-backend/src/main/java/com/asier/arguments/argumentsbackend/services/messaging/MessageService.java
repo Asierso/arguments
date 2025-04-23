@@ -7,5 +7,7 @@ import org.springframework.data.domain.Page;
 public interface MessageService {
     int insert(Message message);
     boolean update(ObjectId id, Message changes);
-    Page<Message> findInDiscussion(String discussionId, int page);
+    Page<Message> findInDiscussion(ObjectId discussionId, int page);
+    Message select(ObjectId id);
+    boolean delete(ObjectId id);
 }

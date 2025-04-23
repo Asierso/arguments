@@ -10,10 +10,14 @@ import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -25,6 +29,10 @@ public class MessageServiceImpl implements MessageService {
     private MessageQueuing messageQueuing;
     @Autowired
     private DiscussionThreadService discussionService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     @Override
     public int insert(Message message) {
@@ -65,9 +73,39 @@ public class MessageServiceImpl implements MessageService {
         return false;
     }
 
+    @Override
+    public Page<Message> findInDiscussion(ObjectId discussionId, int page) {
+        int limit = Integer.parseInt(props.getProperty("arguments.api.messagesPerPage"));
+
+        //Build query to get all messages in same discussion ordered by most recent
+        Query messagesInDiscussion = new Query().addCriteria(
+                Criteria.where("discussionId").is(discussionId)
+        ).with(PageRequest.of(page,limit, Sort.by("sendTime").descending()));
+
+        long total = mongoTemplate.count(Query.of(messagesInDiscussion).limit(-1).skip(-1), Message.class);
+
+        //Get messages filtered and paginated and return with pagination metadata
+        List<Message> messages = mongoTemplate.find(messagesInDiscussion,Message.class);
+
+        return new PageImpl<>(messages,PageRequest.of(page,limit),total);
+    }
 
     @Override
-    public Page<Message> findInDiscussion(String discussionId, int page) {
-        return null;
+    public Message select(ObjectId id) {
+        Optional<Message> selected = messageRepository.findById(id);
+        return selected.orElse(null);
+    }
+
+    @Override
+    public boolean delete(ObjectId id) {
+        Optional<Message> selected = messageRepository.findById(id);
+
+        //Check if message doesn't exist (send 404)
+        if(selected.isEmpty())
+            return false;
+
+        //Remove message
+        messageRepository.deleteById(id);
+        return true;
     }
 }
