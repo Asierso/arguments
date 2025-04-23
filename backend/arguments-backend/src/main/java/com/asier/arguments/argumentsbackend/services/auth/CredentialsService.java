@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 
 import java.util.List;
 

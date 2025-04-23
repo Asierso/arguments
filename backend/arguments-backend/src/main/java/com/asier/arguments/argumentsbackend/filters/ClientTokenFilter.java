@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.filters;
 
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;

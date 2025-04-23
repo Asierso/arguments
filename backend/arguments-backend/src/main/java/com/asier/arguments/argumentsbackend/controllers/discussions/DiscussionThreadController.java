@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.controllers.discussions;
 
-import com.asier.arguments.argumentsbackend.entities.dtos.DiscussionDto;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionDto;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

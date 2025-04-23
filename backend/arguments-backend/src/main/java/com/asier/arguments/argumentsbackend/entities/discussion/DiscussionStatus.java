@@ -1,8 +1,7 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.discussion;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.repositories;
 
-import com.asier.arguments.argumentsbackend.entities.UserSync;
+import com.asier.arguments.argumentsbackend.entities.user.UserSync;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

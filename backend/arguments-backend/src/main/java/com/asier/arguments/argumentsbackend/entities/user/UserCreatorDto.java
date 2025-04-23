@@ -1,7 +1,5 @@
-package com.asier.arguments.argumentsbackend.entities.dtos;
+package com.asier.arguments.argumentsbackend.entities.user;
 
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

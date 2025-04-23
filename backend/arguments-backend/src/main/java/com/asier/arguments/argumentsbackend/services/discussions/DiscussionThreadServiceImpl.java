@@ -2,6 +2,7 @@ package com.asier.arguments.argumentsbackend.services.discussions;
 
 import com.asier.arguments.argumentsbackend.entities.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;

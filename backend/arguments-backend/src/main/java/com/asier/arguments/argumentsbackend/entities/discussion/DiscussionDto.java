@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.entities.dtos;
+package com.asier.arguments.argumentsbackend.entities.discussion;
 
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;

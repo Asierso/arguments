@@ -6,6 +6,6 @@ docker run --rm -d \
 docker run -d \
   --name arguments-dev-ollama \
   -p 11434:11434 \
-  ollama/ollama 2%>/dev/null
+  ollama/ollama
 
 docker exec -d arguments-dev-ollama ollama pull llama3.2:1b
