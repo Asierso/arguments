@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.discussions;
 
+import com.asier.arguments.argumentsbackend.entities.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -46,6 +48,48 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         Optional<DiscussionThread> selected = discussionRepository.findById(id);
         selected.ifPresent(discussionRepository::delete);
         return selected.isPresent();
+    }
+
+    @Override
+    public int join(ObjectId id, String username){
+        Optional<DiscussionThread> selected = discussionRepository.findById(id);
+
+        //Check if discussion thread exists
+        if(selected.isEmpty())
+            return 1;
+
+        DiscussionThread discussion = selected.get();
+
+        //Check if discussion thread is not expired
+        if(discussion.getEndAt().isBefore(Instant.now())){
+            return 2;
+        }
+
+        //Check if discussion thread is full
+        if(discussion.getMaxUsers() >= discussion.getUsers().size()){
+            return 3;
+        }
+
+        //Add username to discussion users list
+        discussion.getUsers().add(username);
+        discussionRepository.save(discussion);
+        return 0;
+    }
+
+    @Override
+    public boolean alterStatus(ObjectId id, DiscussionStatus status) {
+        if(id==null)
+            return false;
+
+        //Get discussion by id
+        Optional<DiscussionThread> selected = discussionRepository.findById(id);
+        if(selected.isEmpty())
+            return false;
+
+        //Save discussion with the status changed
+        selected.get().setStatus(status);
+        discussionRepository.save(selected.get());
+        return true;
     }
 
     @Override

@@ -40,6 +40,7 @@ public class DiscussionThread implements Identify {
     private Integer maxUsers;
     @Modifiable
     private HashSet<String> users;
+    private DiscussionStatus status;
 
     @Override
     public String getId() {

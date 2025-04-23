@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.discussions;
 
+import com.asier.arguments.argumentsbackend.entities.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -10,4 +11,6 @@ public interface DiscussionThreadService {
     Page<DiscussionThread> findInPage(int page);
     boolean delete(ObjectId id);
     boolean update(ObjectId id, DiscussionThread discussion);
+    int join(ObjectId id, String username);
+    boolean alterStatus(ObjectId id, DiscussionStatus status);
 }

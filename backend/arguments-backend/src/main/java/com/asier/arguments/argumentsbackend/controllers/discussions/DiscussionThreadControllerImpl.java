@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.controllers.discussions;
 
+import com.asier.arguments.argumentsbackend.entities.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.dtos.DiscussionDto;
 import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
@@ -40,6 +41,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .maxUsers(discussionDto.getMaxUsers())
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<String>())
+                .status(DiscussionStatus.STARTED)
                 .build();
 
         discussion.getUsers().add(username);
