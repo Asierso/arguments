@@ -6,6 +6,7 @@ import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadReposit
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.Properties;
 
+@Slf4j
 @Service
 public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     @Autowired
@@ -52,6 +54,9 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
 
     @Override
     public int join(ObjectId id, String username){
+        if(id==null)
+            return 1;
+
         Optional<DiscussionThread> selected = discussionRepository.findById(id);
 
         //Check if discussion thread exists
@@ -66,8 +71,13 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         }
 
         //Check if discussion thread is full
-        if(discussion.getMaxUsers() >= discussion.getUsers().size()){
+        if(discussion.getMaxUsers() <= discussion.getUsers().size()){
             return 3;
+        }
+
+        //Check if user is already joined
+        if(discussion.getUsers().contains(username)){
+            return 4;
         }
 
         //Add username to discussion users list

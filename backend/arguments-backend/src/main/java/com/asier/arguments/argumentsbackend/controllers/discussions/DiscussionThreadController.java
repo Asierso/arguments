@@ -12,4 +12,6 @@ public interface DiscussionThreadController {
     ResponseEntity<ServiceResponse> findByPage(@RequestParam String clientToken, @RequestParam(defaultValue = "0") String page);
     @GetMapping("/discussions/{discussionId}")
     ResponseEntity<ServiceResponse> getDiscussion(@RequestParam String clientToken, @PathVariable String discussionId);
+    @PostMapping("/discussions/{discussionId}/join")
+    ResponseEntity<ServiceResponse> join(@RequestParam String clientToken, @PathVariable String discussionId, @RequestAttribute String username);
 }

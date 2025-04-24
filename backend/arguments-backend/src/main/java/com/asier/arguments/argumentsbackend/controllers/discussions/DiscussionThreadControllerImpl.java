@@ -81,4 +81,28 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
         }
         return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).result(selected).build());
     }
+
+    @Override
+    public ResponseEntity<ServiceResponse> join(String clientToken, String discussionId, String username) {
+        switch (discussionThreadService.join(new ObjectId(discussionId),username)){
+            case 0 -> {
+                return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).build());
+            }
+            case 1 -> {
+                return ResponseEntity.status(404).body(ServiceResponse.builder().status(statusProps.getProperty("status.notFound")).build());
+            }
+            case 2 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.expiredDiscussion")).build());
+            }
+            case 3 -> {
+                return ResponseEntity.status(409).body(ServiceResponse.builder().status(statusProps.getProperty("status.discussionMaxReached")).build());
+            }
+            case 4 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.userAlreadyExists")).build());
+            }
+            default -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.notValidRequest")).build());
+            }
+        }
+    }
 }

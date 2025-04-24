@@ -44,8 +44,13 @@ public class MessageServiceImpl implements MessageService {
         if(discussion == null){
             return 1;
         }
+        //Check if discussion is expired
         if(message.getSendTime().isAfter(discussion.getEndAt())){
             return 2;
+        }
+        //User should be joined before send a message
+        if(!discussion.getUsers().contains(message.getSender())){
+            return 3;
         }
 
         Message saved = messageRepository.save(message);

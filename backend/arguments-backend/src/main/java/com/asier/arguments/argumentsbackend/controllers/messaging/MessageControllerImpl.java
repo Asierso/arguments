@@ -50,6 +50,11 @@ public class MessageControllerImpl implements MessageController {
                         .status(statusProps.getProperty("status.expiredDiscussion"))
                         .build());
             }
+            case 3 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.notMember"))
+                        .build());
+            }
             default -> {
                 return ResponseEntity.badRequest().body(ServiceResponse.builder()
                         .status(statusProps.getProperty("status.notValidRequest"))
