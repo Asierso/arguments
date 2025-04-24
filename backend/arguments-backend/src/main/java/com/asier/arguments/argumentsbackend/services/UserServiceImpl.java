@@ -12,6 +12,9 @@ import org.bson.types.ObjectId;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private UserCredentialsRepository userCredentialsRepository;
 
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
+    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     @Override
     public ResponseEntity<ServiceResponse> insert(UserCreatorDto entity) {
@@ -165,6 +169,11 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         //Get all users
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> findInPage(int page) {
+        return userRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.usersPerPage")), Sort.by("username")));
     }
 
 }

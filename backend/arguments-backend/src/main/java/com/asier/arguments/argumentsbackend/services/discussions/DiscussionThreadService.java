@@ -2,10 +2,11 @@ package com.asier.arguments.argumentsbackend.services.discussions;
 
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
+import com.asier.arguments.argumentsbackend.services.TaskPagination;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
-public interface DiscussionThreadService {
+public interface DiscussionThreadService extends TaskPagination<DiscussionThread> {
     void insert(DiscussionThread discussion);
     DiscussionThread select(ObjectId id);
     Page<DiscussionThread> findInPage(int page);
