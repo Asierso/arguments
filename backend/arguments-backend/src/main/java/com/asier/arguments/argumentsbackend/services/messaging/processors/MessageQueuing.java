@@ -39,7 +39,7 @@ public class MessageQueuing implements Runnable {
     private PaimonProcessor paimon;
 
     public MessageQueuing(){
-        pool = Executors.newFixedThreadPool(Integer.parseInt(props.getProperty("arguments.queuing.maxThreads")));
+        pool = Executors.newFixedThreadPool(Integer.parseInt(props.getProperty("arguments.pools.queuingThreads")));
     }
 
     public synchronized void enqueue(Message message){
@@ -48,7 +48,7 @@ public class MessageQueuing implements Runnable {
 
     @PostConstruct
     public void init(){
-        for(int i = 0; i < Integer.parseInt(props.getProperty("arguments.queuing.maxThreads")); i++)
+        for(int i = 0; i < Integer.parseInt(props.getProperty("arguments.pools.queuingThreads")); i++)
             pool.submit(this);
     }
 

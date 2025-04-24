@@ -1,7 +1,7 @@
 package com.asier.arguments.argumentsbackend.tasks;
 
-import com.asier.arguments.argumentsbackend.entities.DiscussionStatus;
-import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
