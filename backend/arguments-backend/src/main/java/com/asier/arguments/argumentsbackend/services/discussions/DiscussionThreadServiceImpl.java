@@ -37,7 +37,7 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     }
 
     public Page<DiscussionThread> findInPage(int page){
-        return discussionRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.discussionsPerPage")), Sort.by("endAt").descending()));
+        return discussionRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.discussionsPerPage")), Sort.by("createdAt").descending()));
     }
 
     @Override
