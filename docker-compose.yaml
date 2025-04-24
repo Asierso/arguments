@@ -32,6 +32,8 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+      ollama:
+        condition: service_started
     networks:
       - arguments-network
 # Ollama Service
