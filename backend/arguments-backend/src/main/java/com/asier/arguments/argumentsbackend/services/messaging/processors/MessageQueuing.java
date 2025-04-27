@@ -63,7 +63,7 @@ public class MessageQueuing implements Runnable {
                 Message message = messageQueue.take();
                 log.info("Processing feedback " + message.getId());
 
-                DiscussionThread discussion = discussionService.select(message.getDiscussionId());
+                DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
 
                 if(discussion == null)
                     continue;

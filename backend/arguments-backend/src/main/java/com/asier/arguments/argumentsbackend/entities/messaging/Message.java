@@ -40,4 +40,5 @@ public class Message implements Identify {
     public String getId(){
         return BasicUtils.getIdentity(id);
     }
+    public String getDiscussionId() {return BasicUtils.getIdentity(discussionId); }
 }

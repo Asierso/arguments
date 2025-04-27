@@ -40,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
         message.setSendTime(Instant.now());
 
         //Before save, check if the target discussion is even valid and not ended
-        DiscussionThread discussion = discussionService.select(message.getDiscussionId());
+        DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
         if(discussion == null){
             return 1;
         }
