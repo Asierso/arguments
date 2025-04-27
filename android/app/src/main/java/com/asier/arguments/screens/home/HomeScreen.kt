@@ -113,7 +113,9 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
             itemsIndexed(items = homeScreenViewModel.loadedDiscussions.toList()) { index, item ->
                 DiscussionCard(
                     discussion = item.discussionThread,
-                    userData = item.user,
+                    userData = item.user.also {
+                        it!!.isActive = if(it.username == homeScreenViewModel.username) true else it.isActive
+                    },
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
                         parameters.viewProfile = it.username
