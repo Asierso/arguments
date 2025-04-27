@@ -92,7 +92,7 @@ fun SelfProfileScreen(activityProperties: ActivityProperties, profileScreenViewM
         profile = {
             UserAlt(
                 name = profileScreenViewModel.userData!!.username,
-                isOnline = profileScreenViewModel.userData!!.isActive) {}
+                isOnline = if(profileScreenViewModel.isSelf()) true else profileScreenViewModel.userData!!.isActive) {}
         })
 
     Column(

@@ -77,8 +77,7 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         modifier = Modifier.fillMaxWidth(),
         profile = {
             UserAlt(
-                name = profileEditorScreenViewModel.userData!!.username,
-                isOnline = profileEditorScreenViewModel.userData!!.isActive) {}
+                name = profileEditorScreenViewModel.userData!!.username) {}
         })
 
     Column(
@@ -121,7 +120,8 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
             //Discussion author
             UserCard(
                 User().apply {
-                username = user.username
+                    username = user.username
+                    isActive = true
             }, modifier = Modifier
                 .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
                 .weight(.60f),
