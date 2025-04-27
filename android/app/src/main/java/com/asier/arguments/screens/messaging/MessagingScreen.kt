@@ -1,6 +1,7 @@
 package com.asier.arguments.screens.messaging
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -26,6 +30,7 @@ import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.TopBarBackground
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -48,35 +53,54 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
 
     messagingScreenViewModel.loadUsername()
 
-    //Load new messages with little delay
-    LaunchedEffect(Unit) {
-        while (true){
-            messagingScreenViewModel.loadMessages(scope)
-            delay(2000)
-        }
-    }
-
-
     messagingScreenViewModel.checkDiscussionAvailability(activityProperties,scope)
 
+    //Load new messages with little delay
+    messagingScreenViewModel.startUpdatingCycle(activityProperties,scope)
 
-    TitleTopBar(title = "XYZ",
+    TitleTopBar(title = messagingScreenViewModel.discussionTitle,
         modifier = Modifier.fillMaxWidth()
     )
 
     MessageBoard(messagingScreenViewModel)
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
     val scope = rememberCoroutineScope()
 
+    //List handlers
+    val listState = rememberLazyListState()
+    val messageListSize = messagingScreenViewModel.messages.toSortedMap().values.flatten().size
+    val isAtTop = remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+    }
+
+    if (isAtTop.value) {
+        //TODO: Implement top loading
+    }
+
+
+    LaunchedEffect(messageListSize) {
+        if(messageListSize > 0)
+            listState.animateScrollToItem( messageListSize - 1)
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
-        LazyColumn(modifier = Modifier.weight(.9f).padding(5.dp).fillMaxWidth()) {
+        LazyColumn(
+            modifier = Modifier.weight(.9f).padding(5.dp).fillMaxWidth(),
+            state = listState
+        ) {
             itemsIndexed(messagingScreenViewModel.messages
                 .toSortedMap()
                 .values
-                .flatten()){ index, item ->
+                .flatten()
+                .sortedBy {
+                    it.sendTime
+                }){ index, item ->
                 ChatMessageDialog(
                     message = item,
                     self = item.sender == messagingScreenViewModel.username,
@@ -86,6 +110,7 @@ fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
                     })
             }
         }
+
         ChatTextInput(
             onValueChanged = {messagingScreenViewModel.writingMessage = it},
             text = messagingScreenViewModel.writingMessage,
@@ -95,3 +120,4 @@ fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
             })
     }
 }
+

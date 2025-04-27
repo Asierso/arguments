@@ -30,10 +30,17 @@ class MessagingScreenViewModel : ViewModel() {
     var storage by mutableStateOf<LocalStorage?>(null)
     var username by mutableStateOf("you")
 
+    //Discussion data
+    var discussionTitle by mutableStateOf("")
     var messages = mutableStateMapOf<Int,List<Message>>()
+
+    //Messaging page data
     var currentPage = 0
+    var totalPages = 0
 
     var writingMessage by mutableStateOf("")
+
+    var updatingCycle by mutableStateOf(false)
 
     fun loadUsername() {
         username = storage!!.load("user")!!
@@ -63,27 +70,37 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    fun loadMessages(scope: CoroutineScope) {
+    fun loadMessages(activityProperties: ActivityProperties,scope: CoroutineScope, pageNum: Int = 0) {
         val id = storage?.load("discussion") ?: ""
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MessagingService.getMessagesByPage(storage!!,id,0)
-                when(StatusCodes.valueOf(response!!.status)){
-                    StatusCodes.SUCCESSFULLY -> {
-                        val resultJson =
-                            GsonUtils.gson.toJson(response.result as LinkedTreeMap<*, *>)
-                        val type = object : TypeToken<PageResponse<Message>>() {}.type
-                        val resultPage =
-                            GsonUtils.gson.fromJson<PageResponse<Message>>(
-                                resultJson,
-                                type
-                            )
+                //Try to get messages
+                try {
+                    val response = MessagingService.getMessagesByPage(storage!!, id, pageNum)
+                    when (StatusCodes.valueOf(response!!.status)) {
+                        StatusCodes.SUCCESSFULLY -> {
+                            val resultJson =
+                                GsonUtils.gson.toJson(response.result as LinkedTreeMap<*, *>)
+                            val type = object : TypeToken<PageResponse<Message>>() {}.type
+                            val resultPage =
+                                GsonUtils.gson.fromJson<PageResponse<Message>>(
+                                    resultJson,
+                                    type
+                                )
 
-                        withContext(Dispatchers.Main){
-                            messages.put(resultPage.number,resultPage.content)
+                            withContext(Dispatchers.Main) {
+                                messages.put(resultPage.number, resultPage.content.toMutableList())
+                                totalPages = resultPage.totalPages
+                            }
                         }
+                        else -> {}
                     }
-                    else -> {}
+                }
+                catch (ignore: Exception){
+                    //Error in discussion, navigate to home
+                    activityProperties.navController.navigate(Screen.Home.route){
+                        popUpTo(0) {inclusive = true}
+                    }
                 }
             }
         }
@@ -104,6 +121,9 @@ class MessagingScreenViewModel : ViewModel() {
                             if (discussion.endAt!!.isBefore(Instant.now())) {
                                 throw Exception()
                             }
+                            else{
+                                discussionTitle = discussion.title
+                            }
                         }
                         else -> {
                             throw Exception()
@@ -113,11 +133,23 @@ class MessagingScreenViewModel : ViewModel() {
                     //Delete discussion reference from storage and go to home screen
                     withContext(Dispatchers.Main) {
                         storage!!.delete("discussion")
-                        delay(100)
-                        activityProperties.navController.navigate(Screen.Home.route) {
-                            popUpTo(0) { inclusive = true }
-                        }
                     }
+                }
+            }
+        }
+    }
+
+    fun startUpdatingCycle(activityProperties: ActivityProperties,scope: CoroutineScope){
+        if(updatingCycle)
+            return
+        updatingCycle = true
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                while(true){
+                    withContext(Dispatchers.Main){
+                        loadMessages(activityProperties,scope)
+                    }
+                    delay(1000)
                 }
             }
         }

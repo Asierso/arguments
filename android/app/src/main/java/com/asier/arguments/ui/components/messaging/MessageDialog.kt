@@ -28,6 +28,7 @@ import com.asier.arguments.ui.theme.TextBright1
 import org.apache.commons.lang3.StringUtils
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -39,7 +40,7 @@ fun MessageDialog(
 ){
     val normalRoundPercent = 15
     val sideRoundRect = 5
-    val hour = message.sendTime.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("HH:mm"))
+    val hour = message.sendTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm"))
     Box(modifier = modifier
         .clip(
             RoundedCornerShape(
@@ -88,7 +89,7 @@ fun MessageDialog(
 }
 
 private fun getDayOf(sendTime : Instant, context: Context) : String{
-    val local = sendTime.atOffset(ZoneOffset.UTC).toLocalDate()
+    val local = sendTime.atZone(ZoneId.systemDefault()).toLocalDate()
     if(local.equals(LocalDate.now())){
         return context.getString(R.string.day_today)
     }

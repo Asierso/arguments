@@ -8,4 +8,5 @@ interface ApiDiscussionsService {
     suspend fun getDiscussionById(localStorage: LocalStorage, discussionId: String) : ServiceResponse?
     suspend fun getDiscussionsByPage(localStorage: LocalStorage, page : Int) : ServiceResponse?
     suspend fun createDiscussion(localStorage: LocalStorage, discussion: DiscussionCreatorDto) : ServiceResponse?
+    suspend fun joinDiscussionById(localStorage: LocalStorage, discussionId: String) : ServiceResponse?
 }

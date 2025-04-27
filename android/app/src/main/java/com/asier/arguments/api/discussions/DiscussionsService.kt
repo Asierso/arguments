@@ -33,4 +33,13 @@ object DiscussionsService : ApiDiscussionsService {
            ApiServices.DiscussionsAuthService(localStorage).createDiscussion(discussion = discussion)
        )
     }
+
+    override suspend fun joinDiscussionById(
+        localStorage: LocalStorage,
+        discussionId: String
+    ): ServiceResponse? {
+        return RetrofitUtils.getResponse(
+            ApiServices.DiscussionsAuthService(localStorage).joinDiscussionById(discussionId = discussionId)
+        )
+    }
 }
