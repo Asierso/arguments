@@ -1,8 +1,9 @@
 package com.asier.arguments.argumentsbackend.controllers.discussions;
 
-import com.asier.arguments.argumentsbackend.entities.DiscussionThread;
-import com.asier.arguments.argumentsbackend.entities.dtos.DiscussionDto;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionDto;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
@@ -40,6 +41,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .maxUsers(discussionDto.getMaxUsers())
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<String>())
+                .status(DiscussionStatus.STARTED)
                 .build();
 
         discussion.getUsers().add(username);
@@ -78,5 +80,29 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
             return ResponseEntity.status(404).body(ServiceResponse.builder().status(statusProps.getProperty("status.notFound")).build());
         }
         return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).result(selected).build());
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> join(String clientToken, String discussionId, String username) {
+        switch (discussionThreadService.join(new ObjectId(discussionId),username)){
+            case 0 -> {
+                return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).build());
+            }
+            case 1 -> {
+                return ResponseEntity.status(404).body(ServiceResponse.builder().status(statusProps.getProperty("status.notFound")).build());
+            }
+            case 2 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.expiredDiscussion")).build());
+            }
+            case 3 -> {
+                return ResponseEntity.status(409).body(ServiceResponse.builder().status(statusProps.getProperty("status.discussionMaxReached")).build());
+            }
+            case 4 -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.userAlreadyExists")).build());
+            }
+            default -> {
+                return ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.notValidRequest")).build());
+            }
+        }
     }
 }

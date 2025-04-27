@@ -1,6 +1,6 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.messaging;
 
-import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.entities.Identify;
 import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;
@@ -13,27 +13,31 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+
 /**
- * This entity creates association between username and password to allow logins.
- * This is confident data and password are encrypted using BCrypt util
+ * Every message posted inside a DiscussionThread by Users
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collection = "credentials")
-public class UserCredentials implements Identify {
+@Document(collection = "messages")
+public class Message implements Identify {
     @Id
     private ObjectId id;
-    //Can't be modified because is used to join with the "public" user class
+    @Indexed
+    private ObjectId discussionId;
     @Mandatory
     @Indexed
-    private String username;
+    private String sender;
     @Mandatory
+    private String message;
+    private Instant sendTime;
     @Modifiable
-    private String password;
+    private String feedback;
     @Override
-    public String getId() {
+    public String getId(){
         return BasicUtils.getIdentity(id);
     }
 }

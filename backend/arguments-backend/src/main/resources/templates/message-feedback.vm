@@ -1,0 +1,21 @@
+Given the following message:
+
+"${message}"
+
+And the topic:
+
+"${topic}"
+
+Evaluate whether the message is aligned with the topic. Then, provide a concise and constructive feedback that suggests how the message could be improved to better fit the topic.
+
+Requirements:
+- Output must be in the same language as the input message.
+- Response must be summarized in 50 characters.
+- Be clear, respectful, and directly helpful.
+- Do not repeat the message or the topic.
+- No extra explanations—just the feedback itself, like a tweet-sized response.
+
+If you can't do the task with the provided information, just write "unknown"
+
+Expected output:
+[Your feedback goes here]

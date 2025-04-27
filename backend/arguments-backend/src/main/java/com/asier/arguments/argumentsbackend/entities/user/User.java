@@ -1,6 +1,6 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.user;
 
-import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.entities.Identify;
 import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import org.springframework.data.annotation.Id;
@@ -13,8 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 /**
  * This is the public User. People can see that information in Arguments social network

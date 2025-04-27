@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;

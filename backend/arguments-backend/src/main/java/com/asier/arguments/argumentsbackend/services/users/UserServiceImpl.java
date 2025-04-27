@@ -1,9 +1,9 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.users;
 
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.user.User;
+import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.repositories.UserCredentialsRepository;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -12,6 +12,9 @@ import org.bson.types.ObjectId;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private UserCredentialsRepository userCredentialsRepository;
 
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
+    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     @Override
     public ResponseEntity<ServiceResponse> insert(UserCreatorDto entity) {
@@ -129,46 +133,6 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    /* OLD
-    @Override
-    public ResponseEntity<ServiceResponse> update(ObjectId id,UserCreatorDto changes) {
-        if(id != null){
-            Optional<User> user = userRepository.findById(id);
-            if(user.isPresent()){
-                //If there are users included in changes, change it
-                if(changes.getUser() != null) {
-                    User userSource = user.get();
-                    AnnotationsUtils.modifyEntity(userSource, changes.getUser());
-                    userRepository.save(userSource);
-                }
-
-                //If there are credentials included in changes, change it
-                if(changes.getCredentials() != null){
-                    Optional<UserCredentials> credentials = userCredentialsRepository.findOne(Example.of(UserCredentials.builder()
-                                    .username(user.get().getUsername()).build()));
-                    if(credentials.isPresent()){
-                        //Hash password
-                        changes.getCredentials().setPassword(BCrypt.hashpw(changes.getCredentials().getPassword(), BCrypt.gensalt()));
-
-                        //Apply changes
-                        UserCredentials credentialsSource = credentials.get();
-                        AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
-                        userCredentialsRepository.save(credentialsSource);
-                    }
-                }
-
-                //Send affirmative answer
-                return ResponseEntity.ok().body(ServiceResponse.builder()
-                        .status(statusProps.getProperty("status.done"))
-                        .build());
-            }
-        }
-
-        //Return not found
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
-                .status(statusProps.getProperty("status.notFound")).build());
-    } */
-
     public boolean update(ObjectId id, UserCreatorDto changes){
         if(id==null)
             return false;
@@ -205,6 +169,11 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         //Get all users
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> findInPage(int page) {
+        return userRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.usersPerPage")), Sort.by("username")));
     }
 
 }

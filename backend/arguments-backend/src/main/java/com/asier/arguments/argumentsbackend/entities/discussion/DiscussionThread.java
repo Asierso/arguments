@@ -1,6 +1,6 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.discussion;
 
-import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.entities.Identify;
 import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import com.asier.arguments.argumentsbackend.utils.annotations.Modifiable;
@@ -13,10 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * This class represents every discussion thread created by Users
@@ -40,6 +37,7 @@ public class DiscussionThread implements Identify {
     private Integer maxUsers;
     @Modifiable
     private HashSet<String> users;
+    private DiscussionStatus status;
 
     @Override
     public String getId() {

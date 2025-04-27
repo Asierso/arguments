@@ -1,6 +1,6 @@
-package com.asier.arguments.argumentsbackend.entities;
+package com.asier.arguments.argumentsbackend.entities.commons;
 
-import com.asier.arguments.argumentsbackend.misc.Identify;
+import com.asier.arguments.argumentsbackend.entities.Identify;
 import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

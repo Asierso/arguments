@@ -1,9 +1,9 @@
 package com.asier.arguments.arguments_backend.endpoints;
 
-import com.asier.arguments.argumentsbackend.entities.User;
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
-import com.asier.arguments.argumentsbackend.entities.dtos.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.entities.user.User;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

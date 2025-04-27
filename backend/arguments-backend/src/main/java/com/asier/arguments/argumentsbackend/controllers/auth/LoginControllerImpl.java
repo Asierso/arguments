@@ -1,8 +1,8 @@
 package com.asier.arguments.argumentsbackend.controllers.auth;
 
-import com.asier.arguments.argumentsbackend.entities.UserCredentials;
-import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
-import com.asier.arguments.argumentsbackend.entities.dtos.ServiceResponse;
+import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
+import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
+import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.services.auth.AuthService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import com.asier.arguments.argumentsbackend.services.auth.CredentialsService;
