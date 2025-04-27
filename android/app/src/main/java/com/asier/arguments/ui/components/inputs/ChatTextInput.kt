@@ -33,7 +33,9 @@ fun ChatTextInput(
             modifier = Modifier.fillMaxWidth().shadow(5.dp)
         )
         IconButton(
-            onClick = {},
+            onClick = {
+                onSendClicked()
+            },
             modifier = Modifier.padding(end = 15.dp).align(Alignment.CenterEnd).width(25.dp).height(25.dp)) {
             Icon(
                 painter = painterResource(R.drawable.ic_send),

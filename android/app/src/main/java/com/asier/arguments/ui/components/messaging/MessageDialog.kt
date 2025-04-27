@@ -54,17 +54,17 @@ fun MessageDialog(
         Column {
             if(!self){
                 Text(
-                    text = StringUtils.abbreviate(message.author,15),
+                    text = StringUtils.abbreviate(message.sender,15),
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
                     fontFamily = Montserrat,
                     fontSize = 15.sp,
-                    color = getColorByName(message.author),
+                    color = getColorByName(message.sender),
                     modifier = Modifier
                 )
             }
             Text(
-                text = message.text,
+                text = message.message,
                 textAlign = if(self) TextAlign.Justify else TextAlign.Justify,
                 fontWeight = FontWeight.Medium,
                 fontFamily = Montserrat,
@@ -102,7 +102,7 @@ private fun getDayOf(sendTime : Instant, context: Context) : String{
 @Composable
 fun MessageDialogPreview(){
     MessageDialog(
-        Message(author = "pepe", text = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet", sendTime = Instant.now()),
+        Message(sender = "pepe", message = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet", sendTime = Instant.now(), discussionId = ""),
         false)
 }
 
@@ -110,6 +110,6 @@ fun MessageDialogPreview(){
 @Composable
 fun MessageDialogSelfPreview(){
     MessageDialog(
-        Message(author = "dummy", text = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet", sendTime = Instant.now()),
+        Message(sender = "dummy", message = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet", sendTime = Instant.now(), discussionId = ""),
         true)
 }
