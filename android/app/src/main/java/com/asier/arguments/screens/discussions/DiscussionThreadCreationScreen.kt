@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +46,7 @@ import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
+import com.asier.arguments.ui.theme.TextError1
 import com.asier.arguments.ui.theme.TopBarBackground
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +62,7 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
 
     //Scope to make fetch
     val scope = rememberCoroutineScope()
+    dtcViewModel.storage = activityProperties.storage
 
     //Show overlay for few time when screen is changing
     LaunchedEffect(Unit) {
@@ -98,11 +101,21 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
         Spacer(modifier = Modifier.height(60.dp))
 
         //Create discussion button
-        PrimaryButton(text = stringResource(R.string.discussion_creation_create_button), modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp), onClick = {
-            dtcViewModel.createDiscussion(activityProperties,scope)
-        })
+        Column {
+            PrimaryButton(text = stringResource(R.string.discussion_creation_create_button), modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp), onClick = {
+                dtcViewModel.createDiscussion(activityProperties,scope)
+            })
+            Text(
+                text = "OJO: No podrás abandonar la discusión hasta que termine",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+                fontFamily = Montserrat,
+                fontSize = 12.sp,
+                color = TextError1
+            )
+        }
     }
 }
 

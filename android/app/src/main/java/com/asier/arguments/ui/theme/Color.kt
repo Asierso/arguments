@@ -40,3 +40,5 @@ val CardBackground = Color(0xFF3B3B3B)
 
 val SelfMessageBox = Color(0xFF7B6CC1)
 val OtherMessageBox = Color(0xFF3B3B3B)
+
+val AlertBackground = Color(0xFF3B3B3B)

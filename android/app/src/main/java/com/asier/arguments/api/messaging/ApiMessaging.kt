@@ -1,0 +1,5 @@
+package com.asier.arguments.api.messaging
+
+interface ApiMessaging {
+
+}

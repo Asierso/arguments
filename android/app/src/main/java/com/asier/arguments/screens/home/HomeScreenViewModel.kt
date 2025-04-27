@@ -57,6 +57,10 @@ class HomeScreenViewModel : ViewModel() {
     var totalElements by mutableLongStateOf(0)
     var totalPages by mutableIntStateOf(1)
 
+    //Alert dialogs handlers
+    var discussionWarning by mutableStateOf(false)
+    var discussionPreloaded by mutableStateOf("")
+
     fun loadUsername() {
         if (username.isNotBlank())
             return
@@ -64,6 +68,11 @@ class HomeScreenViewModel : ViewModel() {
         storage?.load("user")?.let {
             username = it
         }
+    }
+
+    fun openDiscussion(activityProperties: ActivityProperties){
+        storage?.save("discussion",discussionPreloaded)
+        activityProperties.navController.navigate(Screen.Messaging.route)
     }
 
     fun loadProfile(activityProperties: ActivityProperties) {

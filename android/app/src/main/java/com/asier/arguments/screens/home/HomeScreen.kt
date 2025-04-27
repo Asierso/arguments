@@ -34,6 +34,7 @@ import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.alerts.WarningAlert
 import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
@@ -120,10 +121,29 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                     onUsernameClick = {
                         parameters.viewProfile = it.username
                         homeScreenViewModel.loadProfile(activityProperties)
-                    })
+                    },
+                    onDiscussionClick = {
+                        homeScreenViewModel.discussionPreloaded = it.id
+                        homeScreenViewModel.discussionWarning = true
+                    }
+                )
             }
         }
     }
+
+    //Warning confirmation to load discussion
+    WarningAlert(
+        title = "Atención",
+        subtitle = "Una vez accedas, no podrás salir hasta que el debate termine. ¿Estás seguro?",
+        onConfirm = {
+            homeScreenViewModel.discussionWarning = false
+            homeScreenViewModel.openDiscussion(activityProperties)
+        },
+        onDismiss = {
+            homeScreenViewModel.discussionWarning = false
+        },
+        showAlert = homeScreenViewModel.discussionWarning
+    )
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }

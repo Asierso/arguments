@@ -123,6 +123,15 @@ class MainActivity : ComponentActivity() {
                 scope = scope,
                 delay = 10)
         }
+
+        //Load message screen if there's a active discussion (user tries to cheat) and makes the first nav graph screen
+        LaunchedEffect(Unit) {
+            if (activityProperties.storage.load("discussion") != null) {
+                activityProperties.navController.navigate(Screen.Messaging.route){
+                    popUpTo(0) { inclusive = true}
+                }
+            }
+        }
     }
 
     @Composable

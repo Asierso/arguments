@@ -1,6 +1,7 @@
 package com.asier.arguments.ui.components.inputs
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -19,16 +20,17 @@ import com.asier.arguments.ui.theme.TextBright1
 @Composable
 fun ChatTextInput(
     onValueChanged: (String) -> Unit,
+    onSendClicked: () -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "Type...",
     text: String = "") {
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxWidth()) {
         BaseTextInput(
             placeholder = placeholder,
             text = text,
             onValueChanged = onValueChanged,
-            modifier = Modifier.shadow(5.dp)
+            modifier = Modifier.fillMaxWidth().shadow(5.dp)
         )
         IconButton(
             onClick = {},
@@ -45,5 +47,5 @@ fun ChatTextInput(
 @Preview
 @Composable
 fun ChatTextInputPreview(){
-    ChatTextInput(onValueChanged = {})
+    ChatTextInput(onValueChanged = {}, onSendClicked = {})
 }

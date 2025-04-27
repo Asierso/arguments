@@ -2,6 +2,7 @@ package com.asier.arguments.ui.components.others
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,8 @@ fun DiscussionCard(
     discussion: DiscussionThread,
     modifier: Modifier = Modifier,
     userData: User? = null,
-    onUsernameClick: ((user: User) -> Unit)? = null
+    onUsernameClick: ((user: User) -> Unit)? = null,
+    onDiscussionClick: ((discussion: DiscussionThread) -> Unit)? = null
 ) {
     var redraw by remember { mutableStateOf(0) }
 
@@ -76,6 +78,7 @@ fun DiscussionCard(
                     .clip(RoundedCornerShape(17.dp))
                     .background(CardBackground)
                     .matchParentSize()
+                    .clickable { if(!expired) onDiscussionClick?.invoke(discussion) }
             ) {
 
                 //Calculate current progress
