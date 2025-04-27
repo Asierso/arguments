@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.controllers;
+package com.asier.arguments.argumentsbackend.controllers.users;
 
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asier.arguments.argumentsbackend.services.UserService;
+import com.asier.arguments.argumentsbackend.services.users.UserService;
 
 import java.util.Properties;
 @RestController

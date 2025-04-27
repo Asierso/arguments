@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.users;
 
 import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;

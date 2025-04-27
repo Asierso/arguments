@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.controllers;
+package com.asier.arguments.argumentsbackend.controllers.users;
 
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;

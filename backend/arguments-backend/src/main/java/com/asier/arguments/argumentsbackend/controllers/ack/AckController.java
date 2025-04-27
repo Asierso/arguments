@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.controllers;
+package com.asier.arguments.argumentsbackend.controllers.ack;
 
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import org.springframework.http.ResponseEntity;

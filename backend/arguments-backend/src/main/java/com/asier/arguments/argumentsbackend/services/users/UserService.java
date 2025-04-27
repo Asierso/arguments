@@ -1,8 +1,9 @@
-package com.asier.arguments.argumentsbackend.services;
+package com.asier.arguments.argumentsbackend.services.users;
 
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
+import com.asier.arguments.argumentsbackend.services.TaskPagination;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

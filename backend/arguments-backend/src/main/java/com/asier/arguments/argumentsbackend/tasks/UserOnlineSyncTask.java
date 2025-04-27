@@ -1,10 +1,9 @@
 package com.asier.arguments.argumentsbackend.tasks;
 
-import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.user.UserSync;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
-import com.asier.arguments.argumentsbackend.services.UserService;
+import com.asier.arguments.argumentsbackend.services.users.UserService;
 import com.asier.arguments.argumentsbackend.services.auth.UserSyncService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
