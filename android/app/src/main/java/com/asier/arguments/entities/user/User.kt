@@ -6,4 +6,5 @@ data class User(
     var username : String = "",
     var level : Int = 0,
     var xp: Int = 0,
-    var description : String = "")
+    var description : String = "",
+    var isActive : Boolean? = false)

@@ -33,7 +33,7 @@ fun UserCard(
             .padding(start = 10.dp, end = 15.dp, top = 7.dp, bottom = 7.dp)
             .clickable { onClick?.invoke(user) },
         verticalAlignment = Alignment.CenterVertically) {
-        UserAlt(name = user.username) {
+        UserAlt(name = user.username, isOnline = user.isActive) {
             onClick?.invoke(user)
         }
         Column(verticalArrangement = Arrangement.SpaceBetween) {

@@ -51,6 +51,7 @@ import java.time.Instant
 fun DiscussionCard(
     discussion: DiscussionThread,
     modifier: Modifier = Modifier,
+    userData: User? = null,
     onUsernameClick: ((user: User) -> Unit)? = null
 ) {
     var redraw by remember { mutableStateOf(0) }
@@ -112,9 +113,13 @@ fun DiscussionCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     //Discussion author
                     UserCard(
-                        User().apply {
-                            username = StringUtils.abbreviate(discussion.author, 10)
-                        },
+                        if (userData == null)
+                            User().apply {
+                                username = StringUtils.abbreviate(discussion.author, 10)
+                                isActive = null
+                            }
+                        else
+                            userData,
                         modifier = Modifier
                             .padding(start = 5.dp, top = 10.dp, bottom = 10.dp)
                             .weight(.6f),
