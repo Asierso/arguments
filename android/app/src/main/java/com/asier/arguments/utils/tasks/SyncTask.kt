@@ -11,7 +11,12 @@ class SyncTask : Task<LocalStorage> {
         if(param.load("auth") == null)
             return true
 
-        SyncService.sync(param)
+        try{
+            SyncService.sync(param)
+        }catch (e: Exception){
+
+        }
+
         return true
     }
 }

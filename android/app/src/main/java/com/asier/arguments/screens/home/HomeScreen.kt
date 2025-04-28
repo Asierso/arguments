@@ -66,7 +66,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 parameters.isLoading = true
-                delay(500)
+                delay(1500)
                 parameters.isLoading = false
             }
         }
@@ -100,7 +100,7 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 parameters.isLoading = true
-                delay(600)
+                delay(1500)
                 parameters.isLoading = false
             }
         }
@@ -112,7 +112,10 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
             modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
             itemsIndexed(items = homeScreenViewModel.loadedDiscussions.toList()) { index, item ->
                 DiscussionCard(
-                    discussion = item,
+                    discussion = item.discussionThread,
+                    userData = item.user.also {
+                        it!!.isActive = if(it.username == homeScreenViewModel.username) true else it.isActive
+                    },
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
                         parameters.viewProfile = it.username
