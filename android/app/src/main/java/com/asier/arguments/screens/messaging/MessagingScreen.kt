@@ -10,27 +10,40 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asier.arguments.R
+import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.ChatTextInput
 import com.asier.arguments.ui.components.messaging.ChatMessageDialog
 import com.asier.arguments.ui.components.others.UserAlt
+import com.asier.arguments.ui.components.topbars.ChatTopBar
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.TopBarBackground
+import com.asier.arguments.ui.theme.TopBarIcon
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -53,21 +66,39 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
 
     messagingScreenViewModel.loadUsername()
 
-    messagingScreenViewModel.checkDiscussionAvailability(activityProperties,scope)
+    messagingScreenViewModel.checkDiscussionAvailability(parameters,scope, LocalContext.current)
 
     //Load new messages with little delay
-    messagingScreenViewModel.startUpdatingCycle(activityProperties,scope)
+    messagingScreenViewModel.startUpdatingCycle(parameters,scope)
 
-    TitleTopBar(title = messagingScreenViewModel.discussionTitle,
+    ChatTopBar(discussion = messagingScreenViewModel.discussion?: DiscussionThread(),
+        leadingIcon = {
+            Icon(
+                painterResource(R.drawable.ic_logo),
+                contentDescription = "Logo",
+                modifier = it,
+                tint = TopBarIcon
+            )
+        },
         modifier = Modifier.fillMaxWidth()
     )
 
-    MessageBoard(messagingScreenViewModel)
+    MessageBoard(messagingScreenViewModel,
+        whenTopReached = {
+            messagingScreenViewModel.loadNextMessagesPage(parameters,scope)
+        },
+        whenBottomReached = {
+        }
+    )
 }
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
+fun MessageBoard(
+    messagingScreenViewModel : MessagingScreenViewModel,
+    whenTopReached: () -> Unit,
+    whenBottomReached: () -> Unit
+){
     val scope = rememberCoroutineScope()
 
     //List handlers
@@ -79,14 +110,36 @@ fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
         }
     }
 
+    //Top trigger
     if (isAtTop.value) {
-        //TODO: Implement top loading
+        whenTopReached()
     }
 
+    //Bottom triggers
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                val visibleItems = layoutInfo.visibleItemsInfo
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
 
+                if (lastVisibleIndex >= totalItems - 1) {
+                    whenBottomReached()
+                }
+            }
+    }
+    val isNearBottom by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index == messageListSize - 5
+        }
+    }
+
+    //Scroll down if message list is updated, and user isn´t scrolling up
     LaunchedEffect(messageListSize) {
-        if(messageListSize > 0)
+        if(messageListSize > 0 && (isNearBottom || messagingScreenViewModel.firstLoad)){
             listState.animateScrollToItem( messageListSize - 1)
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
@@ -117,7 +170,15 @@ fun MessageBoard(messagingScreenViewModel : MessagingScreenViewModel){
             modifier = Modifier.weight(.1f),
             onSendClicked = {
                 messagingScreenViewModel.sendMessage(scope)
-            })
+
+                //Scroll to bottom when button is pressed
+                scope.launch {
+                    if(messageListSize > 0){
+                        listState.animateScrollToItem( messageListSize - 1)
+                    }
+                }
+            }
+        )
     }
 }
 

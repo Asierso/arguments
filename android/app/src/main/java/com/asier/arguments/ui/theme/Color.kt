@@ -42,3 +42,6 @@ val SelfMessageBox = Color(0xFF7B6CC1)
 val OtherMessageBox = Color(0xFF3B3B3B)
 
 val AlertBackground = Color(0xFF3B3B3B)
+
+val ChatProgressBackground = Color(0xFF2C2C2C)
+val ChatUserIndicator = Color(0xFF655D88)

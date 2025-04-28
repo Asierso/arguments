@@ -54,22 +54,16 @@ class DiscussionThreadCreationViewModel : ViewModel() {
 
                 when(StatusCodes.valueOf(response!!.status)){
                     StatusCodes.SUCCESSFULLY -> {
-                        //TODO Implement discussion access
+                        //Save discussion id and open it
                         val id = GsonUtils.jsonToClass<DiscussionThread>(response.result!! as LinkedTreeMap<*, *>).id
                         storage!!.save("discussion",id)
 
                         withContext(Dispatchers.Main){
                             activityProperties.navController.navigate(Screen.Messaging.route)
                         }
-
-                        activityProperties.snackbarHostState.showSnackbar(
-                            message = SnackbarInvoke(SnackbarType.SUCCESS).apply {
-                                message = "Creado"
-                            }.build(),
-                            duration = SnackbarDuration.Short
-                        )
                     }
                     else -> {
+                        //Show server error
                         activityProperties.snackbarHostState.showSnackbar(
                             message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
                             duration = SnackbarDuration.Short

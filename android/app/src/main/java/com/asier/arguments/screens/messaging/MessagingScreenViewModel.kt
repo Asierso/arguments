@@ -1,11 +1,14 @@
 package com.asier.arguments.screens.messaging
 
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.asier.arguments.MainActivity
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.api.messaging.MessagingService
@@ -14,6 +17,7 @@ import com.asier.arguments.entities.Message
 import com.asier.arguments.entities.MessageCreatorDto
 import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
+import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.utils.GsonUtils
 import com.asier.arguments.utils.storage.LocalStorage
@@ -31,25 +35,27 @@ class MessagingScreenViewModel : ViewModel() {
     var username by mutableStateOf("you")
 
     //Discussion data
-    var discussionTitle by mutableStateOf("")
-    var messages = mutableStateMapOf<Int,List<Message>>()
+    var discussion by mutableStateOf<DiscussionThread?>(null)
+    var messages = mutableStateMapOf<Int, List<Message>>()
 
     //Messaging page data
     var currentPage = 0
     var totalPages = 0
 
+    //UI and load Controller
     var writingMessage by mutableStateOf("")
-
     var updatingCycle by mutableStateOf(false)
+    var firstLoad by mutableStateOf(true)
+    var shouldBeLoading by mutableStateOf(true)
+    var activityRestarting by mutableStateOf(false)
 
     fun loadUsername() {
         username = storage!!.load("user")!!
     }
 
-    fun sendMessage(scope: CoroutineScope){
-        if(writingMessage.isBlank())
+    fun sendMessage(scope: CoroutineScope) {
+        if (writingMessage.isBlank())
             return
-
 
         val id = storage?.load("discussion") ?: ""
 
@@ -59,18 +65,26 @@ class MessagingScreenViewModel : ViewModel() {
 
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MessagingService.insertMessage(storage!!,id,messageComposed)
-                when(StatusCodes.valueOf(response!!.status)) {
+                val response = MessagingService.insertMessage(storage!!, id, messageComposed)
+                when (StatusCodes.valueOf(response!!.status)) {
                     StatusCodes.SUCCESSFULLY -> {
 
                     }
+
                     else -> {}
                 }
             }
         }
     }
 
-    fun loadMessages(activityProperties: ActivityProperties,scope: CoroutineScope, pageNum: Int = 0) {
+    fun loadNextMessagesPage(parameters: ActivityParameters, scope: CoroutineScope) {
+        if (currentPage < totalPages) {
+            currentPage++
+            loadMessages(parameters, scope, pageNum = currentPage)
+        }
+    }
+
+    fun loadMessages(parameters: ActivityParameters, scope: CoroutineScope, pageNum: Int = 0) {
         val id = storage?.load("discussion") ?: ""
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
@@ -79,6 +93,7 @@ class MessagingScreenViewModel : ViewModel() {
                     val response = MessagingService.getMessagesByPage(storage!!, id, pageNum)
                     when (StatusCodes.valueOf(response!!.status)) {
                         StatusCodes.SUCCESSFULLY -> {
+                            //Parse response
                             val resultJson =
                                 GsonUtils.gson.toJson(response.result as LinkedTreeMap<*, *>)
                             val type = object : TypeToken<PageResponse<Message>>() {}.type
@@ -88,25 +103,27 @@ class MessagingScreenViewModel : ViewModel() {
                                     type
                                 )
 
+                            //Load messages in the map and stop loading overlay if is in screen
                             withContext(Dispatchers.Main) {
                                 messages.put(resultPage.number, resultPage.content.toMutableList())
                                 totalPages = resultPage.totalPages
+                                parameters.isLoading = false
                             }
                         }
+
                         else -> {}
                     }
-                }
-                catch (ignore: Exception){
-                    //Error in discussion, navigate to home
-                    activityProperties.navController.navigate(Screen.Home.route){
-                        popUpTo(0) {inclusive = true}
+                } catch (ignore: Exception) {
+                    //Show loading overlay
+                    withContext(Dispatchers.Main) {
+                        parameters.isLoading = true
                     }
                 }
             }
         }
     }
 
-    fun checkDiscussionAvailability(activityProperties: ActivityProperties, scope: CoroutineScope) {
+    fun checkDiscussionAvailability(parameters: ActivityParameters, scope: CoroutineScope, context: Context) {
         val id = storage?.load("discussion") ?: ""
 
         scope.launch {
@@ -116,15 +133,15 @@ class MessagingScreenViewModel : ViewModel() {
                     val response = DiscussionsService.getDiscussionById(storage!!, id)
                     when (StatusCodes.valueOf(response!!.status)) {
                         StatusCodes.SUCCESSFULLY -> {
-                            val discussion =
+                            val loaded =
                                 GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>)
-                            if (discussion.endAt!!.isBefore(Instant.now())) {
+                            if (loaded.endAt!!.isBefore(Instant.now())) {
                                 throw Exception()
-                            }
-                            else{
-                                discussionTitle = discussion.title
+                            } else {
+                                discussion = loaded
                             }
                         }
+
                         else -> {
                             throw Exception()
                         }
@@ -133,23 +150,83 @@ class MessagingScreenViewModel : ViewModel() {
                     //Delete discussion reference from storage and go to home screen
                     withContext(Dispatchers.Main) {
                         storage!!.delete("discussion")
+                        shouldBeLoading = false
+                        parameters.isLoading = true
+                    }
+
+                    if(activityRestarting)
+                        return@launch
+                    activityRestarting = true
+
+                    //Save flag to show expired message
+                    if(storage!!.load("discussion_expired") == null)
+                        storage!!.save("discussion_expired","true")
+
+                    delay(1000)
+
+                    //Restart activity (discussion is expired)
+                    withContext(Dispatchers.Main) {
+                        val intent = Intent(context, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
                     }
                 }
             }
         }
     }
 
-    fun startUpdatingCycle(activityProperties: ActivityProperties,scope: CoroutineScope){
-        if(updatingCycle)
+    fun refreshDiscussion(parameters: ActivityParameters, scope: CoroutineScope) {
+        val id = storage?.load("discussion") ?: ""
+
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    //Try to load discussion. If is expired or is another error, just leave message page
+                    val response = DiscussionsService.getDiscussionById(storage!!, id)
+                    when (StatusCodes.valueOf(response!!.status)) {
+                        StatusCodes.SUCCESSFULLY -> {
+                            withContext(Dispatchers.Main){
+                                discussion = GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>).copy()
+                            }
+                        }
+
+                        else -> {
+                            throw Exception()
+                        }
+                    }
+                } catch (ignore: Exception) {
+
+                }
+            }
+        }
+    }
+
+    fun startUpdatingCycle(parameters: ActivityParameters, scope: CoroutineScope) {
+        if (updatingCycle)
             return
         updatingCycle = true
         scope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                while(true){
-                    withContext(Dispatchers.Main){
-                        loadMessages(activityProperties,scope)
+            var counter = 0
+            while (shouldBeLoading) {
+               withContext(Dispatchers.Main){
+                    loadMessages(parameters, scope)
+
+                   //Execute refresh discussion ever 5s (to load discussion changes)
+                    if(counter % 5 == 0){
+                        refreshDiscussion(parameters,scope)
                     }
-                    delay(1000)
+                    if (counter >= Int.MAX_VALUE - 10) {
+                       counter = 0
+                    }
+
+                }
+
+                delay(1000)
+                counter++
+
+                //If is loaded
+                if (firstLoad) {
+                    firstLoad = false
                 }
             }
         }
