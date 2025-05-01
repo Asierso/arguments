@@ -5,7 +5,7 @@ import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread
 import com.asier.arguments.argumentsbackend.entities.messaging.Message;
 import com.asier.arguments.argumentsbackend.repositories.MessageRepository;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
-import com.asier.arguments.argumentsbackend.services.messaging.processors.MessageQueuing;
+import com.asier.arguments.argumentsbackend.services.messaging.processors.PaimonMessageQueuing;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -27,7 +27,7 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepository messageRepository;
     @Autowired
-    private MessageQueuing messageQueuing;
+    private PaimonMessageQueuing messageQueuing;
     @Autowired
     private DiscussionThreadService discussionService;
     @Autowired

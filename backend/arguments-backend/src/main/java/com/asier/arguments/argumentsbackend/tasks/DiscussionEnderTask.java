@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.tasks;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
+import com.asier.arguments.argumentsbackend.services.users.UserService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DiscussionEnderTask implements Runnable {
     @Autowired
     private DiscussionThreadService discussionService;
+    @Autowired
+    private UserService userService;
+
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     //Pagination vars
@@ -78,14 +82,20 @@ public class DiscussionEnderTask implements Runnable {
         for(DiscussionThread thread : pageable.toList()){
             Instant now = LocalDateTime.now().toInstant(ZoneOffset.UTC);
             
-            //Check if the discussion is expired but still opened and close it
+            //Check if the discussion is expired but still opened and set in to voting
             if(thread.getStatus() == DiscussionStatus.STARTED && thread.getEndAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.VOTING);
                 updateToVoting.incrementAndGet();
             }
+            //If discussion is in voting status and voting grace period is ended, close the discussion
             if(thread.getStatus() == DiscussionStatus.VOTING && thread.getVotingGraceAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.FINISHED);
                 updateToEnding.incrementAndGet();
+
+                //Add discussion in history of every participant user
+                for(String username : thread.getUsers()){
+                    userService.insertInHistory(username,thread);
+                }
             }
         }
     }
