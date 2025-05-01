@@ -27,13 +27,21 @@ public class DiscussionEnderTask implements Runnable {
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     //Pagination vars
-    private AtomicInteger pageIndex = new AtomicInteger(0);
+    private final AtomicInteger pageIndex = new AtomicInteger(0);
     private int maxPages = 0;
+
+    //Discussions updater statistics
+    private final AtomicInteger updateToVoting = new AtomicInteger(0);
+    private final AtomicInteger updateToEnding = new AtomicInteger(0);
 
     @Scheduled(cron = "*/10 * * * * ?")
     public void checkExpiredDiscussions(){
         int enders = Integer.parseInt(props.getProperty("arguments.pools.enders"));
         maxPages = discussionService.findInPage(0).getTotalPages();
+
+        //Reset statistics
+        updateToVoting.set(0);
+        updateToEnding.set(0);
 
         //Prepare threads to process all discussion pages
         try(ExecutorService pool = Executors.newFixedThreadPool(enders)){
@@ -48,11 +56,14 @@ public class DiscussionEnderTask implements Runnable {
         }catch(InterruptedException e){
             pageIndex.set(0);
         }
+
+        //Show logs statistics
+        log.info("Discussion ender pool: {} updates",updateToVoting.get()+updateToEnding.get());
+        log.info("Discussion ender pool: {} to voting, {} to ended",updateToVoting.get(),updateToEnding.get());
     }
 
     @Override
     public void run() {
-        int updatedAmount = 0;
         int page = pageIndex.getAndIncrement();
 
         //If all pages are processed, stop the thread
@@ -70,10 +81,12 @@ public class DiscussionEnderTask implements Runnable {
             //Check if the discussion is expired but still opened and close it
             if(thread.getStatus() == DiscussionStatus.STARTED && thread.getEndAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.VOTING);
-                updatedAmount++;
+                updateToVoting.incrementAndGet();
+            }
+            if(thread.getStatus() == DiscussionStatus.VOTING && thread.getVotingGraceAt().isBefore(now)){
+                discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.FINISHED);
+                updateToEnding.incrementAndGet();
             }
         }
-
-        log.info("Pool thread: " + updatedAmount + " discussions updated");
     }
 }

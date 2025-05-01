@@ -68,6 +68,14 @@ public class MessageQueuing implements Runnable {
                 if(discussion == null)
                     continue;
 
+                //If message is garbage, just leave feedback generation
+                if(message.getMessage().length() < 20){
+                    messageService.update(new ObjectId(message.getId()),Message.builder()
+                            .feedback("Unknown")
+                            .build());
+                    continue;
+                }
+
                 //Generate message for Paimon processor
                 PaimonMessageDto paimonMessage = PaimonMessageDto.builder()
                         .discussionId(new ObjectId(discussion.getId()))
@@ -80,7 +88,7 @@ public class MessageQueuing implements Runnable {
                 paimon.processAsPrompt(new FeedbackTemplate(paimonMessage),response -> {
                     //Save feedback in the same entity in mongo
                     messageService.update(paimonMessage.getMessageId(),Message.builder()
-                            .feedback(response)
+                            .feedback(response.trim())
                             .build()
                     );
                 });

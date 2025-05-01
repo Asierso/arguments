@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.messaging;
 
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.messaging.Message;
 import com.asier.arguments.argumentsbackend.repositories.MessageRepository;
@@ -39,15 +40,22 @@ public class MessageServiceImpl implements MessageService {
         //Add send time to now
         message.setSendTime(Instant.now());
 
+        //Check if message body is empty
+        if(message.getMessage().trim().isBlank()){
+            return 4;
+        }
+
         //Before save, check if the target discussion is even valid and not ended
         DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
         if(discussion == null){
             return 1;
         }
+
         //Check if discussion is expired
-        if(message.getSendTime().isAfter(discussion.getEndAt())){
+        if(message.getSendTime().isAfter(discussion.getEndAt()) || discussion.getStatus() != DiscussionStatus.STARTED){
             return 2;
         }
+
         //User should be joined before send a message
         if(!discussion.getUsers().contains(message.getSender())){
             return 3;
