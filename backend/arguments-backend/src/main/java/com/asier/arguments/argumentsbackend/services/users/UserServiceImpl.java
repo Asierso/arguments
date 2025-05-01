@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.asier.arguments.argumentsbackend.repositories.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -215,7 +216,12 @@ public class UserServiceImpl implements UserService {
 
         //Add discussion to user history
         User user = selected.get();
+
+        if(user.getHistory() == null)
+            user.setHistory(new HashMap<>());
+
         user.getHistory().put(new ObjectId(discussion.getId()),discussion.getTitle());
+
         userRepository.save(user);
 
         return false;

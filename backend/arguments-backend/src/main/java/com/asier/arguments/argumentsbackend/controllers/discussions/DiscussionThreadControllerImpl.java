@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -26,6 +28,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
     @Autowired
     private DiscussionThreadService discussionThreadService;
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
+    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     @Override
     public ResponseEntity<ServiceResponse> insert(String clientToken, DiscussionDto discussionDto, String username) {
         //Check if dto is valid
@@ -40,8 +43,10 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .createdAt(LocalDateTime.now().atZone(ZoneOffset.UTC).toInstant())
                 .maxUsers(discussionDto.getMaxUsers())
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
-                .users(new HashSet<String>())
+                .users(new HashSet<>())
+                .votes(new HashMap<>())
                 .status(DiscussionStatus.STARTED)
+                .votingGraceAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).plusMinutes(Integer.parseInt(props.getProperty("arguments.ln.votingGrace"))).toInstant())
                 .build();
 
         discussion.getUsers().add(username);

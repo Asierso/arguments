@@ -1,10 +1,11 @@
 package com.asier.arguments.argumentsbackend.services.messaging;
 
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.messaging.Message;
 import com.asier.arguments.argumentsbackend.repositories.MessageRepository;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
-import com.asier.arguments.argumentsbackend.services.messaging.processors.MessageQueuing;
+import com.asier.arguments.argumentsbackend.services.messaging.processors.PaimonMessageQueuing;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -26,7 +27,7 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepository messageRepository;
     @Autowired
-    private MessageQueuing messageQueuing;
+    private PaimonMessageQueuing messageQueuing;
     @Autowired
     private DiscussionThreadService discussionService;
     @Autowired
@@ -39,15 +40,22 @@ public class MessageServiceImpl implements MessageService {
         //Add send time to now
         message.setSendTime(Instant.now());
 
+        //Check if message body is empty
+        if(message.getMessage().trim().isBlank()){
+            return 4;
+        }
+
         //Before save, check if the target discussion is even valid and not ended
         DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
         if(discussion == null){
             return 1;
         }
+
         //Check if discussion is expired
-        if(message.getSendTime().isAfter(discussion.getEndAt())){
+        if(message.getSendTime().isAfter(discussion.getEndAt()) || discussion.getStatus() != DiscussionStatus.STARTED){
             return 2;
         }
+
         //User should be joined before send a message
         if(!discussion.getUsers().contains(message.getSender())){
             return 3;
