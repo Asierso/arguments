@@ -59,4 +59,7 @@
     <string name="discussion_creation_maxtimepolicy_short">Few time</string>
     <string name="discussion_creation_maxtimepolicy_mid">Medium discussion</string>
     <string name="discussion_creation_maxtimepolicy_large">Long discussion</string>
+    <string name="day_hour_prefix">at</string>
+    <string name="day_today">Today</string>
+    <string name="day_yesterday">Yesterday</string>
 </resources>

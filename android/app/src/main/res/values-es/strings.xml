@@ -59,4 +59,7 @@
     <string name="discussion_creation_maxtimepolicy_short">Debate corto</string>
     <string name="discussion_creation_maxtimepolicy_mid">Debate mediano</string>
     <string name="discussion_creation_maxtimepolicy_large">Debate largo</string>
+    <string name="day_hour_prefix">a las</string>
+    <string name="day_today">Hoy</string>
+    <string name="day_yesterday">Ayer</string>
 </resources>

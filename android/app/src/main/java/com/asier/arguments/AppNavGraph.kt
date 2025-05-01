@@ -18,6 +18,8 @@ import com.asier.arguments.screens.discussions.DiscussionThreadCreationScreen
 import com.asier.arguments.screens.discussions.DiscussionThreadCreationViewModel
 import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
+import com.asier.arguments.screens.messaging.MessagingScreen
+import com.asier.arguments.screens.messaging.MessagingScreenViewModel
 import com.asier.arguments.screens.profile.ProfileEditorScreen
 import com.asier.arguments.screens.profile.ProfileEditorScreenViewModel
 import com.asier.arguments.screens.profile.ProfileScreen
@@ -57,6 +59,10 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
         //Discussions
         composable(Screen.DiscussionCreate.route){
             DiscussionThreadCreationScreen(DiscussionThreadCreationViewModel())
+        }
+        //Messaging
+        composable(Screen.Messaging.route){
+            MessagingScreen(MessagingScreenViewModel())
         }
     }
 }

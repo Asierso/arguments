@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.UserSync;
+import com.asier.arguments.argumentsbackend.entities.user.UserSync;
 import com.asier.arguments.argumentsbackend.repositories.UserSyncRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;

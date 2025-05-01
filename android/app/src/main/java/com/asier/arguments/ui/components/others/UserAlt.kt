@@ -31,6 +31,7 @@ fun UserAlt(
     name: String,
     modifier: Modifier = Modifier,
     isOnline: Boolean? = null,
+    useBorder: Boolean = true,
     actions: () -> Unit
 ) {
 
@@ -42,7 +43,7 @@ fun UserAlt(
                 .height(50.dp)
                 .clickable { actions() }
                 .background(getColorByName(name))
-                .border(1.dp,Color.Black, RoundedCornerShape(100.dp)),
+                .border(if(useBorder) 1.dp else 0.dp,if(useBorder) Color.Black else Color.Transparent, RoundedCornerShape(100.dp)),
 
             contentAlignment = Alignment.Center) {
             Text(

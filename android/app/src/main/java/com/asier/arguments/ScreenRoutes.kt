@@ -15,4 +15,6 @@ sealed class Screen(val route: String) {
     data object ProfileEdit : Screen("profile.edit")
     //Discussions
     data object DiscussionCreate : Screen("discussion.create")
+    //Messaging
+    data object Messaging : Screen("messaging")
 }

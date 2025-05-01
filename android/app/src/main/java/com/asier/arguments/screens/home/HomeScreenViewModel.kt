@@ -57,12 +57,46 @@ class HomeScreenViewModel : ViewModel() {
     var totalElements by mutableLongStateOf(0)
     var totalPages by mutableIntStateOf(1)
 
+    //Alert dialogs handlers
+    var discussionWarning by mutableStateOf(false)
+    var discussionPreloaded by mutableStateOf("")
+    var discussionExpiredWarning by mutableStateOf(false)
+
     fun loadUsername() {
         if (username.isNotBlank())
             return
 
         storage?.load("user")?.let {
             username = it
+        }
+    }
+
+    fun openDiscussion(activityProperties: ActivityProperties,scope: CoroutineScope){
+        scope.launch {
+            withContext(Dispatchers.IO){
+                val response = DiscussionsService.joinDiscussionById(storage!!,discussionPreloaded)
+                when(StatusCodes.valueOf(response!!.status)){
+                    StatusCodes.SUCCESSFULLY -> {
+                        //Open discussion and save got id
+                        withContext(Dispatchers.Main){
+                            storage?.save("discussion",discussionPreloaded)
+                            activityProperties.navController.navigate(Screen.Messaging.route)
+                        }
+                    }
+                    StatusCodes.EXPIRED_DISCUSSION -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.SERVER_ERROR,"Discusion expirada").build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                    else -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
         }
     }
 

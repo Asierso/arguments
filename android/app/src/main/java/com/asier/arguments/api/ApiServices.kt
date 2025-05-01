@@ -5,6 +5,7 @@ import com.asier.arguments.api.discussions.ApiDiscussions
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.api.login.ApiLogin
 import com.asier.arguments.api.login.LoginService
+import com.asier.arguments.api.messaging.ApiMessaging
 import com.asier.arguments.api.sync.ApiSync
 import com.asier.arguments.api.sync.SyncService
 import com.asier.arguments.api.users.ApiUsers
@@ -26,5 +27,8 @@ object ApiServices {
     val UsersService = RetrofitUtils.getNew().create(ApiUsers::class.java)
     fun DiscussionsAuthService(localStorage: LocalStorage) : ApiDiscussions {
         return RetrofitUtils.getAuthNew(localStorage).create(ApiDiscussions::class.java)
+    }
+    fun MessagingAuthService(localStorage: LocalStorage) : ApiMessaging {
+        return RetrofitUtils.getAuthNew(localStorage).create(ApiMessaging::class.java)
     }
 }

@@ -11,10 +11,14 @@ import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.entities.DiscussionCreatorDto
+import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
+import com.asier.arguments.utils.GsonUtils
+import com.asier.arguments.utils.storage.LocalStorage
+import com.google.gson.internal.LinkedTreeMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +29,9 @@ class DiscussionThreadCreationViewModel : ViewModel() {
     var maxUsers by mutableIntStateOf(-1)
     var title by mutableStateOf("")
     var titleModified by mutableStateOf(false)
+
+    //Inherited elements
+    var storage by mutableStateOf<LocalStorage?>(null)
 
     fun createDiscussion(activityProperties: ActivityProperties, scope: CoroutineScope){
         if(!userPolicy() || !timePolicy() || !titlePolicy()){
@@ -47,21 +54,16 @@ class DiscussionThreadCreationViewModel : ViewModel() {
 
                 when(StatusCodes.valueOf(response!!.status)){
                     StatusCodes.SUCCESSFULLY -> {
-                        //TODO Implement discussion access
-                        //Get id: GsonUtils.jsonToClass<DiscussionThread>(response.result!! as LinkedTreeMap<*, *>).id
+                        //Save discussion id and open it
+                        val id = GsonUtils.jsonToClass<DiscussionThread>(response.result!! as LinkedTreeMap<*, *>).id
+                        storage!!.save("discussion",id)
 
                         withContext(Dispatchers.Main){
-                            activityProperties.navController.navigate(Screen.Home.route)
+                            activityProperties.navController.navigate(Screen.Messaging.route)
                         }
-
-                        activityProperties.snackbarHostState.showSnackbar(
-                            message = SnackbarInvoke(SnackbarType.SUCCESS).apply {
-                                message = "Creado"
-                            }.build(),
-                            duration = SnackbarDuration.Short
-                        )
                     }
                     else -> {
+                        //Show server error
                         activityProperties.snackbarHostState.showSnackbar(
                             message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
                             duration = SnackbarDuration.Short

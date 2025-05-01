@@ -1,6 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.auth;
 
-import com.asier.arguments.argumentsbackend.entities.ValidAuthTokens;
+import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
 
 import java.util.List;
 
