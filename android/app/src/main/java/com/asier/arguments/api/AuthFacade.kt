@@ -39,7 +39,9 @@ object AuthFacade {
         activityProperties.storage.delete("auth")
         activityProperties.storage.delete("user")
         withContext(Dispatchers.Main) {
-            activityProperties.navController.navigate(Screen.Login.route)
+            activityProperties.navController.navigate(Screen.Login.route){
+                popUpTo(0) { inclusive = true }
+            }
         }
     }
 }

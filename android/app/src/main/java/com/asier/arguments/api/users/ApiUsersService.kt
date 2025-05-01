@@ -10,5 +10,6 @@ interface ApiUsersService {
     suspend fun register(user: UserCreatorDto) : ServiceResponse?
     suspend fun getByUsername(username : String) : ServiceResponse?
     suspend fun getById(userId : String) : ServiceResponse?
-    suspend fun updateByName(localStorage: LocalStorage, username: String, user: UserModifiableDto) : ServiceResponse?
+    suspend fun updateByUsername(localStorage: LocalStorage, username: String, user: UserModifiableDto) : ServiceResponse?
+    suspend fun deleteByUsername(localStorage: LocalStorage, username: String) : ServiceResponse?
 }

@@ -41,6 +41,8 @@ class ProfileEditorScreenViewModel : ViewModel() {
     var lastname by mutableStateOf("")
     var password by mutableStateOf("")
 
+    var deleteAccountWarning by mutableStateOf(false)
+
     fun loadUserData(parameters: ActivityParameters, scope: CoroutineScope) {
         //Check if user data is already loaded
         if (isAlreadyLoaded)
@@ -93,7 +95,7 @@ class ProfileEditorScreenViewModel : ViewModel() {
 
                 if (password.isBlank() || checkPasswords() == PasswordPolicyCodes.STRONG) {
                     //Make update
-                    val result = UsersService.updateByName(
+                    val result = UsersService.updateByUsername(
                         localStorage = storage!!,
                         user = userDto,
                         username = storage!!.load("user").toString()
@@ -118,7 +120,7 @@ class ProfileEditorScreenViewModel : ViewModel() {
                     ),
                     credentials = null
                 )
-                val result = UsersService.updateByName(
+                val result = UsersService.updateByUsername(
                     localStorage = storage!!,
                     user = userDto,
                     username = storage!!.load("user").toString())
@@ -147,5 +149,26 @@ class ProfileEditorScreenViewModel : ViewModel() {
 
     fun checkPasswords(): PasswordPolicyCodes {
         return ValidationUtils.checkPasswords(password,password)
+    }
+
+    fun deleteUser(activityProperties: ActivityProperties,scope: CoroutineScope){
+        scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = storage?.load("user").let {
+                    return@let UsersService.deleteByUsername(storage!!,it!!)
+                }
+
+                when(StatusCodes.valueOf(response!!.status)){
+                    StatusCodes.SUCCESSFULLY -> {
+                        activityProperties.navController.navigate(Screen.Login.route){
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 }
