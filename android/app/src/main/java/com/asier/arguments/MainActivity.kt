@@ -1,6 +1,7 @@
 package com.asier.arguments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,6 +32,7 @@ import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbar
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.ui.components.snackbars.SucessSnackbar
+import com.asier.arguments.ui.components.snackbars.WarningSnackbar
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.utils.storage.LocalStorage
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
                         //Check if the invoke is valid (is using custom snackbar)
                         if (builtInvoke != null) {
+                            Log.d("dep",builtInvoke.build())
                             when (builtInvoke.type) {
                                 SnackbarType.SERVER_ERROR ->
                                     if (builtInvoke.message.isNotBlank())
@@ -65,6 +68,11 @@ class MainActivity : ComponentActivity() {
                                         SucessSnackbar(message = builtInvoke.message)
                                     else
                                         SucessSnackbar()
+                                SnackbarType.WARNING ->
+                                    if(builtInvoke.message.isNotBlank())
+                                        WarningSnackbar(message = builtInvoke.message)
+                                    else
+                                        WarningSnackbar()
                             }
                         } else {
                             //Show generic snackbar

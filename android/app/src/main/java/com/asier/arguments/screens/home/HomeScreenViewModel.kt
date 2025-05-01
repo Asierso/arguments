@@ -89,6 +89,12 @@ class HomeScreenViewModel : ViewModel() {
                             duration = SnackbarDuration.Short
                         )
                     }
+                    StatusCodes.DISCUSSION_MAX_REACHED -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.WARNING,"Discusion llena").build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                     else -> {
                         activityProperties.snackbarHostState.showSnackbar(
                             message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),

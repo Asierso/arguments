@@ -39,6 +39,7 @@ import com.asier.arguments.R
 import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.entities.user.User
 import com.asier.arguments.ui.theme.CardBackground
+import com.asier.arguments.ui.theme.ErrorOverlay0
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.TextBright1
@@ -78,7 +79,7 @@ fun DiscussionCard(
                     .clip(RoundedCornerShape(17.dp))
                     .background(CardBackground)
                     .matchParentSize()
-                    .clickable { if(!expired) onDiscussionClick?.invoke(discussion) }
+                    .clickable { if (!expired) onDiscussionClick?.invoke(discussion) }
             ) {
 
                 //Calculate current progress
@@ -116,7 +117,7 @@ fun DiscussionCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     //Discussion author
                     UserCard(
-                        user=userData,
+                        user = userData,
                         modifier = Modifier
                             .padding(start = 5.dp, top = 10.dp, bottom = 10.dp)
                             .weight(.6f),
@@ -185,10 +186,23 @@ fun DiscussionCard(
                         modifier = Modifier.padding(start = 20.dp, end = 10.dp, top = 50.dp)
                     )
                 }
+            } else if(discussion.users.size >= discussion.maxUsers){
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(17.dp))
+                        .alpha(.65f)
+                        .background(ErrorOverlay0.copy(alpha = .2f))
+                        .matchParentSize()
+                        .padding(start = 10.dp, top = 15.dp, end = 10.dp, bottom = 5.dp),
+                    contentAlignment = Alignment.Center
+
+                ) {
+                }
             }
         }
     }
 }
+
 
 @Composable
 @Preview

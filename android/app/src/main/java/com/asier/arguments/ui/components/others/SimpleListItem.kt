@@ -1,7 +1,6 @@
 package com.asier.arguments.ui.components.others
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,32 +17,54 @@ import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
 
 @Composable
-fun ListItem(
+fun SimpleListItem(
     position: Int,
     text: String,
-    modifier: Modifier = Modifier
-){
-    Column (modifier = modifier.background(
-        if(position % 2 == 0) ListEvenItem else ListOddItem
-    )) {
+    modifier: Modifier = Modifier,
+    subtext: String = ""
+) {
+    Column(
+        modifier = modifier.background(
+            if (position % 2 == 0) ListEvenItem else ListOddItem
+        )
+    ) {
         Text(
             text = text,
             color = TextBright1,
             fontFamily = Montserrat,
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(
-                top = 5.dp,
-                bottom = 5.dp,
-                start = 10.dp,
-                end = 10.dp
+                top = 10.dp,
+                start = 20.dp,
+                end = 20.dp,
+                bottom = if(subtext.isNotBlank()) 0.dp else 10.dp
             )
         )
+        if(subtext.isNotBlank()) {
+            Text(
+                text = subtext,
+                color = TextBright1,
+                fontFamily = Montserrat,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 10.dp
+                )
+            )
+        }
     }
 }
 
 @Composable
 @Preview
-fun ListItemPreview(){
-    ListItem(position = 0, text = "Texto", modifier = Modifier.fillMaxWidth())
+fun ListItemPreview() {
+    SimpleListItem(
+        position = 0,
+        text = "Text",
+        subtext = "Subtext",
+        modifier = Modifier.fillMaxWidth()
+    )
 }

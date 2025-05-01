@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -96,7 +97,7 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
 
         //Rule modification
         DiscussionThink(modifier = Modifier.fillMaxWidth(), dtcViewModel = dtcViewModel)
-        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp))
+        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp))
 
         Spacer(modifier = Modifier.height(60.dp))
 

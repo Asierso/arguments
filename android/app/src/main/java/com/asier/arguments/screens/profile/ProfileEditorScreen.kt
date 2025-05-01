@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -90,12 +91,14 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
             .verticalScroll(scrollState)
             .padding(top = 100.dp, start = 10.dp, end = 10.dp)
     ) {
-        UserExtendedCard(user = profileEditorScreenViewModel.userData!!)
-        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+        UserExtendedCard(user = profileEditorScreenViewModel.userData!!, modifier = Modifier
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+        )
+        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp).hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserDescription(parameters,scope)
             hideKeyboard(context)
         }
-        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp).hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserData(parameters,scope)
             hideKeyboard(context)
         }
@@ -179,7 +182,7 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
         )
         //Update description button
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = modifier.fillMaxWidth().hideKeyboardOnClick(),
+            modifier = Modifier.fillMaxWidth().hideKeyboardOnClick(),
             onClick = {
                 updateAction()
             }
@@ -262,7 +265,7 @@ fun UserEditableActionsCard(
             }
         }
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp)
                 .hideKeyboardOnClick(),
@@ -270,7 +273,7 @@ fun UserEditableActionsCard(
                 updateAction()
             })
         WarnedButton(text = stringResource(R.string.profile_delete_account_button),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
                 .hideKeyboardOnClick(),
