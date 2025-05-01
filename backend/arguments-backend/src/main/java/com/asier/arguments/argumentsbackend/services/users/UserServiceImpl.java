@@ -63,8 +63,11 @@ public class UserServiceImpl implements UserService {
         //Hash pwd
         entity.getCredentials().setPassword(BCrypt.hashpw(entity.getCredentials().getPassword(), BCrypt.gensalt()));
 
-        //Create user flags
-        entity.getUser().setIsActive(true);
+        //Fix @Fix fields data
+        AnnotationsUtils.fixEntity(entity);
+
+        //Establish offline by default
+        entity.getUser().setIsActive(false);
 
         //Save entity and return result ok
         userRepository.save(entity.getUser());
@@ -107,6 +110,12 @@ public class UserServiceImpl implements UserService {
                 //Delete user
                 userRepository.deleteById(id);
 
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                                .id(id)
+                                .username(user.get().getUsername())
+                                .build());
+
                 //Send affirmative answer
                 return true;
             }
@@ -128,6 +137,12 @@ public class UserServiceImpl implements UserService {
                 //Delete user
                 userRepository.deleteById(new ObjectId(user.get().getId()));
 
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                        .id(new ObjectId(user.get().getId()))
+                        .username(user.get().getUsername())
+                        .build());
+
                 //Send affirmative answer
                 return true;
             }
@@ -145,6 +160,10 @@ public class UserServiceImpl implements UserService {
             if(changes.getUser() != null) {
                 User userSource = user.get();
                 AnnotationsUtils.modifyEntity(userSource, changes.getUser());
+
+                //Fix @Fix fields data
+                AnnotationsUtils.fixEntity(userSource);
+
                 userRepository.save(userSource);
             }
             //If there are credentials included in changes, change it
@@ -158,10 +177,13 @@ public class UserServiceImpl implements UserService {
                     //Apply changes
                     UserCredentials credentialsSource = credentials.get();
                     AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
+
+                    //Fix @Fix fields data
+                    AnnotationsUtils.fixEntity(credentialsSource);
+
                     userCredentialsRepository.save(credentialsSource);
                 }
             }
-
             return true;
         }
         return false;

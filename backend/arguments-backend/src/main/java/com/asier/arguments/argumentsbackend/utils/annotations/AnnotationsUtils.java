@@ -65,4 +65,27 @@ public class AnnotationsUtils {
             }
         }
     }
+
+    /**
+     * Modify the "fix" fields of source entity with programmed fixed.
+     *
+     * @param source  Source entity
+     * @param <T>     Entity class
+     */
+    public static <T> void fixEntity(T source) {
+        if (source == null) {
+            return;
+        }
+
+        for (Field field : source.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                if (field.isAnnotationPresent(StringFix.class))
+                    if (field.get(source) != null)
+                        field.set(source, ((String)field.get(source)).trim());
+            } catch (IllegalAccessException e) {
+                log.error("Error at fixing entity {}", source.getClass().getSimpleName());
+            }
+        }
+    }
 }
