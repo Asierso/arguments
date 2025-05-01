@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.users;
 
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.User;
@@ -176,4 +177,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.usersPerPage")), Sort.by("username")));
     }
 
+    @Override
+    public boolean insertInHistory(String username, DiscussionThread discussion) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+
+        //Get user by username
+        Optional<User> selected = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
+
+        //Check if there's no user
+        if (selected.isEmpty()) {
+            return false;
+        }
+
+        //Add discussion to user history
+        User user = selected.get();
+        user.getHistory().put(new ObjectId(discussion.getId()),discussion.getTitle());
+        userRepository.save(user);
+
+        return false;
+    }
 }
