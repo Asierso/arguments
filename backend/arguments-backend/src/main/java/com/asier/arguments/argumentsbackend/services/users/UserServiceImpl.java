@@ -105,6 +105,12 @@ public class UserServiceImpl implements UserService {
                 //Delete user
                 userRepository.deleteById(id);
 
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                                .id(id)
+                                .username(user.get().getUsername())
+                                .build());
+
                 //Send affirmative answer
                 return true;
             }
@@ -125,6 +131,12 @@ public class UserServiceImpl implements UserService {
                         .ifPresent(val -> userCredentialsRepository.deleteById(new ObjectId(val.getId())));
                 //Delete user
                 userRepository.deleteById(new ObjectId(user.get().getId()));
+
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                        .id(new ObjectId(user.get().getId()))
+                        .username(user.get().getUsername())
+                        .build());
 
                 //Send affirmative answer
                 return true;
@@ -159,7 +171,6 @@ public class UserServiceImpl implements UserService {
                     userCredentialsRepository.save(credentialsSource);
                 }
             }
-
             return true;
         }
         return false;
