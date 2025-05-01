@@ -35,6 +35,7 @@ import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.ChatTextInput
 import com.asier.arguments.ui.components.messaging.ChatMessageDialog
 import com.asier.arguments.ui.components.others.UserAlt
+import com.asier.arguments.ui.components.others.VotingCard
 import com.asier.arguments.ui.components.topbars.ChatTopBar
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.TopBarBackground
@@ -131,7 +132,7 @@ fun MessageBoard(
     val isNearBottom by remember {
         derivedStateOf {
             val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem?.index == messageListSize - 5
+            lastVisibleItem?.index!! >= messageListSize - 5
         }
     }
 
