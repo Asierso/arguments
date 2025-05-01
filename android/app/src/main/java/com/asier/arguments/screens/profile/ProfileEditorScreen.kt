@@ -36,6 +36,7 @@ import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.alerts.WarningAlert
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.WarnedButton
 import com.asier.arguments.ui.components.inputs.BaseTextInput
@@ -74,6 +75,8 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         parameters.isLoading = true
         return
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     ProfileTopBar(title = profileEditorScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),

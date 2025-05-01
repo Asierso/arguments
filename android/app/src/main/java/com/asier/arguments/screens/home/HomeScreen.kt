@@ -38,6 +38,7 @@ import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.alerts.InfoAlert
 import com.asier.arguments.ui.components.alerts.WarningAlert
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
@@ -86,6 +87,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             it.statusBarColor = TopBarBackground.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     ProfileActionTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),

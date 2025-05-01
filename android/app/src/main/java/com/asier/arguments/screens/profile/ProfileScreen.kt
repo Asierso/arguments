@@ -35,6 +35,7 @@ import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.entities.user.User
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.inputs.BaseTextInput
 import com.asier.arguments.ui.components.others.SimpleListItem
 import com.asier.arguments.ui.components.others.UserAlt
@@ -76,6 +77,8 @@ fun ProfileScreen(
             it.statusBarColor = TopBarBackground.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     //Deny to charge ui if userdata is null
     if(profileScreenViewModel.userData == null){

@@ -40,6 +40,7 @@ import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.others.TextCheck
@@ -68,6 +69,8 @@ fun RegisterSecuenceScreen(
             it.statusBarColor = Background.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     //Render all the screens
     Column(

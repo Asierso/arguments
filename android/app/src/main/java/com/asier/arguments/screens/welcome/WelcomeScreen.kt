@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityParameters
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.SecondaryButton
 import com.asier.arguments.ui.theme.Montserrat
@@ -42,6 +43,8 @@ fun WelcomeScreen() {
     //Activity parameters vm load
     val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
     val scope = rememberCoroutineScope()
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     //If is in a loading cycle, stop loading process
     LaunchedEffect(Unit) {

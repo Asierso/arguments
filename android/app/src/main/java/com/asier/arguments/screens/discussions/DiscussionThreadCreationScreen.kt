@@ -36,6 +36,7 @@ import com.asier.arguments.R
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.inputs.OnUpDown
@@ -84,6 +85,8 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
             it.statusBarColor = TopBarBackground.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     TitleTopBar(
         title = stringResource(R.string.discussion_creation_topbar_title),

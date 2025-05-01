@@ -36,6 +36,7 @@ import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.theme.Background
@@ -64,6 +65,8 @@ fun LoginPage(loginViewModel: LoginViewModel) {
     LaunchedEffect(Unit) {
         parameters.isLoading = false
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
         //Welcome title
