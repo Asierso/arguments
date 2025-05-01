@@ -160,12 +160,19 @@ class ProfileEditorScreenViewModel : ViewModel() {
 
                 when(StatusCodes.valueOf(response!!.status)){
                     StatusCodes.SUCCESSFULLY -> {
-                        activityProperties.navController.navigate(Screen.Login.route){
-                            popUpTo(0) { inclusive = true }
+                        activityProperties.storage.delete("auth")
+                        activityProperties.storage.delete("user")
+                        withContext(Dispatchers.Main){
+                            activityProperties.navController.navigate(Screen.Login.route){
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                     }
                     else -> {
-
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.SERVER_ERROR,"No se pudo procesar su solicitud").build(),
+                            duration = SnackbarDuration.Short
+                        )
                     }
                 }
             }

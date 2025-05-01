@@ -34,6 +34,7 @@ import com.asier.arguments.entities.user.User
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.alerts.WarningAlert
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.WarnedButton
 import com.asier.arguments.ui.components.inputs.BaseTextInput
@@ -78,7 +79,8 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         profile = {
             UserAlt(
                 name = profileEditorScreenViewModel.userData!!.username) {}
-        })
+        }
+    )
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -98,6 +100,20 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
             hideKeyboard(context)
         }
     }
+
+    //Warning area
+    WarningAlert(
+        title = "Borrado de cuenta",
+        subtitle = "Estas seguro de que quieres borrar la cuenta? Esta operación no es reversible",
+        onConfirm = {
+            profileEditorScreenViewModel.deleteUser(activityProperties,scope)
+            profileEditorScreenViewModel.deleteAccountWarning = false
+        },
+        onDismiss = {
+            profileEditorScreenViewModel.deleteAccountWarning = false
+        },
+        showAlert = profileEditorScreenViewModel.deleteAccountWarning
+    )
 }
 
 @Composable
@@ -119,7 +135,7 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
         Row(verticalAlignment = Alignment.CenterVertically) {
             //Discussion author
             UserCard(
-                User().apply {
+                user = User().apply {
                     username = user.username
                     isActive = true
             }, modifier = Modifier
@@ -259,7 +275,7 @@ fun UserEditableActionsCard(
                 .padding(top = 5.dp)
                 .hideKeyboardOnClick(),
             onClick = {
-                //TODO update description
+                profileEditorScreenViewModel.deleteAccountWarning = true
             })
     }
 }

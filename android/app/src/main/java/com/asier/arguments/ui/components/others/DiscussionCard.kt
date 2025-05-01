@@ -116,19 +116,13 @@ fun DiscussionCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     //Discussion author
                     UserCard(
-                        if (userData == null)
-                            User().apply {
-                                username = StringUtils.abbreviate(discussion.author, 10)
-                                isActive = null
-                            }
-                        else
-                            userData,
+                        user=userData,
                         modifier = Modifier
                             .padding(start = 5.dp, top = 10.dp, bottom = 10.dp)
                             .weight(.6f),
                         onClick = {
-                            if (!expired)
-                                onUsernameClick?.invoke(it)
+                            if (!expired && userData != null)
+                                onUsernameClick?.invoke(it!!)
                         }
                     )
 

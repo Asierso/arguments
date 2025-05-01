@@ -27,5 +27,5 @@ interface ApiUsers {
     suspend fun updateByUsername(@Path(value = "username", encoded = true) username : String, @Body user: UserModifiableDto, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 
     @DELETE("auth/users/username/{username}")
-    suspend fun deleteByUsername(@Path(value = "username", encoded = true) username: String) : Response<ServiceResponse>
+    suspend fun deleteByUsername(@Path(value = "username", encoded = true) username: String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

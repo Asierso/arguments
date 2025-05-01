@@ -13,7 +13,7 @@ import com.asier.arguments.screens.home.HomeScreen
 import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
 import com.asier.arguments.screens.register.RegisterSequenceViewModel
-import com.asier.arguments.screens.WelcomePage
+import com.asier.arguments.screens.welcome.WelcomeScreen
 import com.asier.arguments.screens.discussions.DiscussionThreadCreationScreen
 import com.asier.arguments.screens.discussions.DiscussionThreadCreationViewModel
 import com.asier.arguments.screens.home.HomeScreenViewModel
@@ -37,7 +37,7 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
     NavHost(navController = parameters.properties.navController, startDestination = start.route, modifier = modifier){
         //Start point and user auth
         composable(Screen.Welcome.route){
-            WelcomePage()
+            WelcomeScreen()
         }
         composable(Screen.Login.route){
             LoginPage(LoginViewModel())

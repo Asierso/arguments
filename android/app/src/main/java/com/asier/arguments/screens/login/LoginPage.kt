@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -58,6 +59,10 @@ fun LoginPage(loginViewModel: LoginViewModel) {
                 .isAppearanceLightStatusBars = true
             it.statusBarColor = Background.toArgb()
         }
+    }
+    
+    LaunchedEffect(Unit) {
+        parameters.isLoading = false
     }
 
     Column(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {

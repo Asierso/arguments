@@ -33,6 +33,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
 import com.asier.arguments.Screen
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.alerts.InfoAlert
@@ -126,12 +127,22 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             itemsIndexed(items = homeScreenViewModel.loadedDiscussions.toList()) { index, item ->
                 DiscussionCard(
                     discussion = item.discussionThread,
-                    userData = item.user.also {
+                    userData = if(item.user != null){
+                        item.user.also {
+                            it!!.isActive =
+                                if (it.username == homeScreenViewModel.username) true else it.isActive
+                        }
+                    }else{
+                        null
+                    }/*also {
                         it!!.isActive =
                             if (it.username == homeScreenViewModel.username) true else it.isActive
-                    },
+                    }*/,
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
+                        if(it == null)
+                            return@DiscussionCard
+
                         parameters.viewProfile = it.username
                         homeScreenViewModel.loadProfile(activityProperties)
                     },

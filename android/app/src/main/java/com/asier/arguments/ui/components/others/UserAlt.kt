@@ -76,12 +76,13 @@ fun UserAlt(
             }
         }
     }
-
 }
 
 fun getColorByName(name: String): Color {
     val hash = Objects.hash(name.toUpperCase(Locale.current))
     val rng = Random(hash)
+    if(name == "??")
+        return Color(0xFF232323)
     return Color(
         red = rng.nextInt(100, 255),
         green = rng.nextInt(100, 255),
