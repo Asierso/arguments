@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.entities.user.User
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.inputs.BaseTextInput
+import com.asier.arguments.ui.components.others.ListItem
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.progressbars.XpProgressBar
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
@@ -182,7 +185,9 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DiscussionsHistory(modifier: Modifier = Modifier) {
+fun DiscussionsHistory(
+    history: HashMap<String,String>? = null,
+    modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -196,7 +201,18 @@ fun DiscussionsHistory(modifier: Modifier = Modifier) {
             color = TextBright1,
             fontSize = 20.sp
         )
-        Text(text = "Work in progress...")
+        if(history == null){
+            Text("No hay debates aún")
+        }else{
+            LazyColumn {
+                itemsIndexed(history.values.toList()){ index, item ->
+                    ListItem(
+                        position = index,
+                        text = item)
+                }
+            }
+        }
+
     }
 }
 

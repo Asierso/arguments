@@ -7,4 +7,5 @@ data class User(
     var level : Int = 0,
     var xp: Int = 0,
     var description : String = "",
-    var isActive : Boolean? = false)
+    var isActive : Boolean? = false,
+    var history: HashMap<String,String>? = null)
