@@ -15,6 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+
 /**
  * This is the public User. People can see that information in Arguments social network
  * User entity represents all de non-critic data about the user
@@ -49,6 +51,7 @@ public class User implements Identify {
     private Integer level;
     @Modifiable
     private Integer xp;
+    private HashMap<ObjectId, String> history;
     public String getId() {
         return id != null ? id.toHexString() : null;
     }
