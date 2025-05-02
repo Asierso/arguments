@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.services.discussions;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
+import com.asier.arguments.argumentsbackend.services.discussions.processors.PaimonDiscussionQueuing;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -23,6 +24,8 @@ import java.util.Properties;
 public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     @Autowired
     private DiscussionThreadRepository discussionRepository;
+    @Autowired
+    private PaimonDiscussionQueuing discussionQueuing;
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     @Override
     public void insert(DiscussionThread discussion) {
@@ -100,6 +103,11 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         //Save discussion with the status changed
         selected.get().setStatus(status);
         discussionRepository.save(selected.get());
+
+        if(status == DiscussionStatus.VOTING){
+            discussionQueuing.enqueue(selected.get());
+        }
+
         return true;
     }
 
