@@ -82,6 +82,7 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
 
         //Add username to discussion users list
         discussion.getUsers().add(username);
+        discussion.getVotes().put(username,0);
         discussionRepository.save(discussion);
         return 0;
     }
@@ -100,6 +101,33 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         selected.get().setStatus(status);
         discussionRepository.save(selected.get());
         return true;
+    }
+
+    @Override
+    public int voteIn(ObjectId id, String username) {
+        if(id == null)
+            return 1;
+
+        Optional<DiscussionThread> selected = discussionRepository.findById(id);
+        if(selected.isPresent()){
+            DiscussionThread discussion = selected.get();
+            //User isn't in scoreboard
+            if(!discussion.getVotes().containsKey(username)){
+                return 2;
+            }
+
+            //Vote time doesn't proceed now
+            if(discussion.getStatus() != DiscussionStatus.VOTING || discussion.getVotingGraceAt().isBefore(Instant.now())){
+                return 3;
+            }
+
+            //Update votes
+            discussion.getVotes().put(username,discussion.getVotes().get(username)+1);
+            discussionRepository.save(discussion);
+            return 0;
+        }
+
+        return 1;
     }
 
     @Override

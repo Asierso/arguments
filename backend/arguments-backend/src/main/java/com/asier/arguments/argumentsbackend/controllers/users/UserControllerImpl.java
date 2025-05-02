@@ -59,6 +59,30 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    public ResponseEntity<ServiceResponse> existsById(String clientToken, ObjectId id) {
+        if(userService.exists(id)){
+            return ResponseEntity.ok().body(ServiceResponse.builder()
+                    .status(statusProps.getProperty("status.done"))
+                    .build());
+        }
+
+        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.notFound")).build());
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> existsByUsername(String clientToken, String uname) {
+        if(userService.exists(uname)){
+            return ResponseEntity.ok().body(ServiceResponse.builder()
+                    .status(statusProps.getProperty("status.done"))
+                    .build());
+        }
+
+        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(ServiceResponse.builder()
+                .status(statusProps.getProperty("status.notFound")).build());
+    }
+
+    @Override
     public ResponseEntity<ServiceResponse> findAll(String clientToken) {
         return ResponseEntity.ok().body(ServiceResponse.builder()
                 .status(statusProps.getProperty("status.done"))

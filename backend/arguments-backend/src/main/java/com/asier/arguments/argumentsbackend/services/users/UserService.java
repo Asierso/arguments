@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.users;
 
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
@@ -19,4 +20,7 @@ public interface UserService extends TaskPagination<User> {
     boolean update(ObjectId id, UserCreatorDto entity);
     List<User> findAll();
     Page<User> findInPage(int page);
+    void insertInHistory(String username, DiscussionThread discussion);
+    boolean exists(ObjectId id);
+    boolean exists(String username);
 }

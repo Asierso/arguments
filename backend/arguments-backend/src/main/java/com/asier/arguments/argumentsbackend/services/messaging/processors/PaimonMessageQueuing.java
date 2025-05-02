@@ -7,6 +7,7 @@ import com.asier.arguments.argumentsbackend.paimon.PaimonProcessor;
 import com.asier.arguments.argumentsbackend.paimon.templates.FeedbackTemplate;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.services.messaging.MessageService;
+import com.asier.arguments.argumentsbackend.utils.PooledQueue;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import jakarta.annotation.PostConstruct;
@@ -23,33 +24,17 @@ import java.util.concurrent.Executors;
 
 @Component
 @Slf4j
-public class MessageQueuing implements Runnable {
-    private final ArrayBlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(1000);
-    private final ExecutorService pool;
-    private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
-
+public class PaimonMessageQueuing extends PooledQueue<Message> {
     @Autowired
     private DiscussionThreadService discussionService;
-
     @Autowired
     @Lazy
     private MessageService messageService;
-
     @Autowired
     private PaimonProcessor paimon;
 
-    public MessageQueuing(){
-        pool = Executors.newFixedThreadPool(Integer.parseInt(props.getProperty("arguments.pools.queuingThreads")));
-    }
-
-    public synchronized void enqueue(Message message){
-        messageQueue.add(message);
-    }
-
-    @PostConstruct
-    public void init(){
-        for(int i = 0; i < Integer.parseInt(props.getProperty("arguments.pools.queuingThreads")); i++)
-            pool.submit(this);
+    public PaimonMessageQueuing(){
+        super(Integer.parseInt(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.pools.queuingThreads")));
     }
 
     /**
@@ -60,13 +45,21 @@ public class MessageQueuing implements Runnable {
     public void run() {
         while(!Thread.currentThread().isInterrupted()){
             try {
-                Message message = messageQueue.take();
+                Message message = takeFromQueue();
                 log.info("Processing feedback " + message.getId());
 
                 DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
 
                 if(discussion == null)
                     continue;
+
+                //If message is garbage, just leave feedback generation
+                if(message.getMessage().length() < 20){
+                    messageService.update(new ObjectId(message.getId()),Message.builder()
+                            .feedback("Unknown")
+                            .build());
+                    continue;
+                }
 
                 //Generate message for Paimon processor
                 PaimonMessageDto paimonMessage = PaimonMessageDto.builder()
@@ -80,7 +73,7 @@ public class MessageQueuing implements Runnable {
                 paimon.processAsPrompt(new FeedbackTemplate(paimonMessage),response -> {
                     //Save feedback in the same entity in mongo
                     messageService.update(paimonMessage.getMessageId(),Message.builder()
-                            .feedback(response)
+                            .feedback(response.trim())
                             .build()
                     );
                 });

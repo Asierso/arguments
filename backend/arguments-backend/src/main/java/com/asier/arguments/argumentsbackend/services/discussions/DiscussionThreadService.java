@@ -14,4 +14,5 @@ public interface DiscussionThreadService extends TaskPagination<DiscussionThread
     boolean update(ObjectId id, DiscussionThread discussion);
     int join(ObjectId id, String username);
     boolean alterStatus(ObjectId id, DiscussionStatus status);
+    int voteIn(ObjectId id, String username);
 }

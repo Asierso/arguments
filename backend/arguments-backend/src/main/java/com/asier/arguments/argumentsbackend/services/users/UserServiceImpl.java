@@ -1,5 +1,6 @@
 package com.asier.arguments.argumentsbackend.services.users;
 
+import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.User;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.asier.arguments.argumentsbackend.repositories.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -61,8 +63,12 @@ public class UserServiceImpl implements UserService {
         //Hash pwd
         entity.getCredentials().setPassword(BCrypt.hashpw(entity.getCredentials().getPassword(), BCrypt.gensalt()));
 
-        //Establish offline by default
+        //Fix @Fix fields data
+        AnnotationsUtils.fixEntity(entity);
+
+        //Establish user flags
         entity.getUser().setIsActive(false);
+        entity.getUser().setIsEnabled(true);
 
         //Save entity and return result ok
         userRepository.save(entity.getUser());
@@ -75,7 +81,7 @@ public class UserServiceImpl implements UserService {
         //Try to find user
         if(id != null){
             Optional<User> user = userRepository.findById(id);
-            if(user.isPresent())
+            if(user.isPresent() && user.get().getIsEnabled())
                 return user.get();
         }
         return null;
@@ -85,8 +91,8 @@ public class UserServiceImpl implements UserService {
     public User select(String username) {
         //Try to find user
         if(username != null){
-            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
-            if(user.isPresent())
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).isEnabled(true).build()));
+            if(user.isPresent() && user.get().getIsEnabled())
                 return user.get();
         }
         return null;
@@ -104,6 +110,12 @@ public class UserServiceImpl implements UserService {
                                 .ifPresent(val -> userCredentialsRepository.deleteById(new ObjectId(val.getId())));
                 //Delete user
                 userRepository.deleteById(id);
+
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                                .id(id)
+                                .username(user.get().getUsername())
+                                .build());
 
                 //Send affirmative answer
                 return true;
@@ -126,6 +138,12 @@ public class UserServiceImpl implements UserService {
                 //Delete user
                 userRepository.deleteById(new ObjectId(user.get().getId()));
 
+                //Insert the same cloned user but without data. This is for blocking the creation of another user with same username
+                userRepository.save(User.builder()
+                        .id(new ObjectId(user.get().getId()))
+                        .username(user.get().getUsername())
+                        .build());
+
                 //Send affirmative answer
                 return true;
             }
@@ -143,6 +161,10 @@ public class UserServiceImpl implements UserService {
             if(changes.getUser() != null) {
                 User userSource = user.get();
                 AnnotationsUtils.modifyEntity(userSource, changes.getUser());
+
+                //Fix @Fix fields data
+                AnnotationsUtils.fixEntity(userSource);
+
                 userRepository.save(userSource);
             }
             //If there are credentials included in changes, change it
@@ -156,10 +178,13 @@ public class UserServiceImpl implements UserService {
                     //Apply changes
                     UserCredentials credentialsSource = credentials.get();
                     AnnotationsUtils.modifyEntity(credentialsSource,changes.getCredentials());
+
+                    //Fix @Fix fields data
+                    AnnotationsUtils.fixEntity(credentialsSource);
+
                     userCredentialsRepository.save(credentialsSource);
                 }
             }
-
             return true;
         }
         return false;
@@ -176,4 +201,46 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(PageRequest.of(page,Integer.parseInt(props.getProperty("arguments.api.usersPerPage")), Sort.by("username")));
     }
 
+    @Override
+    public void insertInHistory(String username, DiscussionThread discussion) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+
+        //Get user by username
+        Optional<User> selected = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
+
+        //Check if there's no user
+        if (selected.isEmpty()) {
+            return;
+        }
+
+        //Add discussion to user history
+        User user = selected.get();
+
+        if(user.getHistory() == null)
+            user.setHistory(new HashMap<>());
+
+        user.getHistory().put(new ObjectId(discussion.getId()),discussion.getTitle());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean exists(ObjectId id) {
+        if(id != null){
+            Optional<User> user = userRepository.findById(id);
+            return user.isPresent();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean exists(String username) {
+        if(username != null){
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
+            return user.isPresent();
+        }
+        return false;
+    }
 }
