@@ -12,6 +12,7 @@ import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
     @Autowired
+    @Lazy
     private MessageService messageService;
     @Autowired
     private PaimonProcessor paimon;
