@@ -66,8 +66,9 @@ public class UserServiceImpl implements UserService {
         //Fix @Fix fields data
         AnnotationsUtils.fixEntity(entity);
 
-        //Establish offline by default
+        //Establish user flags
         entity.getUser().setIsActive(false);
+        entity.getUser().setEnabled(true);
 
         //Save entity and return result ok
         userRepository.save(entity.getUser());
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
         //Try to find user
         if(id != null){
             Optional<User> user = userRepository.findById(id);
-            if(user.isPresent())
+            if(user.isPresent() && user.get().isEnabled())
                 return user.get();
         }
         return null;
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
         //Try to find user
         if(username != null){
             Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
-            if(user.isPresent())
+            if(user.isPresent() && user.get().isEnabled())
                 return user.get();
         }
         return null;
@@ -201,9 +202,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean insertInHistory(String username, DiscussionThread discussion) {
+    public void insertInHistory(String username, DiscussionThread discussion) {
         if (username == null || username.isBlank()) {
-            return false;
+            return;
         }
 
         //Get user by username
@@ -211,7 +212,7 @@ public class UserServiceImpl implements UserService {
 
         //Check if there's no user
         if (selected.isEmpty()) {
-            return false;
+            return;
         }
 
         //Add discussion to user history
@@ -223,7 +224,23 @@ public class UserServiceImpl implements UserService {
         user.getHistory().put(new ObjectId(discussion.getId()),discussion.getTitle());
 
         userRepository.save(user);
+    }
 
+    @Override
+    public boolean exists(ObjectId id) {
+        if(id != null){
+            Optional<User> user = userRepository.findById(id);
+            return user.isPresent();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean exists(String username) {
+        if(username != null){
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
+            return user.isPresent();
+        }
         return false;
     }
 }

@@ -8,7 +8,6 @@ import com.asier.arguments.argumentsbackend.services.TaskPagination;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -21,5 +20,7 @@ public interface UserService extends TaskPagination<User> {
     boolean update(ObjectId id, UserCreatorDto entity);
     List<User> findAll();
     Page<User> findInPage(int page);
-    boolean insertInHistory(String username, DiscussionThread discussion);
+    void insertInHistory(String username, DiscussionThread discussion);
+    boolean exists(ObjectId id);
+    boolean exists(String username);
 }

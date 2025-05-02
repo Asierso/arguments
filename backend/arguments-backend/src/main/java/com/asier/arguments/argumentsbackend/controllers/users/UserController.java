@@ -16,6 +16,12 @@ public interface UserController {
     @GetMapping("/users/username/{uname}")
     ResponseEntity<ServiceResponse> selectByUsername(@RequestParam String clientToken, @PathVariable String uname);
 
+    @GetMapping("/users/lookup/id/{id}")
+    ResponseEntity<ServiceResponse> existsById(@RequestParam String clientToken, @PathVariable ObjectId id);
+
+    @GetMapping("/users/lookup/username/{uname}")
+    ResponseEntity<ServiceResponse> existsByUsername(@RequestParam String clientToken, @PathVariable String uname);
+
     @GetMapping("/users/all")
     ResponseEntity<ServiceResponse> findAll(@RequestParam String clientToken);
 }

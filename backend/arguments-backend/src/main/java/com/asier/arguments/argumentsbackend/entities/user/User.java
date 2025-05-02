@@ -51,6 +51,7 @@ public class User implements Identify {
     private Integer level;
     @Modifiable
     private Integer xp;
+    private boolean isEnabled;
     private HashMap<ObjectId, String> history;
     public String getId() {
         return id != null ? id.toHexString() : null;
