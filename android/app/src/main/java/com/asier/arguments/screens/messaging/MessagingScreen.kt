@@ -32,6 +32,7 @@ import com.asier.arguments.R
 import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.inputs.ChatTextInput
 import com.asier.arguments.ui.components.messaging.ChatMessageDialog
 import com.asier.arguments.ui.components.others.UserAlt
@@ -64,6 +65,8 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
             it.statusBarColor = TopBarBackground.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     messagingScreenViewModel.loadUsername()
 
