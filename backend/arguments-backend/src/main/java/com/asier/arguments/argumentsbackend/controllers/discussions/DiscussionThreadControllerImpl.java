@@ -45,6 +45,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<>())
                 .votes(new HashMap<>())
+                .voteCache(new HashSet<>())
                 .status(DiscussionStatus.STARTED)
                 .votingGraceAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).plusMinutes(Integer.parseInt(props.getProperty("arguments.ln.votingGrace"))).toInstant())
                 .build();
