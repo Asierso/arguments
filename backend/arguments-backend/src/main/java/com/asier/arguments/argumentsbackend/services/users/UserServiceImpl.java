@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
         //Establish user flags
         entity.getUser().setIsActive(false);
-        entity.getUser().setEnabled(true);
+        entity.getUser().setIsEnabled(true);
 
         //Save entity and return result ok
         userRepository.save(entity.getUser());
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
         //Try to find user
         if(id != null){
             Optional<User> user = userRepository.findById(id);
-            if(user.isPresent() && user.get().isEnabled())
+            if(user.isPresent() && user.get().getIsEnabled())
                 return user.get();
         }
         return null;
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
         //Try to find user
         if(username != null){
             Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).isEnabled(true).build()));
-            if(user.isPresent() && user.get().isEnabled())
+            if(user.isPresent() && user.get().getIsEnabled())
                 return user.get();
         }
         return null;
