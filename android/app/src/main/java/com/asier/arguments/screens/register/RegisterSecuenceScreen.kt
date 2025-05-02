@@ -28,8 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -267,7 +269,7 @@ fun RegisterScreenBody1(
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
             onValueChanged = {
-                registerViewModel.username = it
+                registerViewModel.username = it.toLowerCase(Locale.current)
                 registerViewModel.uniqueTry = false
                 if (registerViewModel.checkUsernamePolicy())
                     registerViewModel.checkUserAvailable(
