@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -41,6 +42,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .maxUsers(discussionDto.getMaxUsers())
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<String>())
+                .votes(new HashMap<String,Integer>())
                 .status(DiscussionStatus.STARTED)
                 .build();
 

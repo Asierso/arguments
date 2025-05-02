@@ -13,6 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -38,6 +39,7 @@ public class DiscussionThread implements Identify {
     @Modifiable
     private HashSet<String> users;
     private DiscussionStatus status;
+    private HashMap<String,Integer> votes;
 
     @Override
     public String getId() {
