@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
         //Fix @Fix fields data
         AnnotationsUtils.fixEntity(entity);
 
+        //Fix username
+        entity.getUser().setUsername(entity.getUser().getUsername().toLowerCase());
+
         //Establish user flags
         entity.getUser().setIsActive(false);
         entity.getUser().setIsEnabled(true);
