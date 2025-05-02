@@ -23,6 +23,12 @@ interface ApiUsers {
     @GET("users/id/{userId}")
     suspend fun getById(@Path(value = "userId", encoded = true) userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 
+    @GET("users/lookup/username/{username}")
+    suspend fun existsByName(@Path(value = "username", encoded = true) username : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+
+    @GET("users/lookup/id/{userId}")
+    suspend fun existsById(@Path(value = "userId", encoded = true) userId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+
     @PATCH("auth/users/username/{username}")
     suspend fun updateByUsername(@Path(value = "username", encoded = true) username : String, @Body user: UserModifiableDto, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 
