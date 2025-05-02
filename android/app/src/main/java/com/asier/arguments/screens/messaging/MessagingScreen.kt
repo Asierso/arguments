@@ -98,10 +98,11 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
             messagingScreenViewModel.loadNextMessagesPage(parameters, scope)
         },
         whenBottomReached = {
+        },
+        onCandidateVote = {
+            messagingScreenViewModel.vote(it.first,activityProperties,scope)
         }
     )
-
-
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -109,7 +110,8 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
 fun MessageBoard(
     messagingScreenViewModel: MessagingScreenViewModel,
     whenTopReached: () -> Unit,
-    whenBottomReached: () -> Unit
+    whenBottomReached: () -> Unit,
+    onCandidateVote: (candidate: Pair<String,Int>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -197,7 +199,7 @@ fun MessageBoard(
                 scoreboard = messagingScreenViewModel.discussion!!.votes,
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp),
                 onCandidateClick = {
-
+                    onCandidateVote(it)
                 }
             )
         } else {

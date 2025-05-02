@@ -19,4 +19,6 @@ interface ApiDiscussions {
     suspend fun createDiscussion(@Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Body discussion : DiscussionCreatorDto) : Response<ServiceResponse>
     @POST("auth/discussions/{discussionId}/join")
     suspend fun joinDiscussionById(@Path("discussionId") discussionId : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
+    @POST("auth/voting/{discussionId}/{userVote}")
+    suspend fun voteTo(@Path("discussionId") discussionId : String, @Path("userVote") userVote : String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

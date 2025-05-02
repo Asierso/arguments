@@ -42,4 +42,14 @@ object DiscussionsService : ApiDiscussionsService {
             ApiServices.DiscussionsAuthService(localStorage).joinDiscussionById(discussionId = discussionId)
         )
     }
+
+    override suspend fun voteTo(
+        localStorage: LocalStorage,
+        discussionId: String,
+        userVote: String
+    ): ServiceResponse? {
+        return RetrofitUtils.getResponse(
+            ApiServices.DiscussionsAuthService(localStorage).voteTo(discussionId = discussionId, userVote = userVote)
+        )
+    }
 }

@@ -3,6 +3,7 @@ package com.asier.arguments.screens.messaging
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,8 @@ import com.asier.arguments.entities.pages.PageResponse
 import com.asier.arguments.misc.StatusCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
+import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.utils.GsonUtils
 import com.asier.arguments.utils.storage.LocalStorage
 import com.google.gson.internal.LinkedTreeMap
@@ -48,6 +51,7 @@ class MessagingScreenViewModel : ViewModel() {
     var firstLoad by mutableStateOf(true)
     var shouldBeLoading by mutableStateOf(true)
     var activityRestarting by mutableStateOf(false)
+    var alreadyVoted by mutableStateOf(false)
 
     fun loadUsername() {
         username = storage!!.load("user")!!
@@ -227,6 +231,69 @@ class MessagingScreenViewModel : ViewModel() {
                 //If is loaded
                 if (firstLoad) {
                     firstLoad = false
+                }
+            }
+        }
+    }
+
+    fun vote(candidate: String,activityProperties: ActivityProperties, scope: CoroutineScope){
+        //Avoid double-voting
+        if(alreadyVoted)
+            return
+
+        scope.launch {
+            withContext(Dispatchers.IO){
+                try {
+                    //Send vote request to server
+                    val response = DiscussionsService.voteTo(
+                        localStorage = storage!!,
+                        discussionId = discussion!!.id,
+                        userVote = candidate
+                    )
+
+                    when (StatusCodes.valueOf(response!!.status)) {
+                        StatusCodes.SUCCESSFULLY -> {
+                            withContext(Dispatchers.Main) {
+                                alreadyVoted = true
+                                discussion!!.votes.put(
+                                    candidate,
+                                    discussion!!.votes.getValue(candidate)
+                                )
+                            }
+                        }
+
+                        StatusCodes.VOTING_CLOSED -> {
+                            activityProperties.snackbarHostState.showSnackbar(
+                                message = SnackbarInvoke(
+                                    SnackbarType.WARNING,
+                                    "Votación cerrada"
+                                ).build(),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+
+                        StatusCodes.USER_ALREADY_VOTED -> {
+                            activityProperties.snackbarHostState.showSnackbar(
+                                message = SnackbarInvoke(
+                                    SnackbarType.WARNING,
+                                    "Votación ya realizada"
+                                ).build(),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+
+                        else -> {
+                            activityProperties.snackbarHostState.showSnackbar(
+                                message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }catch (e: Exception){
+                    activityProperties.snackbarHostState.showSnackbar(
+                        message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
+                        duration = SnackbarDuration.Short
+                    )
                 }
             }
         }
