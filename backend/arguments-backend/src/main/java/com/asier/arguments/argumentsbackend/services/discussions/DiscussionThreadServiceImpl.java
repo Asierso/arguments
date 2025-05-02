@@ -121,8 +121,14 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
                 return 3;
             }
 
-            //Update votes
+            //User tries to vote more than one time (maybe cheating)
+            if(discussion.getVoteCache().contains(username)){
+                return 4;
+            }
+
+            //Update votes and save user in cache (avoid more than one vote per user)
             discussion.getVotes().put(username,discussion.getVotes().get(username)+1);
+            discussion.getVoteCache().add(username);
             discussionRepository.save(discussion);
             return 0;
         }

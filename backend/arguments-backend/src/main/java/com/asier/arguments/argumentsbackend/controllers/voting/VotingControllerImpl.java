@@ -40,6 +40,11 @@ public class VotingControllerImpl implements VotingController {
                         .status(statusProps.getProperty("status.votingClosed"))
                         .build());
             }
+            case 4 -> {
+                return ResponseEntity.status(403).body(ServiceResponse.builder()
+                        .status(statusProps.getProperty("status.alreadyVoted"))
+                        .build());
+            }
             default -> {
                 return ResponseEntity.badRequest().body(ServiceResponse.builder()
                         .status(statusProps.getProperty("status.notValidRequest"))
