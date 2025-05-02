@@ -47,7 +47,7 @@ public class AuthTokenFilter implements Filter {
 
         if (username != null) {
             //Save username in request attributes
-            request.setAttribute("username", username);
+            request.setAttribute("username", username.toLowerCase());
             request.setAttribute("authToken",token);
 
             //Check if the auth token is valid. Valid auth tokens are registered in auths collection
