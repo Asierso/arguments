@@ -50,6 +50,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .build();
 
         discussion.getUsers().add(username);
+        discussion.getVotes().put(username,0);
 
         //Insert discussion in db
         discussionThreadService.insert(discussion);
