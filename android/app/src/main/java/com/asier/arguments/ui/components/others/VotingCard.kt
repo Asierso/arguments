@@ -3,6 +3,7 @@ package com.asier.arguments.ui.components.others
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,11 +36,12 @@ import com.asier.arguments.ui.theme.TextBright2
 @Composable
 fun VotingCard(
     scoreboard: HashMap<String,Int>,
-    modifier: Modifier = Modifier
+    onCandidateClick: (candidate: Pair<String, Int>) -> Unit,
+    modifier: Modifier = Modifier,
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .background(Background)
             .border(
@@ -48,9 +50,7 @@ fun VotingCard(
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(10.dp)
-
             .heightIn(max = (60*4).dp)
-
     ) {
         Text(
             text = "Pulsa para votar",
@@ -69,10 +69,12 @@ fun VotingCard(
                     VotingOption(
                         candidate = item.toPair(),
                         totalVotes = totalVotes,
-                        modifier = Modifier.fillMaxWidth().height(60.dp)
+                        modifier = Modifier.fillMaxWidth().height(60.dp),
+                        onCandidateClick = {
+                            onCandidateClick(it)
+                        }
                     )
                 }
-
             }
         }
     }
@@ -82,11 +84,13 @@ fun VotingCard(
 fun VotingOption(
     candidate: Pair<String,Int>,
     totalVotes: Int,
+    onCandidateClick: (candidate: Pair<String,Int>) -> Unit,
     modifier: Modifier = Modifier
 ){
     Box(
         modifier = modifier
             .shadow(10.dp)
+            .clickable { onCandidateClick(candidate) }
     ) {
         //Background Progress bar
         Canvas(
@@ -143,7 +147,8 @@ fun VotingOptionPreview(){
     VotingOption(
         candidate = Pair("dummy",2),
         totalVotes = 3,
-        modifier = Modifier.height(60.dp).fillMaxWidth()
+        modifier = Modifier.height(60.dp).fillMaxWidth(),
+        onCandidateClick = {}
     )
 }
 
@@ -156,6 +161,7 @@ fun VotingCardPreview(){
             Pair("dummy2",2),
             Pair("dummy3",2),
             Pair("dummy4",1),
-            Pair("dummy5",1))
+            Pair("dummy5",1)),
+        onCandidateClick = {}
     )
 }

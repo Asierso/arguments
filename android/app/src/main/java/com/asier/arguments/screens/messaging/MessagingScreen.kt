@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,10 +47,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Instant
+import java.time.LocalDateTime
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
+fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
     //Activity parameters vm load
     val parameters: ActivityParameters = viewModel(LocalContext.current as ComponentActivity)
     val activityProperties: ActivityProperties = parameters.properties
@@ -66,16 +69,19 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
         }
     }
 
-    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
 
     messagingScreenViewModel.loadUsername()
 
-    messagingScreenViewModel.checkDiscussionAvailability(parameters,scope, LocalContext.current)
+    messagingScreenViewModel.checkDiscussionAvailability(parameters, scope, LocalContext.current)
 
     //Load new messages with little delay
-    messagingScreenViewModel.startUpdatingCycle(parameters,scope)
+    messagingScreenViewModel.startUpdatingCycle(parameters, scope)
 
-    ChatTopBar(discussion = messagingScreenViewModel.discussion?: DiscussionThread(),
+    ChatTopBar(
+        discussion = messagingScreenViewModel.discussion ?: DiscussionThread(),
         leadingIcon = {
             Icon(
                 painterResource(R.drawable.ic_logo),
@@ -89,21 +95,32 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel){
 
     MessageBoard(messagingScreenViewModel,
         whenTopReached = {
-            messagingScreenViewModel.loadNextMessagesPage(parameters,scope)
+            messagingScreenViewModel.loadNextMessagesPage(parameters, scope)
         },
         whenBottomReached = {
         }
     )
+
+
 }
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun MessageBoard(
-    messagingScreenViewModel : MessagingScreenViewModel,
+    messagingScreenViewModel: MessagingScreenViewModel,
     whenTopReached: () -> Unit,
     whenBottomReached: () -> Unit
-){
+) {
     val scope = rememberCoroutineScope()
+
+    //For text input and voting card updating
+    val currentTime = remember { mutableStateOf(Instant.now()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            currentTime.value = Instant.now()
+            delay(1000)
+        }
+    }
 
     //List handlers
     val listState = rememberLazyListState()
@@ -141,14 +158,19 @@ fun MessageBoard(
 
     //Scroll down if message list is updated, and user isn´t scrolling up
     LaunchedEffect(messageListSize) {
-        if(messageListSize > 0 && (isNearBottom || messagingScreenViewModel.firstLoad)){
-            listState.animateScrollToItem( messageListSize - 1)
+        if (messageListSize > 0 && (isNearBottom || messagingScreenViewModel.firstLoad)) {
+            listState.animateScrollToItem(messageListSize - 1)
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(top = 95.dp)) {
         LazyColumn(
-            modifier = Modifier.weight(.9f).padding(5.dp).fillMaxWidth(),
+            modifier = Modifier
+                .weight(.9f)
+                .padding(5.dp)
+                .fillMaxWidth(),
             state = listState
         ) {
             itemsIndexed(messagingScreenViewModel.messages
@@ -157,7 +179,7 @@ fun MessageBoard(
                 .flatten()
                 .sortedBy {
                     it.sendTime
-                }){ index, item ->
+                }) { index, item ->
                 ChatMessageDialog(
                     message = item,
                     self = item.sender == messagingScreenViewModel.username,
@@ -168,21 +190,33 @@ fun MessageBoard(
             }
         }
 
-        ChatTextInput(
-            onValueChanged = {messagingScreenViewModel.writingMessage = it},
-            text = messagingScreenViewModel.writingMessage,
-            modifier = Modifier.weight(.1f),
-            onSendClicked = {
-                messagingScreenViewModel.sendMessage(scope)
+        //Show text input or voting card depending if discussion is active or is in voting time
+        if (messagingScreenViewModel.discussion != null &&
+            currentTime.value.isAfter(messagingScreenViewModel.discussion!!.endAt)) {
+            VotingCard(
+                scoreboard = messagingScreenViewModel.discussion!!.votes,
+                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp),
+                onCandidateClick = {
 
-                //Scroll to bottom when button is pressed
-                scope.launch {
-                    if(messageListSize > 0){
-                        listState.animateScrollToItem( messageListSize - 1)
+                }
+            )
+        } else {
+            ChatTextInput(
+                onValueChanged = { messagingScreenViewModel.writingMessage = it },
+                text = messagingScreenViewModel.writingMessage,
+                modifier = Modifier.weight(.1f),
+                onSendClicked = {
+                    messagingScreenViewModel.sendMessage(scope)
+
+                    //Scroll to bottom when button is pressed
+                    scope.launch {
+                        if (messageListSize > 0) {
+                            listState.animateScrollToItem(messageListSize - 1)
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
