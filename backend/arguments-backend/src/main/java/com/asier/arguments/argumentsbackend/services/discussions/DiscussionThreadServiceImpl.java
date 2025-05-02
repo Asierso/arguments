@@ -120,7 +120,7 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         if(selected.isPresent()){
             DiscussionThread discussion = selected.get();
             //User isn't in scoreboard
-            if(!discussion.getVotes().containsKey(username)){
+            if(username == null || username.isBlank() || !discussion.getVotes().containsKey(username)){
                 return 2;
             }
 

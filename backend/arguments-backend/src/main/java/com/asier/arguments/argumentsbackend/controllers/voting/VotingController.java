@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface VotingController {
-    @PostMapping("/voting/{discussionId}")
-    ResponseEntity<ServiceResponse> voteIn(@RequestParam String clientToken, @PathVariable String discussionId, @RequestAttribute String username);
+    @PostMapping("/voting/{discussionId}/{target}")
+    ResponseEntity<ServiceResponse> voteIn(@RequestParam String clientToken, @PathVariable String target, @PathVariable String usernameVote ,@RequestAttribute String username);
 }

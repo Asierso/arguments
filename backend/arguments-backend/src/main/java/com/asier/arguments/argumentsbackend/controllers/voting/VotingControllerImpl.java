@@ -18,8 +18,8 @@ public class VotingControllerImpl implements VotingController {
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
 
     @Override
-    public ResponseEntity<ServiceResponse> voteIn(String clientToken, String discussionId, String username) {
-        switch (discussionService.voteIn(new ObjectId(discussionId), username)) {
+    public ResponseEntity<ServiceResponse> voteIn(String clientToken, String discussionId, String target, String username) {
+        switch (discussionService.voteIn(new ObjectId(discussionId), target)) {
             case 0 -> {
                 return ResponseEntity.ok().body(ServiceResponse.builder()
                         .status(statusProps.getProperty("status.done"))
