@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public User select(String username) {
         //Try to find user
         if(username != null){
-            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).build()));
+            Optional<User> user = userRepository.findOne(Example.of(User.builder().username(username).isActive(null).isEnabled(true).build()));
             if(user.isPresent() && user.get().isEnabled())
                 return user.get();
         }
