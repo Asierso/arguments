@@ -21,7 +21,7 @@ public class VotingControllerImpl implements VotingController {
 
     @Override
     public ResponseEntity<ServiceResponse> voteIn(String clientToken, String discussionId, String target, String username) {
-        switch (discussionService.voteIn(new ObjectId(discussionId), target)) {
+        switch (discussionService.voteIn(new ObjectId(discussionId), target, username)) {
             case 0 -> {
                 return ResponseEntity.ok().body(ServiceResponse.builder()
                         .status(statusProps.getProperty("status.done"))

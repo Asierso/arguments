@@ -112,7 +112,7 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     }
 
     @Override
-    public int voteIn(ObjectId id, String username) {
+    public int voteIn(ObjectId id, String target, String actor) {
         if(id == null)
             return 1;
 
@@ -120,7 +120,7 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         if(selected.isPresent()){
             DiscussionThread discussion = selected.get();
             //User isn't in scoreboard
-            if(username == null || username.isBlank() || !discussion.getVotes().containsKey(username)){
+            if(target == null || target.isBlank() || !discussion.getVotes().containsKey(target) || actor == null || actor.isBlank()){
                 return 2;
             }
 
@@ -130,13 +130,13 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
             }
 
             //User tries to vote more than one time (maybe cheating)
-            if(discussion.getVoteCache().contains(username)){
+            if(discussion.getVoteCache().contains(target)){
                 return 4;
             }
 
             //Update votes and save user in cache (avoid more than one vote per user)
-            discussion.getVotes().put(username,discussion.getVotes().get(username)+1);
-            discussion.getVoteCache().add(username);
+            discussion.getVotes().put(target,discussion.getVotes().get(target)+1);
+            discussion.getVoteCache().add(actor);
             discussionRepository.save(discussion);
             return 0;
         }
