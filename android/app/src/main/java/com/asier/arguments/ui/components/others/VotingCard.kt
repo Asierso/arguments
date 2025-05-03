@@ -17,28 +17,45 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
+import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.TextBright0
 import com.asier.arguments.ui.theme.TextBright2
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 @Composable
 fun VotingCard(
     scoreboard: HashMap<String,Int>,
-    onCandidateClick: (candidate: Pair<String, Int>) -> Unit,
+    onCandidateClick: (candidate: Pair<String, Int>) -> Boolean,
     modifier: Modifier = Modifier,
+    endVoting: Instant? = null
 ){
+    var choosen by remember { mutableStateOf("") }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -53,7 +70,13 @@ fun VotingCard(
             .heightIn(max = (60*4).dp)
     ) {
         Text(
-            text = "Pulsa para votar",
+            text = "Pulsa para votar ${
+                if(endVoting == null || Instant.now().isAfter(endVoting)) "" else
+                    Duration.between(Instant.now(), endVoting)
+                        .seconds
+                        .let { Instant.ofEpochSecond(it) }
+                        .atZone(ZoneOffset.systemDefault())
+                        .format(DateTimeFormatter.ofPattern("'('mm:ss')'"))}",
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
@@ -70,8 +93,11 @@ fun VotingCard(
                         candidate = item.toPair(),
                         totalVotes = totalVotes,
                         modifier = Modifier.fillMaxWidth().height(60.dp),
+                        choosen = choosen == item.toPair().first,
                         onCandidateClick = {
-                            onCandidateClick(it)
+                            if(onCandidateClick(it)){
+                                choosen = it.first
+                            }
                         }
                     )
                 }
@@ -85,7 +111,8 @@ fun VotingOption(
     candidate: Pair<String,Int>,
     totalVotes: Int,
     onCandidateClick: (candidate: Pair<String,Int>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    choosen: Boolean = false
 ){
     Box(
         modifier = modifier
@@ -98,6 +125,11 @@ fun VotingOption(
                 .clip(RoundedCornerShape(7.dp))
                 .background(CardBackground)
                 .matchParentSize()
+                .border(
+                    width = if(choosen) 3.dp else 0.dp,
+                    color = if(choosen) Primary else Color.Transparent,
+                    shape = RoundedCornerShape(7.dp)
+                )
         ) {
 
             val voteProgress = candidate.second.toFloat() / totalVotes.toFloat()
@@ -108,8 +140,9 @@ fun VotingOption(
                 color = getColorByName(candidate.first).copy(alpha = .8f),
                 size = Size(progressWidth, size.height),
                 topLeft = Offset(0f, 0f),
-                cornerRadius = CornerRadius.Zero
+                cornerRadius = CornerRadius(10f,10f)
             )
+
 
         }
 
@@ -138,6 +171,14 @@ fun VotingOption(
                     modifier = Modifier.padding(start = 7.dp))
             }
         }
+        Text(
+            text = "${candidate.second}",
+            color = TextBright0,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 25.sp,
+            fontFamily = Montserrat,
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 15.dp)
+        )
     }
 }
 
@@ -162,6 +203,9 @@ fun VotingCardPreview(){
             Pair("dummy3",2),
             Pair("dummy4",1),
             Pair("dummy5",1)),
-        onCandidateClick = {}
+        onCandidateClick = {
+            true
+        },
+        endVoting = Instant.now().plusSeconds(123)
     )
 }

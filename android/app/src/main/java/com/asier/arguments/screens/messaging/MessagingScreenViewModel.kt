@@ -139,7 +139,7 @@ class MessagingScreenViewModel : ViewModel() {
                         StatusCodes.SUCCESSFULLY -> {
                             val loaded =
                                 GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>)
-                            if (loaded.endAt!!.isBefore(Instant.now())) {
+                            if (loaded.votingGraceAt!!.isBefore(Instant.now())) {
                                 throw Exception()
                             } else {
                                 discussion = loaded
@@ -257,7 +257,7 @@ class MessagingScreenViewModel : ViewModel() {
                                 alreadyVoted = true
                                 discussion!!.votes.put(
                                     candidate,
-                                    discussion!!.votes.getValue(candidate)
+                                    discussion!!.votes.getValue(candidate)+1
                                 )
                             }
                         }

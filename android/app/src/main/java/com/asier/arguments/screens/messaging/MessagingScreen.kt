@@ -199,8 +199,13 @@ fun MessageBoard(
                 scoreboard = messagingScreenViewModel.discussion!!.votes,
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp),
                 onCandidateClick = {
+                    if(messagingScreenViewModel.alreadyVoted){
+                        return@VotingCard false
+                    }
                     onCandidateVote(it)
-                }
+                    return@VotingCard true
+                },
+                endVoting = messagingScreenViewModel.discussion!!.votingGraceAt
             )
         } else {
             ChatTextInput(

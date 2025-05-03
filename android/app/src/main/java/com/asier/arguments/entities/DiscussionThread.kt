@@ -11,5 +11,6 @@ data class DiscussionThread(
     var users: List<String> = emptyList(),
     var createdAt: Instant? = null,
     var endAt: Instant? = null,
+    var votingGraceAt: Instant? = null,
     var votes: HashMap<String,Int> = hashMapOf()
 )

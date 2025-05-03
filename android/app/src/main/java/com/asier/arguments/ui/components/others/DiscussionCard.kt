@@ -64,6 +64,10 @@ fun DiscussionCard(
         while (discussion.endAt!!.isAfter(Instant.now())) {
             delay(1000)
             redraw++
+
+            if(redraw == Int.MAX_VALUE){
+                redraw = 0
+            }
         }
     }
 
