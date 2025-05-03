@@ -126,7 +126,7 @@ fun VotingOption(
                 .background(CardBackground)
                 .matchParentSize()
                 .border(
-                    width = if(choosen) 3.dp else 0.dp,
+                    width = if(choosen) 2.dp else 0.dp,
                     color = if(choosen) Primary else Color.Transparent,
                     shape = RoundedCornerShape(7.dp)
                 )
