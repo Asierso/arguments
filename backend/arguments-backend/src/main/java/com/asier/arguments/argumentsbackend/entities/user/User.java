@@ -47,9 +47,7 @@ public class User implements Identify {
     @Modifiable
     @StringFix
     private String description;
-    @Modifiable
     private Integer level;
-    @Modifiable
     private Integer xp;
     private Boolean isEnabled;
     private HashMap<ObjectId, String> history;

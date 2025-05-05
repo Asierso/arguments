@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.tasks;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
+import com.asier.arguments.argumentsbackend.services.discussions.components.Score;
 import com.asier.arguments.argumentsbackend.services.users.UserService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -27,6 +28,8 @@ public class DiscussionEnderTask implements Runnable {
     private DiscussionThreadService discussionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private Score score;
 
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
@@ -91,6 +94,7 @@ public class DiscussionEnderTask implements Runnable {
             //If discussion is in voting status and voting grace period is ended, close the discussion
             if(thread.getStatus() == DiscussionStatus.VOTING && thread.getVotingGraceAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.FINISHED);
+                score.resolveVotations(thread);
                 updateToEnding.incrementAndGet();
 
                 //Add discussion in history of every participant user

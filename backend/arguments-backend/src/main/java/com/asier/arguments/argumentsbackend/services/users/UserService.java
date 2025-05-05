@@ -23,4 +23,5 @@ public interface UserService extends TaskPagination<User> {
     void insertInHistory(String username, DiscussionThread discussion);
     boolean exists(ObjectId id);
     boolean exists(String username);
+    void modifyXp(ObjectId id, int lvl, int xp);
 }

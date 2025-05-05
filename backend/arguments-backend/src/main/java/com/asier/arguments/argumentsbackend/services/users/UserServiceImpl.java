@@ -246,4 +246,20 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public void modifyXp(ObjectId id, int lvl, int xp) {
+        if(id==null)
+            return;
+
+        Optional<User> selected = userRepository.findById(id);
+
+        //Change levels if user exists
+        if(selected.isPresent()){
+            User user = selected.get();
+            user.setXp(xp);
+            user.setLevel(lvl);
+            userRepository.save(user);
+        }
+    }
 }

@@ -43,6 +43,7 @@ public class DiscussionThread implements Identify {
     private DiscussionStatus status;
     private HashMap<String,Integer> votes;
     private HashSet<String> voteCache;
+    private String paimonVote;
 
     @Override
     public String getId() {

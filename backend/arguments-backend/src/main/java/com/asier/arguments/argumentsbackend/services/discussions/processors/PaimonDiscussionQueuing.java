@@ -5,6 +5,7 @@ import com.asier.arguments.argumentsbackend.entities.discussion.PaimonDiscussion
 import com.asier.arguments.argumentsbackend.entities.messaging.Message;
 import com.asier.arguments.argumentsbackend.paimon.PaimonProcessor;
 import com.asier.arguments.argumentsbackend.paimon.templates.VotingTemplate;
+import com.asier.arguments.argumentsbackend.services.discussions.DiscussionMembersService;
 import com.asier.arguments.argumentsbackend.services.messaging.MessageService;
 import com.asier.arguments.argumentsbackend.utils.PooledQueue;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
@@ -30,6 +31,8 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
     private MessageService messageService;
     @Autowired
     private PaimonProcessor paimon;
+    @Autowired
+    private DiscussionMembersService membersService;
 
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     public PaimonDiscussionQueuing(){
@@ -88,8 +91,9 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
                         .build();
 
                 paimon.processAsPrompt(new VotingTemplate(paimonDiscussion),response -> {
-                    if(discussion.getUsers().contains(response.trim().toLowerCase())){
-                        //TODO: Apply vote
+                    String replace = response.trim().toLowerCase().replace("\"", "");
+                    if(discussion.getUsers().contains(replace)){
+                        membersService.votePaimonIn(new ObjectId(discussion.getId()), replace);
                     }else{
                         //TODO: Can't vote
                     }

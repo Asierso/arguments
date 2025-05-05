@@ -6,13 +6,13 @@ import com.asier.arguments.argumentsbackend.services.TaskPagination;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
+import java.util.HashSet;
+
 public interface DiscussionThreadService extends TaskPagination<DiscussionThread> {
     void insert(DiscussionThread discussion);
     DiscussionThread select(ObjectId id);
     Page<DiscussionThread> findInPage(int page);
     boolean delete(ObjectId id);
     boolean update(ObjectId id, DiscussionThread discussion);
-    int join(ObjectId id, String username);
     boolean alterStatus(ObjectId id, DiscussionStatus status);
-    int voteIn(ObjectId id, String target, String actor);
 }
