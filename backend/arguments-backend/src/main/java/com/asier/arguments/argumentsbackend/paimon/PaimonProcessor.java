@@ -39,6 +39,8 @@ public class PaimonProcessor {
     public void processAsPrompt(VelocityTemplate template, PaimonFetchCallback callback){
         String prompt = velocity.applyTemplate(template);
 
+        log.info("paimon, template is " + prompt);
+
         LlamaStreamRequest req = new LlamaPromptsBuilder(settings)
                 .appendPrompt(prompt)
                 .withStream(false)

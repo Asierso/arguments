@@ -9,6 +9,7 @@ import com.asier.arguments.argumentsbackend.repositories.UserCredentialsReposito
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -253,6 +255,7 @@ public class UserServiceImpl implements UserService {
             return;
 
         Optional<User> selected = userRepository.findById(id);
+        log.info("user " + selected.isPresent() );
 
         //Change levels if user exists
         if(selected.isPresent()){

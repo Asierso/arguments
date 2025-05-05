@@ -5,6 +5,8 @@ import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
 import com.asier.arguments.argumentsbackend.repositories.UserRepository;
+import com.asier.arguments.argumentsbackend.services.users.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,12 +16,13 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class DiscussionMembersServiceImpl implements DiscussionMembersService {
     @Autowired
     private DiscussionThreadRepository discussionRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Override
     public int join(ObjectId id, String username){
         if(id==null)
@@ -130,10 +133,14 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
         if(selected.isPresent() && selected.get().getUsers() != null){
             //Add all users to the set
             for(String username : selected.get().getUsers()){
-                Optional<User> found = userRepository.findOne(Example.of(User.builder().username(username).build()));
-                found.ifPresent(users::add);
+                User found = userService.select(username);
+                if(found != null) {
+                    users.add(found);
+                }
             }
         }
+
+        log.info("ooo" + users.size());
 
         return users;
     }

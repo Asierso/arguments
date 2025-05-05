@@ -92,10 +92,8 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
 
                 paimon.processAsPrompt(new VotingTemplate(paimonDiscussion),response -> {
                     String replace = response.trim().toLowerCase().replace("\"", "");
-                    if(discussion.getUsers().contains(replace)){
+                    if(discussion.getUsers().contains(replace)) {
                         membersService.votePaimonIn(new ObjectId(discussion.getId()), replace);
-                    }else{
-                        //TODO: Can't vote
                     }
                 });
 

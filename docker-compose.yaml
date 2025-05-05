@@ -47,7 +47,7 @@ services:
     networks:
       - arguments-network
     entrypoint: ["sh", "-c"]
-    command: ["ollama serve && ollama pull llama3.2:3b "]
+    command: ["ollama serve && ollama pull llama3.2:3b-instruct-q8_0 "]
 
 networks:
   arguments-network:

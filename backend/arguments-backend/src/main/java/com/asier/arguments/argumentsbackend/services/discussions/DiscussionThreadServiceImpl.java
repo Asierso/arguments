@@ -55,10 +55,6 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         return selected.isPresent();
     }
 
-
-
-
-
     @Override
     public boolean alterStatus(ObjectId id, DiscussionStatus status) {
         if(id==null)

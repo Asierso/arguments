@@ -94,6 +94,7 @@ public class DiscussionEnderTask implements Runnable {
             //If discussion is in voting status and voting grace period is ended, close the discussion
             if(thread.getStatus() == DiscussionStatus.VOTING && thread.getVotingGraceAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.FINISHED);
+                log.info("discussion scoring");
                 score.resolveVotations(thread);
                 updateToEnding.incrementAndGet();
 

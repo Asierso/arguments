@@ -1,16 +1,18 @@
 package com.asier.arguments.argumentsbackend.services.discussions.components;
 
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
+import com.asier.arguments.argumentsbackend.entities.rankings.BenedictData;
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionMembersService;
-import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.services.users.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Slf4j
 @Component
 public class Score {
     @Autowired
@@ -33,12 +35,20 @@ public class Score {
 
         //Add xp points
         for(User user : users){
+            log.info("pl " + user.getUsername());
             int votesPlus = discussion.getVotes().get(user.getUsername()) * 10;
             int winnerPlus = benedict.winner().getKey().equals(user.getUsername())? 50 * users.size() : 0;
-            user.setXp(user.getXp() + votesPlus + winnerPlus);
 
-            //Modify user
-            userService.modifyXp(new ObjectId(user.getId()),user.getLevel(),user.getXp());
+            //Calculate xp and level of user
+            int xp = user.getXp() == null? 0 : user.getXp() + votesPlus + winnerPlus;
+            int level = user.getLevel() == null? 0 : user.getLevel();
+            if(xp >= 100) {
+                level += xp / 100;
+                xp = xp % 100;
+            }
+
+            user.setLevel(level);
+            user.setXp(xp);
         }
     }
 
