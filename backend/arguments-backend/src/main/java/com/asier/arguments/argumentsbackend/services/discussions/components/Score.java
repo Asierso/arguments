@@ -35,7 +35,6 @@ public class Score {
 
         //Add xp points
         for(User user : users){
-            log.info("pl " + user.getUsername());
             int votesPlus = discussion.getVotes().get(user.getUsername()) * 10;
             int winnerPlus = benedict.winner().getKey().equals(user.getUsername())? 50 * users.size() : 0;
 
@@ -49,6 +48,7 @@ public class Score {
 
             user.setLevel(level);
             user.setXp(xp);
+            userService.modifyXp(new ObjectId(user.getId()),level,xp);
         }
     }
 

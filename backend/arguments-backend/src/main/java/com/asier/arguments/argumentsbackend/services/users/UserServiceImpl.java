@@ -255,7 +255,6 @@ public class UserServiceImpl implements UserService {
             return;
 
         Optional<User> selected = userRepository.findById(id);
-        log.info("user " + selected.isPresent() );
 
         //Change levels if user exists
         if(selected.isPresent()){

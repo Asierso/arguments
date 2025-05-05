@@ -140,8 +140,6 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
             }
         }
 
-        log.info("ooo" + users.size());
-
         return users;
     }
 }
