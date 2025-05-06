@@ -37,7 +37,7 @@ public class PaimonProcessor {
     public void processAsPrompt(VelocityTemplate template, PaimonFetchCallback callback){
         String prompt = velocity.applyTemplate(template);
 
-        log.info("Requesting to ollama server using velocity template");
+        log.info("Requesting to ollama server using VLT template: {}",prompt);
 
         LlamaStreamRequest req = new LlamaPromptsBuilder(settings)
                 .appendPrompt(prompt)

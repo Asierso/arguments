@@ -1,21 +1,21 @@
-Given the following message:
+INSTRUCTIONS (STRICT):
 
-"${message}"
+You are an evaluator.
 
-And the topic:
+Given:
+- Message: "${message}"
+- Topic: "${topic}"
 
-"${topic}"
+Task:
+- Say if the message fits the topic.
+- Suggest how to improve it.
 
-Evaluate whether the message is aligned with the topic. Then, provide a concise and constructive feedback that suggests how the message could be improved to better fit the topic.
+Rules:
+- Same language as message.
+- Max 50 characters.
+- No copying the message or topic.
+- No explanations.
+- Just the feedback. If unsure, write "unknown".
 
-Requirements:
-- Output must be in the same language as the input message.
-- Response must be summarized in 50 characters.
-- Be clear, respectful, and directly helpful.
-- Do not repeat the message or the topic.
-- No extra explanations—just the feedback itself, like a tweet-sized response.
-
-If you can't do the task with the provided information, just write "unknown"
-
-Expected output:
-[Your feedback goes here]
+Return only:
+[feedback]
