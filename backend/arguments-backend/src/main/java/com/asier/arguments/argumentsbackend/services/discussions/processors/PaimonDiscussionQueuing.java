@@ -91,6 +91,7 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
                         .build();
 
                 paimon.processAsPrompt(new VotingTemplate(paimonDiscussion),response -> {
+                    log.info("Paimon raw benedict for {}: {}",discussion.getId(),response);
                     String replace = response.trim().toLowerCase().replace("\"", "");
                     if(discussion.getUsers().contains(replace)) {
                         membersService.votePaimonIn(new ObjectId(discussion.getId()), replace);
