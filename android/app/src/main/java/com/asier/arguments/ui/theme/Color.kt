@@ -17,6 +17,7 @@ val Background = Color(0xFF242424)
 
 val Primary = Color(0xFF7B6CC1)
 val PrimaryDark = Color(0xFF2B2936)
+val PrimaryLight = Color(0xFFADA1F3)
 val Secondary = Color(0xFF676767)
 val Disabled = Color(0xFF2F2F2F)
 val Tertiary = Color(0xFF655E88)

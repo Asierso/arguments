@@ -45,7 +45,6 @@ import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.TextBright1
 import com.asier.arguments.ui.theme.TextError0
 import kotlinx.coroutines.delay
-import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.Instant
 
@@ -127,7 +126,7 @@ fun DiscussionCard(
                             .weight(.6f),
                         onClick = {
                             if (!expired && userData != null)
-                                onUsernameClick?.invoke(it!!)
+                                onUsernameClick?.invoke(it)
                         }
                     )
 

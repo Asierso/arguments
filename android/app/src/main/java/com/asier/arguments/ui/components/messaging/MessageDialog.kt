@@ -29,7 +29,6 @@ import org.apache.commons.lang3.StringUtils
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -38,16 +37,16 @@ fun MessageDialog(
     self: Boolean,
     modifier: Modifier = Modifier
 ){
-    val normalRoundPercent = 15
+    val normalRound = 15
     val sideRoundRect = 5
     val hour = message.sendTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm"))
     Box(modifier = modifier
         .clip(
             RoundedCornerShape(
-                topStartPercent = if (self) normalRoundPercent else sideRoundRect,
-                topEndPercent = if (self) sideRoundRect else normalRoundPercent,
-                bottomEndPercent = normalRoundPercent,
-                bottomStartPercent = normalRoundPercent
+                topStart = if (self) normalRound.dp else sideRoundRect.dp,
+                topEnd = if (self) sideRoundRect.dp else normalRound.dp,
+                bottomEnd = normalRound.dp,
+                bottomStart = normalRound.dp
             )
         )
         .background(if (self) SelfMessageBox else OtherMessageBox)

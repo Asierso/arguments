@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
-import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
@@ -41,9 +40,6 @@ import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.inputs.OnUpDown
 import com.asier.arguments.ui.components.others.TextCheck
-import com.asier.arguments.ui.components.others.UserAlt
-import com.asier.arguments.ui.components.topbars.BaseTopBar
-import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat

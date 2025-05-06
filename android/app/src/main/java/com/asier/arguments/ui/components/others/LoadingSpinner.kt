@@ -25,7 +25,9 @@ import com.asier.arguments.R
 import com.asier.arguments.ui.theme.Primary
 
 @Composable
-fun LoadingSpinner() {
+fun LoadingSpinner(
+    modifier: Modifier = Modifier
+) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
     val angle by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -38,7 +40,7 @@ fun LoadingSpinner() {
     val image = ImageBitmap.imageResource(R.drawable.ic_logo_minimal)
 
     Box(
-        modifier = Modifier.size(70.dp),
+        modifier = modifier.size(70.dp),
         contentAlignment = Alignment.Center
     ) {
         Canvas(modifier = Modifier.size(70.dp).padding(5.dp)) {

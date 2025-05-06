@@ -13,6 +13,7 @@ import com.asier.arguments.MainActivity
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.api.messaging.MessagingService
+import com.asier.arguments.entities.DiscussionStatus
 import com.asier.arguments.entities.DiscussionThread
 import com.asier.arguments.entities.Message
 import com.asier.arguments.entities.MessageCreatorDto
@@ -139,11 +140,7 @@ class MessagingScreenViewModel : ViewModel() {
                         StatusCodes.SUCCESSFULLY -> {
                             val loaded =
                                 GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>)
-                            if (loaded.votingGraceAt!!.isBefore(Instant.now())) {
-                                throw Exception()
-                            } else {
-                                discussion = loaded
-                            }
+                            discussion = loaded
                         }
 
                         else -> {
@@ -155,7 +152,6 @@ class MessagingScreenViewModel : ViewModel() {
                     withContext(Dispatchers.Main) {
                         storage!!.delete("discussion")
                         shouldBeLoading = false
-                        parameters.isLoading = true
                     }
 
                     if(activityRestarting)
@@ -191,6 +187,7 @@ class MessagingScreenViewModel : ViewModel() {
                         StatusCodes.SUCCESSFULLY -> {
                             withContext(Dispatchers.Main){
                                 discussion = GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>).copy()
+                                checkStatus(parameters,scope)
                             }
                         }
 
@@ -202,6 +199,16 @@ class MessagingScreenViewModel : ViewModel() {
 
                 }
             }
+        }
+    }
+
+    fun checkStatus(parameters: ActivityParameters, scope: CoroutineScope){
+        when(discussion!!.status){
+            DiscussionStatus.FINISHED -> {
+                storage!!.delete("discussion")
+                parameters.properties.navController.navigate(Screen.Rankings.route)
+            }
+            else -> {}
         }
     }
 
@@ -232,6 +239,17 @@ class MessagingScreenViewModel : ViewModel() {
                 if (firstLoad) {
                     firstLoad = false
                 }
+            }
+        }
+    }
+
+    fun checkIfAlone(parameters: ActivityParameters){
+        //If the user is alone in the discussion, quit the chance of vote and return to home
+        if(discussion!!.users.size <=1){
+            parameters.properties.storage.delete("discussion")
+            parameters.isAlone = true
+            parameters.properties.navController.navigate(Screen.Home.route){
+                popUpTo(0){inclusive = true}
             }
         }
     }

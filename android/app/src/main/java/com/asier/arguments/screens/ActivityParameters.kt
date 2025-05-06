@@ -11,5 +11,6 @@ Activity parameters are all that are reachable to changes. Perfect to send plain
 class ActivityParameters : ViewModel() {
     var viewProfile by mutableStateOf("")
     var isLoading by mutableStateOf(false)
+    var isAlone by mutableStateOf(false)
     lateinit var properties: ActivityProperties
 }

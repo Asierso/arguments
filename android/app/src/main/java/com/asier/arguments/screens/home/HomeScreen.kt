@@ -183,6 +183,16 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
         showAlert = homeScreenViewModel.discussionExpiredWarning
     )
 
+    //Show if the last discussion was alone (only 1 user)
+    InfoAlert(
+        title = "Discusión finalizada",
+        subtitle = "No hay usuarios suficientes para que se produzca alguna votación",
+        onClose = {
+            parameters.isAlone = false
+        },
+        showAlert = parameters.isAlone
+    )
+
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->

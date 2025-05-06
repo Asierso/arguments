@@ -17,4 +17,6 @@ sealed class Screen(val route: String) {
     data object DiscussionCreate : Screen("discussion.create")
     //Messaging
     data object Messaging : Screen("messaging")
+    //Rankings
+    data object Rankings : Screen("rankings")
 }

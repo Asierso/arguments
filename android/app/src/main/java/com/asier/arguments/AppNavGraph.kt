@@ -24,6 +24,8 @@ import com.asier.arguments.screens.profile.ProfileEditorScreen
 import com.asier.arguments.screens.profile.ProfileEditorScreenViewModel
 import com.asier.arguments.screens.profile.ProfileScreen
 import com.asier.arguments.screens.profile.ProfileScreenViewModel
+import com.asier.arguments.screens.rankings.RankingsScreen
+import com.asier.arguments.screens.rankings.RankingsScreenViewModel
 
 /**
  * Manage all the navigation flow in the application
@@ -63,6 +65,10 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
         //Messaging
         composable(Screen.Messaging.route){
             MessagingScreen(MessagingScreenViewModel())
+        }
+        //Rankings
+        composable(Screen.Rankings.route){
+            RankingsScreen(RankingsScreenViewModel())
         }
     }
 }

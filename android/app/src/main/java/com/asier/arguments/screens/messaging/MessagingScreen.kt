@@ -101,6 +101,9 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
         },
         onCandidateVote = {
             messagingScreenViewModel.vote(it.first,activityProperties,scope)
+        },
+        onVotationOpening = {
+            messagingScreenViewModel.checkIfAlone(parameters)
         }
     )
 }
@@ -111,7 +114,8 @@ fun MessageBoard(
     messagingScreenViewModel: MessagingScreenViewModel,
     whenTopReached: () -> Unit,
     whenBottomReached: () -> Unit,
-    onCandidateVote: (candidate: Pair<String,Int>) -> Unit
+    onCandidateVote: (candidate: Pair<String,Int>) -> Unit,
+    onVotationOpening: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -195,6 +199,9 @@ fun MessageBoard(
         //Show text input or voting card depending if discussion is active or is in voting time
         if (messagingScreenViewModel.discussion != null &&
             currentTime.value.isAfter(messagingScreenViewModel.discussion!!.endAt)) {
+
+            onVotationOpening()
+
             VotingCard(
                 scoreboard = messagingScreenViewModel.discussion!!.votes,
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp),
@@ -205,6 +212,7 @@ fun MessageBoard(
                     onCandidateVote(it)
                     return@VotingCard true
                 },
+                paimonVote = messagingScreenViewModel.discussion!!.paimonVote,
                 endVoting = messagingScreenViewModel.discussion!!.votingGraceAt
             )
         } else {

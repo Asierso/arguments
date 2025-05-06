@@ -37,6 +37,12 @@ object RetrofitUtils {
     private fun getClient(authenticate: Boolean, localStorage: LocalStorage? = null) : OkHttpClient{
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor { chain ->
+                val newRequest = chain.request().newBuilder()
+                    .header("Connection", "close")
+                    .build()
+                chain.proceed(newRequest)
+            }
         if(authenticate)
             client.addInterceptor(AuthInterceptor(tokenSource = {
                 localStorage?.load("auth")!!

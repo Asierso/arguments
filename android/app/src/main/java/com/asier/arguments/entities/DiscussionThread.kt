@@ -12,5 +12,7 @@ data class DiscussionThread(
     var createdAt: Instant? = null,
     var endAt: Instant? = null,
     var votingGraceAt: Instant? = null,
-    var votes: HashMap<String,Int> = hashMapOf()
+    var votes: HashMap<String,Int> = hashMapOf(),
+    var paimonVote: String = "",
+    var status: DiscussionStatus = DiscussionStatus.NONE
 )
