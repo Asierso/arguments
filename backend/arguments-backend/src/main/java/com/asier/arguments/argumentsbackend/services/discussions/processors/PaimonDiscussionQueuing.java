@@ -63,7 +63,7 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
                 }finally {
                     pool.shutdown();
                     try {
-                        if (!pool.awaitTermination(10, TimeUnit.SECONDS)) {
+                        if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
                             pool.shutdownNow();
                         }
                     } catch (InterruptedException e) {

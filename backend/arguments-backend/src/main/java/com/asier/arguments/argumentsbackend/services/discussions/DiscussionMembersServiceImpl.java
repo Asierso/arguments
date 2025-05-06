@@ -71,7 +71,7 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
             }
 
             //Vote time doesn't proceed now
-            if(discussion.getStatus() != DiscussionStatus.VOTING || discussion.getVotingGraceAt().isBefore(Instant.now())){
+            if(discussion.getEndAt().isAfter(Instant.now()) || discussion.getVotingGraceAt().isBefore(Instant.now())){
                 return 3;
             }
 
@@ -103,7 +103,7 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
             }
 
             //Vote time doesn't proceed now
-            if(discussion.getStatus() != DiscussionStatus.VOTING || discussion.getVotingGraceAt().isBefore(Instant.now())){
+            if(discussion.getEndAt().isAfter(Instant.now()) || discussion.getVotingGraceAt().isBefore(Instant.now())){
                 return 3;
             }
 
