@@ -102,16 +102,6 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
                 return 2;
             }
 
-            //Vote time doesn't proceed now
-            if(discussion.getEndAt().isAfter(Instant.now()) || discussion.getVotingGraceAt().isBefore(Instant.now())){
-                return 3;
-            }
-
-            //User tries to vote more than one time (maybe cheating)
-            if(discussion.getVoteCache().contains(target)){
-                return 4;
-            }
-
             //Update votes and save user in cache (avoid more than one vote per user)
             discussion.setPaimonVote(target);
             discussionRepository.save(discussion);
