@@ -3,7 +3,7 @@ package com.asier.arguments.argumentsbackend.controllers.users;
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
-import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.components.AuthComponent;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
 import org.bson.types.ObjectId;
@@ -23,7 +23,7 @@ public class UserControllerImpl implements UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private AuthService authService;
+    private AuthComponent authService;
 
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
     

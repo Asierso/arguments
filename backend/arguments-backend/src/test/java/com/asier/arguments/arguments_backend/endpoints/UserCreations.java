@@ -4,7 +4,7 @@ import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
 import com.asier.arguments.argumentsbackend.entities.user.UserCreatorDto;
-import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.components.AuthComponent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class UserCreations {
 
     @Test
     public void testCreateUser() throws JsonProcessingException {
-        String uri = "http://localhost:" + port + "/api/v1/users?clientToken=" + new AuthService().getClientKey();
+        String uri = "http://localhost:" + port + "/api/v1/users?clientToken=" + new AuthComponent().getClientKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -43,7 +43,7 @@ public class UserCreations {
 
     @Test
     public void testSelectUserByName() throws JsonProcessingException {
-        String uri = "http://localhost:" + port + "/api/v1/users/username/userprueba?clientToken=" + new AuthService().getClientKey();
+        String uri = "http://localhost:" + port + "/api/v1/users/username/userprueba?clientToken=" + new AuthComponent().getClientKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -60,7 +60,7 @@ public class UserCreations {
 
     @Test
     public void testSelectUserById() throws JsonProcessingException {
-        String uri = "http://localhost:" + port + "/api/v1/users/id/67db6959ab53504efcc64bbd?clientToken=" + new AuthService().getClientKey();
+        String uri = "http://localhost:" + port + "/api/v1/users/id/67db6959ab53504efcc64bbd?clientToken=" + new AuthComponent().getClientKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -97,7 +97,7 @@ public class UserCreations {
 
     @Test
     public void testGetAllUsers(){
-        String uri = "http://localhost:" + port + "/api/v1/users/all?clientToken=" + new AuthService().getClientKey();
+        String uri = "http://localhost:" + port + "/api/v1/users/all?clientToken=" + new AuthComponent().getClientKey();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 

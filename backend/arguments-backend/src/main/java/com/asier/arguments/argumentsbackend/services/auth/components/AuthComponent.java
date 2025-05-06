@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.services.auth;
+package com.asier.arguments.argumentsbackend.services.auth.components;
 
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -6,14 +6,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
-@Service
-public class AuthService {
+@Component
+public class AuthComponent {
     private final Key authKey = Keys.hmacShaKeyFor(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.api.authSecret").getBytes());
     private final Key clientKey = Keys.hmacShaKeyFor(PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS).getProperty("arguments.api.clientSecret").getBytes());
     public String generateAuthToken(String username){

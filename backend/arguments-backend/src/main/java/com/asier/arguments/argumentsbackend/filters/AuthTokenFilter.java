@@ -2,7 +2,7 @@ package com.asier.arguments.argumentsbackend.filters;
 
 import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
-import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.components.AuthComponent;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -24,7 +24,7 @@ import java.io.IOException;
 @WebFilter("/api/v1/auth/*")
 public class AuthTokenFilter implements Filter {
     @Autowired
-    private AuthService authService;
+    private AuthComponent authService;
     @Autowired
     private ValidAuthsTokenService authTokenService;
 
