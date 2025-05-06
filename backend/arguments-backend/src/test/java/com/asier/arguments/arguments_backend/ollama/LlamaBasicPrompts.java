@@ -16,7 +16,7 @@ import org.junit.Test;
 public class LlamaBasicPrompts {
     @Test
     public void simplePrompt(){
-        LlamaConnection conn = LlamaConnectionUtils.getConnection();
+        LlamaConnection conn = new LlamaConnection(LlamaConnectionUtils.getConnectionUri());
         LlamaSettings settings = new LlamaSettingsBuilder().useModel("llama3.2:1b").build();
         LlamaStreamRequest lls = new LlamaPromptsBuilder(settings).appendPrompt("Capital de españa").build();
 
