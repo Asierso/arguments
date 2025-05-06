@@ -76,7 +76,7 @@ public class DiscussionMembersServiceImpl implements DiscussionMembersService {
             }
 
             //User tries to vote more than one time (maybe cheating)
-            if(discussion.getVoteCache().contains(target)){
+            if(discussion.getVoteCache().contains(actor)){
                 return 4;
             }
 
