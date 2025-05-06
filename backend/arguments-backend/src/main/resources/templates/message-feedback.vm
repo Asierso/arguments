@@ -1,21 +1,15 @@
-INSTRUCTIONS (STRICT):
+Input:
+Message: "${message}"
+Topic: "${topic}"
 
-You are an evaluator.
-
-Given:
-- Message: "${message}"
-- Topic: "${topic}"
-
-Task:
-- Say if the message fits the topic.
-- Suggest how to improve it.
-
-Rules:
+Instructions:
+- Decide if message fits topic.
+- If yes or no, DO NOT say so.
+- Write one helpful suggestion.
+- Max length: 50 characters.
+- No extra words. No "fitted", no judgments.
 - Same language as message.
-- Max 50 characters.
-- No copying the message or topic.
-- No explanations.
-- Just the feedback. If unsure, write "unknown".
+- If unsure, return: unknown
 
-Return only:
-[feedback]
+Return:
+[ONE short improvement only]
