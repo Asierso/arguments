@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
 
                         //Check if the invoke is valid (is using custom snackbar)
                         if (builtInvoke != null) {
-                            Log.d("dep",builtInvoke.build())
                             when (builtInvoke.type) {
                                 SnackbarType.SERVER_ERROR ->
                                     if (builtInvoke.message.isNotBlank())
@@ -135,8 +134,10 @@ class MainActivity : ComponentActivity() {
         //Load message screen if there's a active discussion (user tries to cheat) and makes the first nav graph screen
         LaunchedEffect(Unit) {
             if (activityProperties.storage.load("discussion") != null) {
-                activityProperties.navController.navigate(Screen.Messaging.route){
-                    popUpTo(0) { inclusive = true}
+                if(activityProperties.storage.load("discussion_expired_bypass") == null) {
+                    activityProperties.navController.navigate(Screen.Messaging.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             }
         }

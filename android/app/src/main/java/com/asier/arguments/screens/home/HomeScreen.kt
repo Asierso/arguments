@@ -77,6 +77,9 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
                 parameters.isLoading = false
             }
         }
+
+        //Drop bypass flag
+        homeScreenViewModel.deleteBypass()
     }
 
     //Change status bar color
@@ -189,6 +192,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
         subtitle = "No hay usuarios suficientes para que se produzca alguna votación",
         onClose = {
             parameters.isAlone = false
+            homeScreenViewModel.deleteDiscussionId()
         },
         showAlert = parameters.isAlone
     )

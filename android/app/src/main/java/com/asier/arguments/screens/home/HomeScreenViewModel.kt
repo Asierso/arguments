@@ -71,6 +71,16 @@ class HomeScreenViewModel : ViewModel() {
         }
     }
 
+    fun deleteBypass(){
+        if(storage!!.load("discussion_expired_bypass")!=null)
+            storage!!.delete("discussion_expired_bypass")
+    }
+
+    fun deleteDiscussionId(){
+        if(storage!!.load("discussion")!=null)
+            storage!!.delete("discussion")
+    }
+
     fun openDiscussion(activityProperties: ActivityProperties,scope: CoroutineScope){
         scope.launch {
             withContext(Dispatchers.IO){

@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Instant
 
 class MessagingScreenViewModel : ViewModel() {
     var storage by mutableStateOf<LocalStorage?>(null)
@@ -70,14 +69,7 @@ class MessagingScreenViewModel : ViewModel() {
 
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MessagingService.insertMessage(storage!!, id, messageComposed)
-                when (StatusCodes.valueOf(response!!.status)) {
-                    StatusCodes.SUCCESSFULLY -> {
-
-                    }
-
-                    else -> {}
-                }
+                MessagingService.insertMessage(storage!!, id, messageComposed)
             }
         }
     }
@@ -128,7 +120,7 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    fun checkDiscussionAvailability(parameters: ActivityParameters, scope: CoroutineScope, context: Context) {
+    fun checkDiscussionAvailability(scope: CoroutineScope, context: Context) {
         val id = storage?.load("discussion") ?: ""
 
         scope.launch {
@@ -175,7 +167,7 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    fun refreshDiscussion(parameters: ActivityParameters, scope: CoroutineScope) {
+    private fun refreshDiscussion(parameters: ActivityParameters, scope: CoroutineScope) {
         val id = storage?.load("discussion") ?: ""
 
         scope.launch {
@@ -187,7 +179,7 @@ class MessagingScreenViewModel : ViewModel() {
                         StatusCodes.SUCCESSFULLY -> {
                             withContext(Dispatchers.Main){
                                 discussion = GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>).copy()
-                                checkStatus(parameters,scope)
+                                checkStatus(parameters)
                             }
                         }
 
@@ -202,7 +194,7 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    fun checkStatus(parameters: ActivityParameters, scope: CoroutineScope){
+    private fun checkStatus(parameters: ActivityParameters){
         when(discussion!!.status){
             DiscussionStatus.FINISHED -> {
                 storage!!.delete("discussion")
@@ -244,9 +236,12 @@ class MessagingScreenViewModel : ViewModel() {
     }
 
     fun checkIfAlone(parameters: ActivityParameters){
+        //Save bypass flag (avoid ban alert)
+        if(storage!!.load("discussion_expired_bypass")==null)
+            storage!!.save("discussion_expired_bypass","true")
+
         //If the user is alone in the discussion, quit the chance of vote and return to home
         if(discussion!!.users.size <=1){
-            parameters.properties.storage.delete("discussion")
             parameters.isAlone = true
             parameters.properties.navController.navigate(Screen.Home.route){
                 popUpTo(0){inclusive = true}
@@ -270,6 +265,7 @@ class MessagingScreenViewModel : ViewModel() {
                     )
 
                     when (StatusCodes.valueOf(response!!.status)) {
+                        //Voting success
                         StatusCodes.SUCCESSFULLY -> {
                             withContext(Dispatchers.Main) {
                                 alreadyVoted = true
@@ -280,6 +276,7 @@ class MessagingScreenViewModel : ViewModel() {
                             }
                         }
 
+                        //Votation time was closed
                         StatusCodes.VOTING_CLOSED -> {
                             activityProperties.snackbarHostState.showSnackbar(
                                 message = SnackbarInvoke(
@@ -290,6 +287,7 @@ class MessagingScreenViewModel : ViewModel() {
                             )
                         }
 
+                        //The same user voted before
                         StatusCodes.USER_ALREADY_VOTED -> {
                             activityProperties.snackbarHostState.showSnackbar(
                                 message = SnackbarInvoke(
@@ -299,7 +297,7 @@ class MessagingScreenViewModel : ViewModel() {
                                 duration = SnackbarDuration.Short
                             )
                         }
-
+                        //Another error
                         else -> {
                             activityProperties.snackbarHostState.showSnackbar(
                                 message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
@@ -308,6 +306,7 @@ class MessagingScreenViewModel : ViewModel() {
                         }
                     }
                 }catch (e: Exception){
+                    //Server connection error
                     activityProperties.snackbarHostState.showSnackbar(
                         message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
                         duration = SnackbarDuration.Short
