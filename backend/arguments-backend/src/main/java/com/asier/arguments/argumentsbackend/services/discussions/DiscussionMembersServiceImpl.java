@@ -4,12 +4,10 @@ import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.user.User;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
-import com.asier.arguments.argumentsbackend.repositories.UserRepository;
 import com.asier.arguments.argumentsbackend.services.users.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
