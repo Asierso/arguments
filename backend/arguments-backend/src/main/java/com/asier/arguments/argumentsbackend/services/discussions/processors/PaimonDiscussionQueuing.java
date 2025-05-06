@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -90,13 +91,21 @@ public class PaimonDiscussionQueuing extends PooledQueue<DiscussionThread> {
                         .messages(messages)
                         .build();
 
-                paimon.processAsPrompt(new VotingTemplate(paimonDiscussion),response -> {
-                    log.info("Paimon raw benedict for {}: {}",discussion.getId(),response);
-                    String replace = response.trim().toLowerCase().replace("\"", "");
-                    if(discussion.getUsers().contains(replace)) {
-                        membersService.votePaimonIn(new ObjectId(discussion.getId()), replace);
-                    }
-                });
+                AtomicInteger retries = new AtomicInteger();
+                AtomicBoolean success = new AtomicBoolean(false);
+                while(retries.get() < 3 && !success.get()) {
+                    paimon.processAsPrompt(new VotingTemplate(paimonDiscussion), response -> {
+                        log.info("Paimon raw benedict for {} (retry {}): {}", discussion.getId(), retries.get(), response);
+                        String replace = response.trim().toLowerCase().replace("\"", "");
+                        if (discussion.getUsers().contains(replace)) {
+                            membersService.votePaimonIn(new ObjectId(discussion.getId()), replace);
+                            success.set(true);
+                        }
+                        else{
+                            retries.getAndIncrement();
+                        }
+                    });
+                }
 
             }catch (InterruptedException e) {
                 log.error("Suspended discussion queuing service at thread {}", Thread.currentThread().getName());
