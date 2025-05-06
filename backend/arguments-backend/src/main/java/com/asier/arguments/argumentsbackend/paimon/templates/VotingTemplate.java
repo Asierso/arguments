@@ -13,6 +13,13 @@ public class VotingTemplate implements VelocityTemplate {
     private PaimonDiscussionThreadDto discussion;
     @Override
     public VelocityResource build(VelocityContext context) {
-        return null;
+        context.put("usernames",discussion.getMessages().keySet().toArray());
+        context.put("topic",discussion.getTopic());
+        context.put("messages",discussion.getMessages());
+
+        return VelocityResource.builder()
+                .template("discussion-voting")
+                .context(context)
+                .build();
     }
 }

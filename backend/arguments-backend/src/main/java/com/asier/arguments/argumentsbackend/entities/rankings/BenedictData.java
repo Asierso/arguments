@@ -1,4 +1,4 @@
-package com.asier.arguments.argumentsbackend.services.discussions.components;
+package com.asier.arguments.argumentsbackend.entities.rankings;
 
 import java.util.Map;
 
