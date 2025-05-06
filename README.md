@@ -33,7 +33,7 @@ OLLAMA_PORT=11434
 1. Clonar el repositorio
 2. Lanzar orquestador de contenedores ejecutando el comando `docker-compose up -d` en la raíz del proyecto
 3. Espere a que los contenedores estén levantados. Esta acción podría tardar hasta 10 minutos
-4. Para ver el token de acceso, abra los logs del contenedor de Spring Boot con `docker logs arguments-backend` y busque la línea que empiece por "Client token: [tu token]". Copiese ese token ya que será obligatorio para realizar cualquier petición con el servicio
+4. Para ver el token de acceso, ejecute `docker exec -it arguments-backend /bin/bash` y luego `cat token.txt`. Copie el token ya que será obligatorio para realizar cualquier petición con el servicio. Tambien puede revisarlo desde los logs, en la línea que empiece por "Client token: [tu token]".
 
 >[!TIP]
 > Tenga en cuenta que si quiere que la aplicación funcione con su versión del back-ennd de Arguments, debe de cambiar la URL a la cual la aplicación intentará conectarse así como el token. Esta configuración puede encontrarla en `android/app/src/main/java/com/asier/arguments/utils/Globals.kt`
