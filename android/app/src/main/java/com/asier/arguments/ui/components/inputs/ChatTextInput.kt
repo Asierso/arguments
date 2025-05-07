@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asier.arguments.R
+import com.asier.arguments.ui.components.others.hideKeyboardOnClick
 import com.asier.arguments.ui.theme.TextBoxBorder
 import com.asier.arguments.ui.theme.TextBright1
 
@@ -37,6 +39,7 @@ fun ChatTextInput(
             placeholder = placeholder,
             text = text,
             onValueChanged = onValueChanged,
+            maxLines = 10,
             modifier = Modifier.fillMaxWidth().shadow(5.dp).drawBehind {
                 val strokeBottom = 2.dp.toPx()
                 val radius = 9.dp.toPx()
@@ -50,20 +53,22 @@ fun ChatTextInput(
                     size = Size(width-22f, height-strokeBottom-43f),
                     cornerRadius = CornerRadius(radius, radius)
                 )
+            },
+            //Add send button inside textfield
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        onSendClicked()
+                    },
+                    modifier = Modifier.padding(end = 15.dp).align(Alignment.CenterEnd).width(25.dp).height(25.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_send),
+                        contentDescription = "send",
+                        tint = TextBright1)
+                }
             }
         )
-        IconButton(
-            onClick = {
-                onSendClicked()
-            },
-            modifier = Modifier.padding(end = 15.dp).align(Alignment.CenterEnd).width(25.dp).height(25.dp)) {
-            Icon(
-                painter = painterResource(R.drawable.ic_send),
-                contentDescription = "send",
-                tint = TextBright1)
-        }
     }
-
 }
 
 @Preview

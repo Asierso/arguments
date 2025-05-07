@@ -181,6 +181,7 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
             onValueChanged = {profileEditorScreenViewModel.description = it},
             readOnly = false,
             minLines = 5,
+            maxLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
         //Update description button

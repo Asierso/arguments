@@ -249,6 +249,10 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
+    fun loadProfile(activityProperties: ActivityProperties) {
+        activityProperties.navController.navigate(Screen.Profile.route)
+    }
+
     fun vote(candidate: String,activityProperties: ActivityProperties, scope: CoroutineScope){
         //Avoid double-voting
         if(alreadyVoted)

@@ -100,9 +100,9 @@ class DiscussionThreadCreationViewModel : ViewModel() {
     }
 
     fun titleType(context: Context) : String{
-        return if(title.length < 5)
+        return if(title.trim().length < 5)
             context.getString(R.string.discussion_creation_titlepolicy_tooshort)
-        else if(title.length > 30)
+        else if(title.trim().length > 30)
             context.getString(R.string.discussion_creation_titlepolicy_toolarge)
         else
             context.getString(R.string.discussion_creation_titlepolicy_ok)

@@ -89,13 +89,15 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
         whenTopReached = {
             messagingScreenViewModel.loadNextMessagesPage(parameters, scope)
         },
-        whenBottomReached = {
-        },
         onCandidateVote = {
             messagingScreenViewModel.vote(it.first,activityProperties,scope)
         },
         onVotationOpening = {
             messagingScreenViewModel.checkIfAlone(parameters)
+        },
+        onAltClick = {
+            parameters.viewProfile = it
+            messagingScreenViewModel.loadProfile(activityProperties)
         }
     )
 }
@@ -105,9 +107,9 @@ fun MessagingScreen(messagingScreenViewModel: MessagingScreenViewModel) {
 fun MessageBoard(
     messagingScreenViewModel: MessagingScreenViewModel,
     whenTopReached: () -> Unit,
-    whenBottomReached: () -> Unit,
     onCandidateVote: (candidate: Pair<String,Int>) -> Unit,
-    onVotationOpening: () -> Unit
+    onVotationOpening: () -> Unit,
+    onAltClick: (String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -134,19 +136,7 @@ fun MessageBoard(
         whenTopReached()
     }
 
-    //Bottom triggers
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo }
-            .collect { layoutInfo ->
-                val visibleItems = layoutInfo.visibleItemsInfo
-                val totalItems = layoutInfo.totalItemsCount
-                val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-
-                if (lastVisibleIndex >= totalItems - 1) {
-                    whenBottomReached()
-                }
-            }
-    }
+    //Check if is near to bottom to scroll down automatically
     val isNearBottom by remember {
         derivedStateOf {
             val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
@@ -183,7 +173,9 @@ fun MessageBoard(
                     self = item.sender == messagingScreenViewModel.username,
                     modifier = Modifier.padding(top = 10.dp),
                     userAlt = {
-                        UserAlt(name = item.sender) { }
+                        UserAlt(name = item.sender) {
+                            onAltClick(item.sender)
+                        }
                     })
             }
         }
@@ -214,7 +206,6 @@ fun MessageBoard(
             ChatTextInput(
                 onValueChanged = { messagingScreenViewModel.writingMessage = it },
                 text = messagingScreenViewModel.writingMessage,
-                modifier = Modifier.weight(.1f),
                 onSendClicked = {
                     messagingScreenViewModel.sendMessage(scope)
 

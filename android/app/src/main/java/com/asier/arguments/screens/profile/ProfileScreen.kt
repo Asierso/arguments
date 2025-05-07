@@ -191,6 +191,7 @@ fun UserDetailCard(user: User, modifier: Modifier = Modifier) {
             onValueChanged = {},
             readOnly = true,
             minLines = 5,
+            maxLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
     }

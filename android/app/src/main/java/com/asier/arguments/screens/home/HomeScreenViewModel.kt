@@ -90,7 +90,9 @@ class HomeScreenViewModel : ViewModel() {
                         //Open discussion and save got id
                         withContext(Dispatchers.Main){
                             storage?.save("discussion",discussionPreloaded)
-                            activityProperties.navController.navigate(Screen.Messaging.route)
+                            activityProperties.navController.navigate(Screen.Messaging.route){
+                                popUpTo(0){inclusive = true}
+                            }
                         }
                     }
                     StatusCodes.EXPIRED_DISCUSSION -> {
