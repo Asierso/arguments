@@ -110,6 +110,13 @@ class MainActivity : ComponentActivity() {
         //Set properties
         parameters.properties = activityProperties
 
+        //TODO: REMOVE
+        /*Rankings test
+        AppNavGraph(
+            modifier = Modifier,
+            start = Screen.Rankings
+        )*/
+
         AppNavGraph(
             modifier = modifier,
             start = if ((activityProperties.storage.load("auth")
