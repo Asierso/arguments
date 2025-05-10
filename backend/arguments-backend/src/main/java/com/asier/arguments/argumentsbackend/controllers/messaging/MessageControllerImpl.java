@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Properties;
 
 @RestController
@@ -84,6 +85,25 @@ public class MessageControllerImpl implements MessageController {
         //Get paginated messages
         Page<Message> pag = messageService.findInDiscussion(new ObjectId(discussionId),pageNum);
         return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).result(pag).build());
+
+    }
+
+    @Override
+    public ResponseEntity<ServiceResponse> findByPageByUsername(String discussionId, String username, String clientToken) {
+        //If discussion id is null return not valid request
+        if(discussionId == null){
+            return  ResponseEntity.badRequest().body(ServiceResponse.builder().status(statusProps.getProperty("status.notValidRequest")).build());
+        }
+
+        //Get all messages by discussion and by username
+        List<Message> messages = messageService.findInDiscussionByUsername(new ObjectId(discussionId),username);
+
+        //If messages list is null, return not found error
+        if(messages == null){
+            return ResponseEntity.status(404).body(ServiceResponse.builder().status(statusProps.getProperty("status.notFound")).build());
+        }
+
+        return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).result(messages).build());
 
     }
 }
