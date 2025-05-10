@@ -112,7 +112,7 @@ public class MessageServiceImpl implements MessageService {
         Query messagesInDiscussionByUsername = new Query().addCriteria(
                 Criteria.where("discussionId").is(discussionId)
         ).addCriteria(
-                Criteria.where("author").is(username)
+                Criteria.where("sender").is(username)
         ).with(Sort.by("sendTime").ascending());
 
         //Get the messages filtered and return list
