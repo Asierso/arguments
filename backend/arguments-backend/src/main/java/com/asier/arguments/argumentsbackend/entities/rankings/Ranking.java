@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class Ranking implements Identify {
     @Id
     private ObjectId id;
     @Mandatory
+    @Indexed
     private ObjectId discussionId;
     @Mandatory
     private HashMap<String,Integer> ranking;

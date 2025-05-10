@@ -6,6 +6,7 @@ import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -47,8 +48,11 @@ public class RankingServiceImpl implements RankingService{
             return null;
         }
 
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnoreNullValues();
+
         //Find ranking by discussion id
-        Optional<Ranking> selected = rankingRepository.findOne(Example.of(Ranking.builder().discussionId(discussionId).build()));
+        Optional<Ranking> selected = rankingRepository.findOne(Example.of(Ranking.builder().discussionId(discussionId).build(),matcher));
         return selected.orElse(null);
     }
 
