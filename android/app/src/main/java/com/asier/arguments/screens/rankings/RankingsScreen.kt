@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -91,6 +92,11 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
         .fillMaxSize()
         .padding(5.dp))
 
+    LaunchedEffect(Unit){
+        rankingsScreenViewModel.loadUserXp(scope)
+        rankingsScreenViewModel.loadRanking(scope)
+    }
+
     TitleTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),
         leadingIcon = {
@@ -106,9 +112,9 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
         modifier = Modifier.padding(top = 100.dp)
     ) {
         RankedPositionCard(
-            position = 1,
-            gainedXp = 12,
-            totalXp = 50,
+            position = rankingsScreenViewModel.selfPosition,
+            gainedXp = rankingsScreenViewModel.xpEarn,
+            totalXp = rankingsScreenViewModel.totalXp,
             onRankingClick = {},
             modifier = Modifier.padding(10.dp)
         )
@@ -155,7 +161,7 @@ fun RankedPositionCard(
         Spacer(modifier = Modifier.height(8.dp))
         Column {
             CanvasXpBar(
-                xp = 1f,
+                xp = totalXp.toFloat(),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
