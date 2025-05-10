@@ -21,7 +21,7 @@ public class RankingControllerImpl implements RankingController {
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
     @Override
     public ResponseEntity<ServiceResponse> getRankings(String clientToken, String discussionId) {
-        Ranking ranking = rankingService.select(new ObjectId(discussionId));
+        Ranking ranking = rankingService.selectByDiscussion(new ObjectId(discussionId));
 
         //Send error if selected ranking wasn't found
         if(ranking == null){
