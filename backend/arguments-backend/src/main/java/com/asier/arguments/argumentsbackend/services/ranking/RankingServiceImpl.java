@@ -7,6 +7,9 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +18,8 @@ import java.util.Optional;
 public class RankingServiceImpl implements RankingService{
     @Autowired
     private RankingRepository rankingRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
     @Override
     public boolean insert(Ranking ranking) {
         if(AnnotationsUtils.isNotValidEntity(ranking)){
@@ -48,11 +53,12 @@ public class RankingServiceImpl implements RankingService{
             return null;
         }
 
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withIgnoreNullValues();
-
         //Find ranking by discussion id
-        Optional<Ranking> selected = rankingRepository.findOne(Example.of(Ranking.builder().discussionId(discussionId).build(),matcher));
+        Query rankingQuery = new Query().addCriteria(
+                Criteria.where("discussionId").is(discussionId)
+        );
+
+        Optional<Ranking> selected = mongoTemplate.find(rankingQuery,Ranking.class).stream().findAny();
         return selected.orElse(null);
     }
 
