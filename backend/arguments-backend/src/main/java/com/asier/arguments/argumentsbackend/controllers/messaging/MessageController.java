@@ -10,4 +10,6 @@ public interface MessageController {
     ResponseEntity<ServiceResponse> insert(@PathVariable String discussionId, @RequestParam String clientToken, @RequestBody Message message);
     @GetMapping("/messaging/{discussionId}")
     ResponseEntity<ServiceResponse> findByPage(@PathVariable String discussionId, @RequestParam String clientToken, @RequestParam(defaultValue = "0") String page);
+    @GetMapping("/messaging/{discussionId}/{username}")
+    ResponseEntity<ServiceResponse> findByPageByUsername(@PathVariable String discussionId, @PathVariable String username, @RequestParam String clientToken);
 }
