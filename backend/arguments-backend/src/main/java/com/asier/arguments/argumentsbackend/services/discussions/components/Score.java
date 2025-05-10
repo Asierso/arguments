@@ -67,7 +67,7 @@ public class Score {
         //Create ranking entity for ranking board
         log.info("Creating ranking for discussion {}",discussion.getId());
         rankingService.insert(Ranking.builder()
-                .discussion(new ObjectId(discussion.getId()))
+                .discussionId(new ObjectId(discussion.getId()))
                         .ranking(discussion.getVotes())
                         .xpPoints(xpPoints)
                         .paimonVote(benedict.draw()? discussion.getPaimonVote() : "") //Paimon vote just count if is

@@ -1,6 +1,7 @@
 package com.asier.arguments.argumentsbackend.entities.rankings;
 
 import com.asier.arguments.argumentsbackend.entities.Identify;
+import com.asier.arguments.argumentsbackend.utils.BasicUtils;
 import com.asier.arguments.argumentsbackend.utils.annotations.Mandatory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class Ranking implements Identify {
     @Id
     private ObjectId id;
     @Mandatory
-    private ObjectId discussion;
+    private ObjectId discussionId;
     @Mandatory
     private HashMap<String,Integer> ranking;
     @Mandatory
@@ -30,4 +31,5 @@ public class Ranking implements Identify {
     public String getId() {
         return id != null ? id.toHexString() : null;
     }
+    public String getDiscussionId() {return BasicUtils.getIdentity(discussionId); }
 }

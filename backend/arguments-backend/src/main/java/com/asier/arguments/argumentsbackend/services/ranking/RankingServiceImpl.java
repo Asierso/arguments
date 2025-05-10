@@ -21,7 +21,7 @@ public class RankingServiceImpl implements RankingService{
         }
 
         //Avoid multiple rankings for one discussion thread (just 1 - 1)
-        if(rankingRepository.findOne(Example.of(Ranking.builder().discussion(ranking.getDiscussion()).build())).isPresent()) {
+        if(rankingRepository.findOne(Example.of(Ranking.builder().discussionId(new ObjectId(ranking.getDiscussionId())).build())).isPresent()) {
             return false;
         }
 
@@ -48,7 +48,7 @@ public class RankingServiceImpl implements RankingService{
         }
 
         //Find ranking by discussion id
-        Optional<Ranking> selected = rankingRepository.findOne(Example.of(Ranking.builder().discussion(discussionId).build()));
+        Optional<Ranking> selected = rankingRepository.findOne(Example.of(Ranking.builder().discussionId(discussionId).build()));
         return selected.orElse(null);
     }
 
