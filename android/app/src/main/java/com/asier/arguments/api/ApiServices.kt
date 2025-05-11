@@ -6,6 +6,7 @@ import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.api.login.ApiLogin
 import com.asier.arguments.api.login.LoginService
 import com.asier.arguments.api.messaging.ApiMessaging
+import com.asier.arguments.api.rankings.ApiRankings
 import com.asier.arguments.api.sync.ApiSync
 import com.asier.arguments.api.sync.SyncService
 import com.asier.arguments.api.users.ApiUsers
@@ -30,5 +31,8 @@ object ApiServices {
     }
     fun MessagingAuthService(localStorage: LocalStorage) : ApiMessaging {
         return RetrofitUtils.getAuthNew(localStorage).create(ApiMessaging::class.java)
+    }
+    fun RankingsAuthService(localStorage: LocalStorage) : ApiRankings {
+        return RetrofitUtils.getAuthNew(localStorage).create(ApiRankings::class.java)
     }
 }

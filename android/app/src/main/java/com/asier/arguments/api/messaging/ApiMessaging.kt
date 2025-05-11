@@ -15,4 +15,6 @@ interface ApiMessaging {
     suspend fun insertMessage(@Path("discussionId") discussionId: String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Body message: MessageCreatorDto) : Response<ServiceResponse>
     @GET("auth/messaging/{discussionId}")
     suspend fun getMessagesByPage(@Path("discussionId") discussionId: String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN, @Query("page") page : Int = 0) : Response<ServiceResponse>
+    @GET("auth/messaging/{discussionId}/{username}")
+    suspend fun getMessagesByUsername(@Path("discussionId") discussionId: String, @Path("username") username: String, @Query("clientToken") clientToken: String = Globals.API_CLIENT_TOKEN) : Response<ServiceResponse>
 }

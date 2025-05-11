@@ -7,5 +7,6 @@ data class Message(
     var sender: String,
     var discussionId: String,
     var sendTime: Instant,
-    var message: String
+    var message: String,
+    var feedback: String = ""
 )

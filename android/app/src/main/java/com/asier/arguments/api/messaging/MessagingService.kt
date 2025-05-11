@@ -26,4 +26,14 @@ object MessagingService : ApiMessagingService {
             ApiServices.MessagingAuthService(localStorage).getMessagesByPage(discussionId,page = page)
         )
     }
+
+    override suspend fun getMessagesByUsername(
+        localStorage: LocalStorage,
+        discussionId: String,
+        username: String
+    ): ServiceResponse? {
+        return RetrofitUtils.getResponse(
+            ApiServices.MessagingAuthService(localStorage).getMessagesByUsername(discussionId = discussionId,username = username)
+        )
+    }
 }
