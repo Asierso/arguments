@@ -48,3 +48,16 @@ Para levantar un entorno de pruebas, el cual permitirá ejecutar la aplicación 
 1. En `arguments.properties` y `application.properties`asegúrese de que las líneas de local tests están descomentadas y las líneas de deploy comentadas. Las líneas de configuración para despliegue se pueden identificar porque hacen referencia al nombre de la red creada por compose en su correspondiente YAML
 2. Ejecutar el fichero `fastenv.sh`. Asegurese de que tenga permisos para ejecutarse
 3. Ya tiene el entorno de pruebas preparado. Puede ejecutar el proyecto Spring Boot sin problema. Recuerde que en el entorno de pruebas, el servicio se lanza en el puerto 8088. Siga la guía de comprobaciones por si existiera algún fallo
+
+## ✍️ Cierre del Proyecto – Versión 1.0 
+Después de meses de trabajo, esfuerzo, insomnio y alma puesta en cada línea, la RC ya está lista.
+Y aquí está, el final.
+Un proyecto que no solo fue un desafío, sino una experiencia.
+Aquí no solo se integran ramas.
+Aquí se integra todo lo que fui para lograr esto.
+Un backend blindado, un frontend que aguantó, y yo... que resistí hasta el final.
+Gracias por cada error que me enseñó.
+Gracias por cada test que me templó.
+Y gracias a mí mismo por no soltar.
+Este proyecto ya no es solo código.
+Es mi historia compilada.
