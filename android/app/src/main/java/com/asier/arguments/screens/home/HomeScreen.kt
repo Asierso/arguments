@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,9 +89,11 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
         }
     }
 
-    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
 
-    ProfileActionTopBar(title = "Discusiones",
+    ProfileActionTopBar(title = stringResource(R.string.discussions_home_title),
         modifier = Modifier.fillMaxWidth(),
         profile = {
             UserAlt(name = homeScreenViewModel.username) {
@@ -160,8 +163,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
 
     //Warning confirmation to load discussion
     WarningAlert(
-        title = "Atención",
-        subtitle = "Una vez accedas, no podrás salir hasta que el debate termine. ¿Estás seguro?",
+        title = stringResource(R.string.discussion_join_warning_title),
+        subtitle = stringResource(R.string.discussion_join_warning_text),
         onConfirm = {
             homeScreenViewModel.discussionWarning = false
             homeScreenViewModel.openDiscussion(activityProperties,scope)
@@ -174,8 +177,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
 
     //Check if there was a discussion in db (joined previously) and user closes the app before discussion expires
     InfoAlert(
-        title = "Discusión expirada",
-        subtitle = "Te has salido de la aplicación mientras estabas en una discusión. Arguments se guarda el derecho de banearte si esta conducta se repite",
+        title = stringResource(R.string.discussion_expired_info_title),
+        subtitle = stringResource(R.string.discussion_expired_info_text),
         onClose = {
             homeScreenViewModel.discussionExpiredWarning = false
             activityProperties.storage.delete("discussion_expired")
@@ -185,8 +188,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
 
     //Show if the last discussion was alone (only 1 user)
     InfoAlert(
-        title = "Discusión finalizada",
-        subtitle = "No hay usuarios suficientes para que se produzca alguna votación",
+        title = stringResource(R.string.discussion_ended_info_title),
+        subtitle = stringResource(R.string.discussion_ended_info_text),
         onClose = {
             parameters.isAlone = false
             homeScreenViewModel.deleteDiscussionId()

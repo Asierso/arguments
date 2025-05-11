@@ -82,7 +82,9 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
         }
     }
 
-    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
 
     TitleTopBar(
         title = stringResource(R.string.discussion_creation_topbar_title),
@@ -96,7 +98,9 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
 
         //Rule modification
         DiscussionThink(modifier = Modifier.fillMaxWidth(), dtcViewModel = dtcViewModel)
-        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp))
+        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier
+            .padding(10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp))
 
         Spacer(modifier = Modifier.height(60.dp))
 
@@ -108,7 +112,7 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
                 dtcViewModel.createDiscussion(activityProperties,scope)
             })
             Text(
-                text = "OJO: No podrás abandonar la discusión hasta que termine",
+                text = stringResource(R.string.discussion_creation_warn_text),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
                 fontFamily = Montserrat,

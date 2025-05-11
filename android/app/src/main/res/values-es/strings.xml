@@ -62,4 +62,21 @@
     <string name="day_hour_prefix">a las</string>
     <string name="day_today">Hoy</string>
     <string name="day_yesterday">Ayer</string>
+    <string name="discussions_home_title">Discusiones</string>
+    <string name="discussion_join_warning_title">Atención</string>
+    <string name="discussion_join_warning_text">Una vez accedas, no podrás salir hasta que el debate termine. ¿Estás seguro?</string>
+    <string name="discussion_expired_info_title">Discusión expirada</string>
+    <string name="discussion_expired_info_text">Te has salido de la aplicación mientras estabas en una discusión. Arguments se guarda el derecho de banearte si esta conducta se repite</string>
+    <string name="discussion_ended_info_title">Discusión finalizada</string>
+    <string name="discussion_ended_info_text">No hay usuarios suficientes para que se produzca alguna votación</string>
+    <string name="discussion_creation_warn_text">No podrás abandonar la discusión hasta que termine</string>
+    <string name="profile_account_delete_warning_title">Borrado de cuenta</string>
+    <string name="profile_account_delete_warning_text">Estas seguro de que quieres borrar la cuenta? Esta operación no es reversible</string>
+    <string name="voting_card_benedict_text">Preparando benedicto</string>
+    <string name="voting_card_vote_text">Pulsa para votar</string>
+    <string name="user_card_nodata">Sin datos</string>
+    <string name="user_card_noone">Nadie</string>
+    <string name="alert_close">Cerrar</string>
+    <string name="alert_cancel">Cancelar</string>
+    <string name="alert_acept">Aceptar</string>
 </resources>

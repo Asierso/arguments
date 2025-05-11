@@ -5,8 +5,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.asier.arguments.R
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.SecondaryButton
 import com.asier.arguments.ui.theme.AlertBackground
@@ -30,12 +32,12 @@ fun WarningAlert(
             onDismiss()
         },
         confirmButton = {
-            PrimaryButton(text = "Aceptar", onClick = {
+            PrimaryButton(text = stringResource(R.string.alert_acept), onClick = {
                 onConfirm()
             }, modifier = Modifier.fillMaxWidth())
         },
         dismissButton = {
-            SecondaryButton(text = "Cancelar", onClick = {
+            SecondaryButton(text = stringResource(R.string.alert_cancel), onClick = {
                 onDismiss()
             }, modifier = Modifier.fillMaxWidth())
         },

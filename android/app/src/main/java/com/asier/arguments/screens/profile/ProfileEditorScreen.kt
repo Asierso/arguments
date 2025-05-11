@@ -76,7 +76,9 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         return
     }
 
-    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
 
     ProfileTopBar(title = profileEditorScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
@@ -97,11 +99,17 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         UserExtendedCard(user = profileEditorScreenViewModel.userData!!, modifier = Modifier
             .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
         )
-        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp).hideKeyboardOnClick()){
+        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier
+            .padding(top = 10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+            .hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserDescription(parameters,scope)
             hideKeyboard(context)
         }
-        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp).hideKeyboardOnClick()){
+        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier
+            .padding(top = 10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+            .hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserData(parameters,scope)
             hideKeyboard(context)
         }
@@ -109,8 +117,8 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
 
     //Warning area
     WarningAlert(
-        title = "Borrado de cuenta",
-        subtitle = "Estas seguro de que quieres borrar la cuenta? Esta operación no es reversible",
+        title = stringResource(R.string.profile_account_delete_warning_title),
+        subtitle = stringResource(R.string.profile_account_delete_warning_text),
         onConfirm = {
             profileEditorScreenViewModel.deleteUser(activityProperties,scope)
             profileEditorScreenViewModel.deleteAccountWarning = false
@@ -145,8 +153,8 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
                     username = user.username
                     isActive = true
             }, modifier = Modifier
-                .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
-                .weight(.60f),
+                    .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
+                    .weight(.60f),
                 onClick = { }
             )
 
@@ -186,7 +194,9 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
         )
         //Update description button
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = Modifier.fillMaxWidth().hideKeyboardOnClick(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .hideKeyboardOnClick(),
             onClick = {
                 updateAction()
             }

@@ -44,6 +44,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,7 +85,7 @@ fun VotingCard(
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(10.dp)
-            .heightIn(max = (60*4).dp)
+            .heightIn(max = (60 * 4).dp)
     ) {
         if(endVoting != null && endVoting.isBefore(Instant.now())){
             Row(
@@ -94,10 +95,12 @@ fun VotingCard(
                     painter = painterResource(R.drawable.ic_ia),
                     contentDescription = "ia",
                     tint = shineColorEffector().value,
-                    modifier = Modifier.width(30.dp).height(30.dp)
+                    modifier = Modifier
+                        .width(30.dp)
+                        .height(30.dp)
                 )
                 Text(
-                    text = "Preparando benedicto",
+                    text = stringResource(R.string.voting_card_benedict_text),
                     fontFamily = Montserrat,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp,
@@ -108,13 +111,13 @@ fun VotingCard(
             return
         }
         Text(
-            text = "Pulsa para votar ${
-                if(endVoting == null || Instant.now().isAfter(endVoting)) "" else
+            text = stringResource(R.string.voting_card_vote_text,
+                if (endVoting == null || Instant.now().isAfter(endVoting)) "" else
                     Duration.between(Instant.now(), endVoting)
                         .seconds
                         .let { Instant.ofEpochSecond(it) }
                         .atZone(ZoneOffset.systemDefault())
-                        .format(DateTimeFormatter.ofPattern("'('mm:ss')'"))}",
+                        .format(DateTimeFormatter.ofPattern("'('mm:ss')'"))),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
@@ -130,7 +133,9 @@ fun VotingCard(
                     VotingOption(
                         candidate = item.toPair(),
                         totalVotes = totalVotes,
-                        modifier = Modifier.fillMaxWidth().height(60.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp),
                         choosen = choosen == item.toPair().first,
                         onCandidateClick = {
                             if(onCandidateClick(it)){
@@ -166,8 +171,8 @@ fun VotingOption(
                 .background(CardBackground)
                 .matchParentSize()
                 .border(
-                    width = if(choosen) 2.dp else 0.dp,
-                    color = if(choosen) Primary else Color.Transparent,
+                    width = if (choosen) 2.dp else 0.dp,
+                    color = if (choosen) Primary else Color.Transparent,
                     shape = RoundedCornerShape(7.dp)
                 )
         ) {
@@ -191,7 +196,8 @@ fun VotingOption(
             verticalAlignment = Alignment.CenterVertically) {
             UserAlt(
                 name = candidate.first,
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier
+                    .padding(start = 8.dp)
                     .shadow(shape = RoundedCornerShape(100.dp), elevation = 5.dp),
                 useBorder = false){}
             Column(verticalArrangement = Arrangement.SpaceBetween) {
@@ -212,7 +218,9 @@ fun VotingOption(
             }
         }
         Row(
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 15.dp),
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             //Draw IA vote
@@ -242,7 +250,9 @@ fun VotingOptionPreview(){
     VotingOption(
         candidate = Pair("dummy",2),
         totalVotes = 3,
-        modifier = Modifier.height(60.dp).fillMaxWidth(),
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth(),
         onCandidateClick = {}
     )
 }
@@ -253,7 +263,9 @@ fun VotingOptionPaimonPreview(){
     VotingOption(
         candidate = Pair("dummy",2),
         totalVotes = 3,
-        modifier = Modifier.height(60.dp).fillMaxWidth(),
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth(),
         onCandidateClick = {},
         paimonChoosen = true
     )
