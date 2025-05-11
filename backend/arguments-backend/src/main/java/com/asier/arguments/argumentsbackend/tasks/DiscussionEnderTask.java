@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.tasks;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
+import com.asier.arguments.argumentsbackend.services.discussions.components.Score;
 import com.asier.arguments.argumentsbackend.services.users.UserService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -27,6 +28,8 @@ public class DiscussionEnderTask implements Runnable {
     private DiscussionThreadService discussionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private Score score;
 
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
@@ -54,8 +57,9 @@ public class DiscussionEnderTask implements Runnable {
             }
 
             //Leaves grace time to end and restart index to the next scan
-            pool.awaitTermination(10, TimeUnit.SECONDS);
-            pool.shutdownNow();
+            if(pool.awaitTermination(10, TimeUnit.SECONDS)){
+                pool.shutdownNow();
+            }
             pageIndex.set(0);
         }catch(InterruptedException e){
             pageIndex.set(0);
@@ -87,9 +91,16 @@ public class DiscussionEnderTask implements Runnable {
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.VOTING);
                 updateToVoting.incrementAndGet();
             }
+            
             //If discussion is in voting status and voting grace period is ended, close the discussion
             if(thread.getStatus() == DiscussionStatus.VOTING && thread.getVotingGraceAt().isBefore(now)){
                 discussionService.alterStatus(new ObjectId(thread.getId()), DiscussionStatus.FINISHED);
+
+                //Omit auto-discussions
+                if(thread.getUsers().size() <= 1)
+                    continue;
+
+                score.resolveVotations(thread);
                 updateToEnding.incrementAndGet();
 
                 //Add discussion in history of every participant user

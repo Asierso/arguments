@@ -23,7 +23,6 @@ import java.util.Properties;
 @Slf4j
 public class PaimonProcessor {
     private final LlamaSettings settings;
-    private final LlamaConnection connection;
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
 
     @Autowired
@@ -33,11 +32,12 @@ public class PaimonProcessor {
         settings = new LlamaSettingsBuilder()
                 .useModel(props.getProperty("paimon.model"))
                 .build();
-        connection = LlamaConnectionUtils.getConnection();
     }
 
     public void processAsPrompt(VelocityTemplate template, PaimonFetchCallback callback){
         String prompt = velocity.applyTemplate(template);
+
+        log.info("Requesting to ollama server using VLT template");
 
         LlamaStreamRequest req = new LlamaPromptsBuilder(settings)
                 .appendPrompt(prompt)
@@ -45,7 +45,7 @@ public class PaimonProcessor {
                 .build();
         try {
             //Run callback with llama response
-            callback.run(connection.fetch(req).getResponse());
+            callback.run(new LlamaConnection(LlamaConnectionUtils.getConnectionUri()).fetch(req).getResponse());
         }catch (LlamaConnectionException e){
             log.error("Error at paimon: " + e.getMessage());
         }

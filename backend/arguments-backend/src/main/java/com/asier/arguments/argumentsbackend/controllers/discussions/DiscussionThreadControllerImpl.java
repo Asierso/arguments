@@ -4,6 +4,7 @@ import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionDto;
 import com.asier.arguments.argumentsbackend.entities.commons.ServiceResponse;
+import com.asier.arguments.argumentsbackend.services.discussions.DiscussionMembersService;
 import com.asier.arguments.argumentsbackend.services.discussions.DiscussionThreadService;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -27,6 +27,8 @@ import java.util.Properties;
 public class DiscussionThreadControllerImpl implements DiscussionThreadController{
     @Autowired
     private DiscussionThreadService discussionThreadService;
+    @Autowired
+    private DiscussionMembersService discussionMembersService;
     private final Properties statusProps = PropertiesUtils.getProperties(ResourceLocator.STATUS);
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     @Override
@@ -45,6 +47,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
                 .endAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).toInstant())
                 .users(new HashSet<>())
                 .votes(new HashMap<>())
+                .voteCache(new HashSet<>())
                 .status(DiscussionStatus.STARTED)
                 .votingGraceAt(LocalDateTime.now().atZone(ZoneOffset.UTC).plusMinutes(discussionDto.getDuration()).plusMinutes(Integer.parseInt(props.getProperty("arguments.ln.votingGrace"))).toInstant())
                 .build();
@@ -90,7 +93,7 @@ public class DiscussionThreadControllerImpl implements DiscussionThreadControlle
 
     @Override
     public ResponseEntity<ServiceResponse> join(String clientToken, String discussionId, String username) {
-        switch (discussionThreadService.join(new ObjectId(discussionId),username)){
+        switch (discussionMembersService.join(new ObjectId(discussionId),username)){
             case 0 -> {
                 return ResponseEntity.ok().body(ServiceResponse.builder().status(statusProps.getProperty("status.done")).build());
             }

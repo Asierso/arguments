@@ -14,7 +14,6 @@ import java.util.Properties;
 @Component
 public class VelocityUtils {
     private final VelocityEngine engine;
-    private final StringWriter writer = new StringWriter();
 
     public VelocityUtils(){
         Properties props = new Properties();
@@ -33,6 +32,7 @@ public class VelocityUtils {
     public String applyTemplate(VelocityTemplate template){
         //Process template with velocity context data
         VelocityResource resource = template.build(new VelocityContext());
+        StringWriter writer = new StringWriter();
         engine.getTemplate(resource.getResource()).merge(resource.getContext(),writer);
 
         //Return processed data

@@ -104,6 +104,22 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findInDiscussionByUsername(ObjectId discussionId, String username) {
+        if(username == null)
+            return null;
+
+        //Build query to get messages in the same discussion created by the same user
+        Query messagesInDiscussionByUsername = new Query().addCriteria(
+                Criteria.where("discussionId").is(discussionId)
+        ).addCriteria(
+                Criteria.where("sender").is(username)
+        ).with(Sort.by("sendTime").ascending());
+
+        //Get the messages filtered and return list
+        return mongoTemplate.find(messagesInDiscussionByUsername,Message.class);
+    }
+
+    @Override
     public Message select(ObjectId id) {
         Optional<Message> selected = messageRepository.findById(id);
         return selected.orElse(null);

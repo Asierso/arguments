@@ -2,7 +2,7 @@ package com.asier.arguments.argumentsbackend.tasks;
 
 import com.asier.arguments.argumentsbackend.entities.user.UserCredentials;
 import com.asier.arguments.argumentsbackend.entities.commons.ValidAuthTokens;
-import com.asier.arguments.argumentsbackend.services.auth.AuthService;
+import com.asier.arguments.argumentsbackend.services.auth.components.AuthComponent;
 import com.asier.arguments.argumentsbackend.services.auth.CredentialsService;
 import com.asier.arguments.argumentsbackend.services.auth.ValidAuthsTokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class TokenRevokationTask {
     @Autowired
     private CredentialsService credentialsService;
     @Autowired
-    private AuthService authService;
+    private AuthComponent authService;
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void checkTokens(){

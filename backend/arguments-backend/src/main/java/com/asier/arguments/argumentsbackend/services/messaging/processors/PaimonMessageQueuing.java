@@ -47,6 +47,7 @@ public class PaimonMessageQueuing extends PooledQueue<Message> {
             try {
                 Message message = takeFromQueue();
                 log.info("Processing feedback " + message.getId());
+                log.info("Message raw: {}",message.getMessage());
 
                 DiscussionThread discussion = discussionService.select(new ObjectId(message.getDiscussionId()));
 

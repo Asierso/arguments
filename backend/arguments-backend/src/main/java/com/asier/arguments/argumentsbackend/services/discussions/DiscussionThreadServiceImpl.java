@@ -3,6 +3,7 @@ package com.asier.arguments.argumentsbackend.services.discussions;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionStatus;
 import com.asier.arguments.argumentsbackend.entities.discussion.DiscussionThread;
 import com.asier.arguments.argumentsbackend.repositories.DiscussionThreadRepository;
+import com.asier.arguments.argumentsbackend.services.discussions.processors.PaimonDiscussionQueuing;
 import com.asier.arguments.argumentsbackend.utils.ResourceLocator;
 import com.asier.arguments.argumentsbackend.utils.annotations.AnnotationsUtils;
 import com.asier.arguments.argumentsbackend.utils.properties.PropertiesUtils;
@@ -13,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -23,6 +22,8 @@ import java.util.Properties;
 public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     @Autowired
     private DiscussionThreadRepository discussionRepository;
+    @Autowired
+    private PaimonDiscussionQueuing discussionQueuing;
     private final Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
     @Override
     public void insert(DiscussionThread discussion) {
@@ -53,41 +54,6 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
     }
 
     @Override
-    public int join(ObjectId id, String username){
-        if(id==null)
-            return 1;
-
-        Optional<DiscussionThread> selected = discussionRepository.findById(id);
-
-        //Check if discussion thread exists
-        if(selected.isEmpty())
-            return 1;
-
-        DiscussionThread discussion = selected.get();
-
-        //Check if discussion thread is not expired
-        if(discussion.getEndAt().isBefore(Instant.now())){
-            return 2;
-        }
-
-        //Check if discussion thread is full
-        if(discussion.getMaxUsers() <= discussion.getUsers().size()){
-            return 3;
-        }
-
-        //Check if user is already joined
-        if(discussion.getUsers().contains(username)){
-            return 4;
-        }
-
-        //Add username to discussion users list
-        discussion.getUsers().add(username);
-        discussion.getVotes().put(username,0);
-        discussionRepository.save(discussion);
-        return 0;
-    }
-
-    @Override
     public boolean alterStatus(ObjectId id, DiscussionStatus status) {
         if(id==null)
             return false;
@@ -100,34 +66,12 @@ public class DiscussionThreadServiceImpl implements DiscussionThreadService {
         //Save discussion with the status changed
         selected.get().setStatus(status);
         discussionRepository.save(selected.get());
-        return true;
-    }
 
-    @Override
-    public int voteIn(ObjectId id, String username) {
-        if(id == null)
-            return 1;
-
-        Optional<DiscussionThread> selected = discussionRepository.findById(id);
-        if(selected.isPresent()){
-            DiscussionThread discussion = selected.get();
-            //User isn't in scoreboard
-            if(!discussion.getVotes().containsKey(username)){
-                return 2;
-            }
-
-            //Vote time doesn't proceed now
-            if(discussion.getStatus() != DiscussionStatus.VOTING || discussion.getVotingGraceAt().isBefore(Instant.now())){
-                return 3;
-            }
-
-            //Update votes
-            discussion.getVotes().put(username,discussion.getVotes().get(username)+1);
-            discussionRepository.save(discussion);
-            return 0;
+        if(status == DiscussionStatus.VOTING){
+            discussionQueuing.enqueue(selected.get());
         }
 
-        return 1;
+        return true;
     }
 
     @Override

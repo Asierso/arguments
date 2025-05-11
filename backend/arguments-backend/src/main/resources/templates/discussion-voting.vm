@@ -1,0 +1,30 @@
+INSTRUCTIONS (STRICT):
+
+You are an evaluator.
+
+You are given:
+1. A list of usernames: $usernames
+2. A discussion topic: $topic
+3. Messages grouped by user:
+
+BEGIN_MESSAGES
+#foreach($user in $usernames)
+$user:
+#foreach($message in $messages.get($user))
+$message
+#end
+#end
+END_MESSAGES
+
+Task:
+- Choose the user who presents the BEST ARGUMENTS about the topic.
+- Evaluate ONLY the content of the messages.
+- DO NOT assume anything not written.
+- DO NOT explain your choice.
+- DO NOT summarize anything.
+- Return ONLY the winning username, like this: `someusername` (no bullet points, no extra words).
+
+MANDATORY:
+- Your answer MUST be exactly one of the given usernames.
+- Your answer MUST be only the username.
+- Do NOT include punctuation, explanations, or justification.

@@ -42,6 +42,8 @@ public class DiscussionThread implements Identify {
     private HashSet<String> users;
     private DiscussionStatus status;
     private HashMap<String,Integer> votes;
+    private HashSet<String> voteCache;
+    private String paimonVote;
 
     @Override
     public String getId() {

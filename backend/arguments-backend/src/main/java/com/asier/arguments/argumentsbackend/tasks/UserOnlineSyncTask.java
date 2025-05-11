@@ -48,8 +48,9 @@ public class UserOnlineSyncTask implements Runnable {
             }
 
             //Leaves grace time to end and restart index to the next scan
-            pool.awaitTermination(10, TimeUnit.SECONDS);
-            pool.shutdownNow();
+            if(pool.awaitTermination(10, TimeUnit.SECONDS)){
+                pool.shutdownNow();
+            }
             pageIndex.set(0);
         }catch(InterruptedException e){
             pageIndex.set(0);

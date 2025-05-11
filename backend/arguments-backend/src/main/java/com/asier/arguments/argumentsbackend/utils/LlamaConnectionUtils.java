@@ -6,13 +6,13 @@ import com.asierso.llamaapi.LlamaConnection;
 import java.util.Properties;
 
 public class LlamaConnectionUtils {
-    public static LlamaConnection getConnection() {
+    public static String getConnectionUri() {
         Properties props = PropertiesUtils.getProperties(ResourceLocator.ARGUMENTS);
         StringBuilder uri = new StringBuilder().append(props.getProperty("llama.uri.protocol"))
                 .append("://")
                 .append(props.getProperty("llama.uri.address"))
                 .append(":")
                 .append(props.getProperty("llama.uri.port"));
-        return new LlamaConnection(uri.toString());
+        return uri.toString();
     }
 }
