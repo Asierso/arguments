@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
@@ -64,6 +65,7 @@ import com.asier.arguments.ui.theme.TextBright1
 import com.asier.arguments.ui.theme.TextBright2
 import com.asier.arguments.ui.theme.TopBarBackground
 import com.asier.arguments.ui.theme.TopBarIcon
+import org.apache.commons.lang3.StringUtils
 import java.time.Instant
 
 @SuppressLint("ContextCastToActivity")
@@ -97,7 +99,7 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
         rankingsScreenViewModel.loadRanking(scope)
 
 
-    TitleTopBar(title = "Discusiones",
+    TitleTopBar(title = StringUtils.abbreviate(rankingsScreenViewModel.title,15),
         modifier = Modifier.fillMaxWidth(),
         leadingIcon = {
             Icon(
@@ -154,7 +156,7 @@ fun RankingListScreen(rankingsScreenViewModel: RankingsScreenViewModel, username
         .padding(top = 110.dp)
         .fillMaxHeight()) {
         Text(
-            text = "Ranking",
+            text = stringResource(R.string.ranking_ranking_text),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -175,7 +177,7 @@ fun RankingListScreen(rankingsScreenViewModel: RankingsScreenViewModel, username
         }
         //Change view to overview
         PrimaryButton(
-            text = "Ver resumen",
+            text = stringResource(R.string.ranking_summary_button),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
@@ -196,10 +198,10 @@ fun RankedPositionListElement(
 ) {
     Box(modifier = modifier) {
         Row(
-            modifier =  Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
-                .background(if(isSelf) Primary else CardBackground)
+                .background(if (isSelf) Primary else CardBackground)
                 .padding(10.dp)
         ) {
             UserAlt(
@@ -232,7 +234,9 @@ fun RankedPositionListElement(
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
             fontSize = 28.sp,
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 15.dp)
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 15.dp)
         )
     }
 
@@ -256,14 +260,14 @@ fun RankedPositionCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "¡Fin del debate!",
+            text = stringResource(R.string.ranking_discussion_end_text),
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
             fontSize = 22.sp
         )
         Text(
-            text = "Has quedado ${position}º",
+            text = "${stringResource(R.string.ranking_position_text)} ${position}",
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             color = TextBright1,
@@ -298,7 +302,7 @@ fun RankedPositionCard(
         }
         Spacer(modifier = Modifier.height(15.dp))
         PrimaryButton(
-            text = "Ver ranking",
+            text = stringResource(R.string.ranking_ranking_list_button),
             modifier = Modifier.fillMaxWidth(),
             padding = PaddingValues(10.dp, 15.dp),
             onClick = { onRankingClick() }
@@ -314,7 +318,7 @@ fun ArgumentsList(
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "Tus argumentos",
+            text = stringResource(R.string.ranking_arguments_title),
             fontFamily = Montserrat,
             fontWeight = FontWeight.Medium,
             color = TextBright1,
@@ -340,7 +344,7 @@ fun ArgumentsList(
             if (userMessages.isNullOrEmpty()) {
                 item {
                     Text(
-                        text = "Sin mensajes",
+                        text = stringResource(R.string.ranking_arguments_noarguments_text),
                         fontFamily = Montserrat,
                         fontWeight = FontWeight.Medium,
                         color = TextBright2,
@@ -354,7 +358,9 @@ fun ArgumentsList(
             itemsIndexed(userMessages) { index, item ->
                 Column {
                     Row(modifier = Modifier.padding(8.dp)) {
-                        Column(modifier = Modifier.weight(.5f).padding(end = 3.dp)) {
+                        Column(modifier = Modifier
+                            .weight(.5f)
+                            .padding(end = 3.dp)) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_ia),
                                 contentDescription = "ia",
@@ -380,7 +386,10 @@ fun ArgumentsList(
                             modifier = Modifier.weight(.5f)
                         )
                     }
-                    Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().border(1.dp, Color.White.copy(alpha = 0.3f)))
+                    Spacer(modifier = Modifier
+                        .height(1.dp)
+                        .fillMaxWidth()
+                        .border(1.dp, Color.White.copy(alpha = 0.3f)))
                 }
             }
         }

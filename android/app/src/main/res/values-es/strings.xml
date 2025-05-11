@@ -79,4 +79,11 @@
     <string name="alert_close">Cerrar</string>
     <string name="alert_cancel">Cancelar</string>
     <string name="alert_acept">Aceptar</string>
+    <string name="ranking_ranking_text">Ranking</string>
+    <string name="ranking_summary_button">Ver resumen</string>
+    <string name="ranking_discussion_end_text">¡Fin del debate!</string>
+    <string name="ranking_ranking_list_button">Ver ranking</string>
+    <string name="ranking_arguments_title">Tus argumentos</string>
+    <string name="ranking_arguments_noarguments_text">Sin mensajes</string>
+    <string name="ranking_position_text">Has quedado</string>
 </resources>
