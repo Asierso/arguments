@@ -93,7 +93,7 @@ fun VotingCard(
                 Icon(
                     painter = painterResource(R.drawable.ic_ia),
                     contentDescription = "ia",
-                    tint = ShineColorEffector().value,
+                    tint = shineColorEffector().value,
                     modifier = Modifier.width(30.dp).height(30.dp)
                 )
                 Text(
@@ -220,7 +220,7 @@ fun VotingOption(
                 Icon(
                     painter = painterResource(R.drawable.ic_ia),
                     contentDescription = "ia",
-                    tint = ShineColorEffector().value,
+                    tint = shineColorEffector().value,
                     modifier = Modifier.padding(end = 10.dp)
                 )
             }
@@ -273,20 +273,6 @@ fun VotingCardPreview(){
             true
         },
         endVoting = Instant.now().plusSeconds(123)
-    )
-}
-
-@Composable
-fun ShineColorEffector() : State<Color> {
-    //Shine animation
-    val infiniteTransition = rememberInfiniteTransition()
-    return infiniteTransition.animateColor(
-        initialValue = Primary,
-        targetValue = PrimaryLight,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = ""
     )
 }
 

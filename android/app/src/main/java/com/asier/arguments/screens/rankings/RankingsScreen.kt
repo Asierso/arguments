@@ -1,22 +1,22 @@
 package com.asier.arguments.screens.rankings
 
 import android.annotation.SuppressLint
-import android.icu.text.CaseMap.Title
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,13 +32,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,20 +53,17 @@ import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.messaging.MessageDialog
 import com.asier.arguments.ui.components.others.UserAlt
-import com.asier.arguments.ui.components.progressbars.BaseProgressBar
-import com.asier.arguments.ui.components.progressbars.XpProgressBar
-import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
+import com.asier.arguments.ui.components.others.shineColorEffector
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.ui.theme.CardBackground
-import com.asier.arguments.ui.theme.ChatProgressBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.PrimaryDark
 import com.asier.arguments.ui.theme.TextBright1
+import com.asier.arguments.ui.theme.TextBright2
 import com.asier.arguments.ui.theme.TopBarBackground
 import com.asier.arguments.ui.theme.TopBarIcon
-import java.time.Duration
 import java.time.Instant
 
 @SuppressLint("ContextCastToActivity")
@@ -88,12 +85,15 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
         }
     }
 
-    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
-        .fillMaxSize()
-        .padding(5.dp))
+    ArgumentsPatternBackground(
+        alpha = .05f, modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    )
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         rankingsScreenViewModel.loadUserXp(scope)
+        rankingsScreenViewModel.loadMessages(scope)
         rankingsScreenViewModel.loadRanking(scope)
     }
 
@@ -108,25 +108,136 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
             )
         })
 
+    //Change between ranking views
+    when (rankingsScreenViewModel.screen) {
+        RankingsScreenViewModel.RankingScreen.OVERVIEW -> {
+            RankedOverviewScreen(rankingsScreenViewModel, onReturnClick = {rankingsScreenViewModel.goBackButton(activityProperties)})
+        }
+
+        RankingsScreenViewModel.RankingScreen.LIST -> {
+            RankingListScreen(rankingsScreenViewModel,activityProperties.storage.load("user")!!)
+        }
+    }
+
+}
+
+@Composable
+fun RankedOverviewScreen(rankingsScreenViewModel: RankingsScreenViewModel, onReturnClick: () -> Unit) {
     Column(
-        modifier = Modifier.padding(top = 100.dp)
+        modifier = Modifier
+            .padding(top = 100.dp)
+            .fillMaxHeight()
     ) {
         RankedPositionCard(
             position = rankingsScreenViewModel.selfPosition,
             gainedXp = rankingsScreenViewModel.xpEarn,
             totalXp = rankingsScreenViewModel.totalXp,
-            onRankingClick = {},
+            onRankingClick = {
+                rankingsScreenViewModel.screen = RankingsScreenViewModel.RankingScreen.LIST
+            },
             modifier = Modifier.padding(10.dp)
         )
 
         ArgumentsList(
-            modifier = Modifier.padding(top = 10.dp),
-            userMessages = listOf(
-                Message(message = "Hello", sendTime = Instant.now(), discussionId = "0", sender = "dummy"),
-            )
+            modifier = Modifier.padding(top = 10.dp, start = 1.dp, end = 1.dp),
+            userMessages = rankingsScreenViewModel.messages,
+            onReturnClick = {
+                onReturnClick()
+            }
         )
     }
 }
+
+@Composable
+fun RankingListScreen(rankingsScreenViewModel: RankingsScreenViewModel, username: String) {
+    Column(modifier = Modifier
+        .padding(top = 110.dp)
+        .fillMaxHeight()) {
+        Text(
+            text = "Ranking",
+            fontFamily = Montserrat,
+            fontWeight = FontWeight.SemiBold,
+            color = TextBright1,
+            fontSize = 28.sp,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            itemsIndexed(rankingsScreenViewModel.sortedRanking.entries.toList()) { index, item ->
+                //Print every rank position sorted (show name, votes and xp earned)
+                RankedPositionListElement(
+                    voteData = item.toPair(),
+                    isSelf = item.key == username,
+                    xp = rankingsScreenViewModel.xpRanking[item.key]?: 0,
+                    modifier = Modifier.padding(5.dp)
+                )
+            }
+        }
+        //Change view to overview
+        PrimaryButton(
+            text = "Ver resumen",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            padding = PaddingValues(10.dp, 15.dp),
+            onClick = {
+                rankingsScreenViewModel.screen = RankingsScreenViewModel.RankingScreen.OVERVIEW
+            }
+        )
+    }
+}
+
+@Composable
+fun RankedPositionListElement(
+    voteData: Pair<String, Int>,
+    xp: Int,
+    modifier: Modifier = Modifier,
+    isSelf: Boolean = false
+) {
+    Box(modifier = modifier) {
+        Row(
+            modifier =  Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(if(isSelf) Primary else CardBackground)
+                .padding(10.dp)
+        ) {
+            UserAlt(
+                name = voteData.first,
+                useBorder = false,
+                modifier = Modifier
+                    .height(45.dp)
+                    .width(45.dp)
+            ) { }
+            Column(modifier = Modifier.padding(start = 10.dp)) {
+                Text(
+                    text = voteData.first,
+                    fontFamily = Montserrat,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextBright1,
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "+${xp} XP",
+                    fontFamily = Montserrat,
+                    fontWeight = FontWeight.Medium,
+                    color = TextBright1,
+                    fontSize = 15.sp
+                )
+            }
+        }
+        Text(
+            text = "${voteData.second}",
+            fontFamily = Montserrat,
+            fontWeight = FontWeight.SemiBold,
+            color = TextBright1,
+            fontSize = 28.sp,
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 15.dp)
+        )
+    }
+
+}
+
 
 @Composable
 fun RankedPositionCard(
@@ -135,7 +246,7 @@ fun RankedPositionCard(
     totalXp: Int,
     onRankingClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
@@ -189,7 +300,7 @@ fun RankedPositionCard(
         PrimaryButton(
             text = "Ver ranking",
             modifier = Modifier.fillMaxWidth(),
-            padding = PaddingValues(10.dp,15.dp),
+            padding = PaddingValues(10.dp, 15.dp),
             onClick = { onRankingClick() }
         )
     }
@@ -197,9 +308,10 @@ fun RankedPositionCard(
 
 @Composable
 fun ArgumentsList(
-    userMessages: List<Message>,
+    userMessages: MutableList<Message>?,
+    onReturnClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Tus argumentos",
@@ -219,20 +331,48 @@ fun ArgumentsList(
                     color = CardBackground,
                     shape = RoundedCornerShape(10.dp)
                 )
-                .padding(10.dp)
-                .heightIn(max = (60 * 4).dp)
+                .padding(2.dp)
+                //.heightIn(max = (60 * 4).dp)
+                .weight(1f)
                 .fillMaxWidth()
         ) {
+            //If messages are loading or there's no message
+            if (userMessages.isNullOrEmpty()) {
+                item {
+                    Text(
+                        text = "Sin mensajes",
+                        fontFamily = Montserrat,
+                        fontWeight = FontWeight.Medium,
+                        color = TextBright2,
+                        fontSize = 18.sp,
+                    )
+                }
+                return@LazyColumn
+            }
+
+            //If there's messages to show, load it
             itemsIndexed(userMessages) { index, item ->
                 Row(modifier = Modifier.padding(8.dp)) {
-                    Text(
-                        text = "Feedback...",
-                        fontFamily = Montserrat,
-                        fontWeight = FontWeight.Normal,
-                        color = TextBright1,
-                        fontSize = 18.sp,
-                        modifier = Modifier.weight(.5f)
-                    )
+                    Column(modifier = Modifier.weight(.5f)) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_ia),
+                            contentDescription = "ia",
+                            tint = shineColorEffector().value,
+                            modifier = Modifier
+                                .width(15.dp)
+                                .height(15.dp)
+                        )
+                        Text(
+                            text = if (item.feedback.toLowerCase(Locale.current)
+                                    .replace("\"", "") == "unknown"
+                            ) "..." else item.feedback,
+                            fontFamily = Montserrat,
+                            fontWeight = FontWeight.Normal,
+                            color = TextBright1,
+                            textAlign = TextAlign.Justify,
+                            fontSize = 13.sp
+                        )
+                    }
                     MessageDialog(
                         message = item,
                         self = true,
@@ -241,6 +381,16 @@ fun ArgumentsList(
                 }
             }
         }
+        PrimaryButton(
+            text = "Volver",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            padding = PaddingValues(10.dp, 15.dp),
+            onClick = {
+                onReturnClick()
+            }
+        )
     }
 }
 
@@ -248,12 +398,13 @@ fun ArgumentsList(
 fun CanvasXpBar(
     xp: Float,
     modifier: Modifier = Modifier
-){
+) {
     //Background Progress bar
     Canvas(
         modifier = modifier
             .clip(
-                RoundedCornerShape(9.dp
+                RoundedCornerShape(
+                    9.dp
                 )
             )
             .background(PrimaryDark)
@@ -275,20 +426,39 @@ fun CanvasXpBar(
 
 @Composable
 @Preview
-fun RankedPositionPreviewCard(){
-RankedPositionCard(
-    position = 1,
-    gainedXp = 12,
-    totalXp = 50,
-    onRankingClick = {})
+fun RankedPositionPreviewCard() {
+    RankedPositionCard(
+        position = 1,
+        gainedXp = 12,
+        totalXp = 50,
+        onRankingClick = {})
 }
 
 @Composable
 @Preview
-fun ArgumentsListPreview(){
+fun ArgumentsListPreview() {
     ArgumentsList(
-        userMessages = listOf(
-            Message(message = "Hello", sendTime = Instant.now(), discussionId = "0", sender = "dummy"),
-            )
+        onReturnClick = {},
+        userMessages = mutableListOf(
+            Message(
+                message = "Hello",
+                sendTime = Instant.now(),
+                discussionId = "0",
+                sender = "dummy",
+                feedback = ""
+            ),
+        )
+    )
+}
+
+@Composable
+@Preview
+fun RankedPositionListElementPreview(
+    modifier: Modifier = Modifier
+) {
+    RankedPositionListElement(
+        modifier = Modifier.fillMaxWidth(),
+        xp = 10,
+        voteData = Pair("dummy",1)
     )
 }
