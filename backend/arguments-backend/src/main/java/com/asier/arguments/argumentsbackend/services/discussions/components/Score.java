@@ -42,6 +42,7 @@ public class Score {
 
         //Add xp points
         for(User user : users){
+            //Xp plus
             int votesPlus = discussion.getVotes().get(user.getUsername()) * 10;
             int winnerPlus = benedict.winner().getKey().equals(user.getUsername())? 50 * users.size() : 0;
 
@@ -68,6 +69,7 @@ public class Score {
         log.info("Creating ranking for discussion {}",discussion.getId());
         rankingService.insert(Ranking.builder()
                 .discussionId(new ObjectId(discussion.getId()))
+                        .title(discussion.getTitle())
                         .ranking(discussion.getVotes())
                         .xpPoints(xpPoints)
                         .paimonVote(benedict.draw()? discussion.getPaimonVote() : "") //Paimon vote just count if is

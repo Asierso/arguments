@@ -25,6 +25,7 @@ public class Ranking implements Identify {
     @Mandatory
     @Indexed
     private ObjectId discussionId;
+    private String title;
     @Mandatory
     private HashMap<String,Integer> ranking;
     @Mandatory
