@@ -1,6 +1,7 @@
 package com.asier.arguments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,6 +32,7 @@ import com.asier.arguments.ui.components.snackbars.ConnectionErrorSnackbar
 import com.asier.arguments.ui.components.snackbars.SnackbarInvoke
 import com.asier.arguments.ui.components.snackbars.SnackbarType
 import com.asier.arguments.ui.components.snackbars.SucessSnackbar
+import com.asier.arguments.ui.components.snackbars.WarningSnackbar
 import com.asier.arguments.ui.theme.ArgumentsTheme
 import com.asier.arguments.ui.theme.Background
 import com.asier.arguments.utils.storage.LocalStorage
@@ -65,6 +67,11 @@ class MainActivity : ComponentActivity() {
                                         SucessSnackbar(message = builtInvoke.message)
                                     else
                                         SucessSnackbar()
+                                SnackbarType.WARNING ->
+                                    if(builtInvoke.message.isNotBlank())
+                                        WarningSnackbar(message = builtInvoke.message)
+                                    else
+                                        WarningSnackbar()
                             }
                         } else {
                             //Show generic snackbar
@@ -122,6 +129,17 @@ class MainActivity : ComponentActivity() {
                 parameters = activityProperties.storage,
                 scope = scope,
                 delay = 10)
+        }
+
+        //Load message screen if there's a active discussion (user tries to cheat) and makes the first nav graph screen
+        LaunchedEffect(Unit) {
+            if (activityProperties.storage.load("discussion") != null) {
+                if(activityProperties.storage.load("discussion_expired_bypass") == null) {
+                    activityProperties.navController.navigate(Screen.Messaging.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            }
         }
     }
 

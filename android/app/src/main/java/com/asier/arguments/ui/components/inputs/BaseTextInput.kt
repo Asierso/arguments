@@ -43,8 +43,10 @@ fun BaseTextInput(
     text: String = "",
     suffix: String = "",
     leadingIcon: @Composable() (() -> Unit)? = null,
+    trailingIcon: @Composable() (() -> Unit)? = null,
     readOnly: Boolean = false,
     minLines: Int = 1,
+    maxLines: Int = 1,
     isError: Boolean = false,
     enabled: Boolean = true,
     isPassword: Boolean = false,
@@ -100,9 +102,11 @@ fun BaseTextInput(
                 shape = RoundedCornerShape(10.dp),
                 colors = textColors,
                 readOnly = readOnly,
-                singleLine = minLines <= 1,
+                singleLine = maxLines <= 1,
                 minLines = minLines,
+                maxLines = maxLines,
                 isError = isError,
+                trailingIcon = trailingIcon,
                 visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
             )
         } else {
@@ -125,10 +129,12 @@ fun BaseTextInput(
                     leadingIcon.invoke()
                 },
                 readOnly = readOnly,
-                singleLine = minLines <= 1,
+                singleLine = maxLines <= 1,
                 minLines = minLines,
+                maxLines = maxLines,
                 isError = isError,
                 enabled = enabled,
+                trailingIcon = trailingIcon,
                 visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
             )
         }

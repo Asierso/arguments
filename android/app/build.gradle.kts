@@ -83,10 +83,13 @@ dependencies {
     //Apache StringUtils
     implementation(libs.commons.lang3)
 
-    // Room
+    //Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    //Bson
+    implementation(libs.bson)
 }
 
 configurations.all {

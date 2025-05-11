@@ -59,4 +59,24 @@
     <string name="discussion_creation_maxtimepolicy_short">Few time</string>
     <string name="discussion_creation_maxtimepolicy_mid">Medium discussion</string>
     <string name="discussion_creation_maxtimepolicy_large">Long discussion</string>
+    <string name="day_hour_prefix">at</string>
+    <string name="day_today">Today</string>
+    <string name="day_yesterday">Yesterday</string>
+    <string name="discussions_home_title">Discussions</string>
+    <string name="discussion_join_warning_title">Warning</string>
+    <string name="discussion_join_warning_text">Once you enter, you cannot leave until discussion ends. ¿Are you sure?</string>
+    <string name="discussion_expired_info_title">Expired discussion</string>
+    <string name="discussion_expired_info_text">You leaved the app while you was in a discussion. Arguments keeps the right to ban you if that behaviour is repeated</string>
+    <string name="discussion_ended_info_title">Ended discussion</string>
+    <string name="discussion_ended_info_text">Not enough users for voting</string>
+    <string name="discussion_creation_warn_text">You cannot leave the discussion until ends</string>
+    <string name="profile_account_delete_warning_title">Account deleting</string>
+    <string name="profile_account_delete_warning_text">Are you sure you want to delete the account? This action is not reversible</string>
+    <string name="voting_card_benedict_text">Preparing benedict</string>
+    <string name="voting_card_vote_text">Click to vote</string>
+    <string name="user_card_nodata">No nada</string>
+    <string name="user_card_noone">None</string>
+    <string name="alert_close">Close</string>
+    <string name="alert_cancel">Cancel</string>
+    <string name="alert_acept">Accept</string>
 </resources>

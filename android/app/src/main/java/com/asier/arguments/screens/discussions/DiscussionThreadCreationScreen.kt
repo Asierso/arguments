@@ -20,31 +20,31 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
-import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.inputs.OnUpDown
 import com.asier.arguments.ui.components.others.TextCheck
-import com.asier.arguments.ui.components.others.UserAlt
-import com.asier.arguments.ui.components.topbars.BaseTopBar
-import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.TitleTopBar
 import com.asier.arguments.ui.theme.CardBackground
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.TextBright1
+import com.asier.arguments.ui.theme.TextError1
 import com.asier.arguments.ui.theme.TopBarBackground
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +60,7 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
 
     //Scope to make fetch
     val scope = rememberCoroutineScope()
+    dtcViewModel.storage = activityProperties.storage
 
     //Show overlay for few time when screen is changing
     LaunchedEffect(Unit) {
@@ -81,6 +82,10 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
         }
     }
 
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
+
     TitleTopBar(
         title = stringResource(R.string.discussion_creation_topbar_title),
         modifier = Modifier.fillMaxWidth())
@@ -93,16 +98,28 @@ fun DiscussionThreadCreationScreen(dtcViewModel: DiscussionThreadCreationViewMod
 
         //Rule modification
         DiscussionThink(modifier = Modifier.fillMaxWidth(), dtcViewModel = dtcViewModel)
-        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier.padding(10.dp))
+        DiscussionRules(dtcViewModel = dtcViewModel, modifier = Modifier
+            .padding(10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp))
 
         Spacer(modifier = Modifier.height(60.dp))
 
         //Create discussion button
-        PrimaryButton(text = stringResource(R.string.discussion_creation_create_button), modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp), onClick = {
-            dtcViewModel.createDiscussion(activityProperties,scope)
-        })
+        Column {
+            PrimaryButton(text = stringResource(R.string.discussion_creation_create_button), modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp), onClick = {
+                dtcViewModel.createDiscussion(activityProperties,scope)
+            })
+            Text(
+                text = stringResource(R.string.discussion_creation_warn_text),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+                fontFamily = Montserrat,
+                fontSize = 12.sp,
+                color = TextError1
+            )
+        }
     }
 }
 

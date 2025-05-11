@@ -17,6 +17,7 @@ val Background = Color(0xFF242424)
 
 val Primary = Color(0xFF7B6CC1)
 val PrimaryDark = Color(0xFF2B2936)
+val PrimaryLight = Color(0xFFADA1F3)
 val Secondary = Color(0xFF676767)
 val Disabled = Color(0xFF2F2F2F)
 val Tertiary = Color(0xFF655E88)
@@ -37,3 +38,16 @@ val TextBright2 = Color(0xFFB9B9B9)
 val TopBarBackground = Color(0xFF3B3B3B)
 val TopBarIcon = Color(0xFF949494)
 val CardBackground = Color(0xFF3B3B3B)
+
+val SelfMessageBox = Color(0xFF7B6CC1)
+val OtherMessageBox = Color(0xFF3B3B3B)
+
+val AlertBackground = Color(0xFF3B3B3B)
+
+val ChatProgressBackground = Color(0xFF2C2C2C)
+val ChatUserIndicator = Color(0xFF655D88)
+
+val ListEvenItem = Color(0xFF454545)
+val ListOddItem = Color(0xFF343434)
+
+val ErrorOverlay0 = Color(0xFFE84343)

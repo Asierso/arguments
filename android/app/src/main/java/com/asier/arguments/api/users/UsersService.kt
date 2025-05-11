@@ -20,7 +20,19 @@ object UsersService : ApiUsersService {
         return RetrofitUtils.getResponse(ApiServices.UsersService.getById(userId = userId))
     }
 
-    override suspend fun updateByName(localStorage: LocalStorage, username: String, user: UserModifiableDto): ServiceResponse? {
-        return RetrofitUtils.getResponse(ApiServices.UsersAuthService(localStorage).updateByName(username = username, user = user))
+    override suspend fun existsByUsername(username: String): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.UsersService.existsByName(username = username))
+    }
+
+    override suspend fun existsById(userId: String): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.UsersService.existsById(userId = userId))
+    }
+
+    override suspend fun updateByUsername(localStorage: LocalStorage, username: String, user: UserModifiableDto): ServiceResponse? {
+        return RetrofitUtils.getResponse(ApiServices.UsersAuthService(localStorage).updateByUsername(username = username, user = user))
+    }
+
+    override suspend fun deleteByUsername(localStorage: LocalStorage, username: String) : ServiceResponse?{
+        return RetrofitUtils.getResponse(ApiServices.UsersAuthService(localStorage).deleteByUsername(username = username))
     }
 }

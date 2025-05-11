@@ -57,12 +57,70 @@ class HomeScreenViewModel : ViewModel() {
     var totalElements by mutableLongStateOf(0)
     var totalPages by mutableIntStateOf(1)
 
+    //Alert dialogs handlers
+    var discussionWarning by mutableStateOf(false)
+    var discussionPreloaded by mutableStateOf("")
+    var discussionExpiredWarning by mutableStateOf(false)
+
     fun loadUsername() {
         if (username.isNotBlank())
             return
 
         storage?.load("user")?.let {
             username = it
+        }
+    }
+
+    fun deleteBypass(){
+        if(storage!!.load("discussion_expired_bypass")!=null)
+            storage!!.delete("discussion_expired_bypass")
+    }
+
+    fun deleteDiscussionId(){
+        if(storage!!.load("discussion")!=null)
+            storage!!.delete("discussion")
+
+        if(storage!!.load("discussion_finished")!=null)
+            storage!!.delete("discussion_finished")
+    }
+
+    fun openDiscussion(activityProperties: ActivityProperties,scope: CoroutineScope){
+        scope.launch {
+            withContext(Dispatchers.IO){
+                deleteBypass()
+                deleteDiscussionId()
+                val response = DiscussionsService.joinDiscussionById(storage!!,discussionPreloaded)
+                when(StatusCodes.valueOf(response!!.status)){
+                    StatusCodes.SUCCESSFULLY -> {
+                        //Open discussion and save got id
+                        withContext(Dispatchers.Main){
+                            //Register into the new discussion
+                            storage?.save("discussion",discussionPreloaded)
+                            activityProperties.navController.navigate(Screen.Messaging.route){
+                                popUpTo(0){inclusive = true}
+                            }
+                        }
+                    }
+                    StatusCodes.EXPIRED_DISCUSSION -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.SERVER_ERROR,"Discusion expirada").build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                    StatusCodes.DISCUSSION_MAX_REACHED -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.WARNING,"Discusion llena").build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                    else -> {
+                        activityProperties.snackbarHostState.showSnackbar(
+                            message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
         }
     }
 

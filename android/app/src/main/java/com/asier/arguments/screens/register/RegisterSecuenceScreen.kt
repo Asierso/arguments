@@ -28,8 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +42,7 @@ import com.asier.arguments.R
 import com.asier.arguments.Screen
 import com.asier.arguments.screens.ActivityProperties
 import com.asier.arguments.misc.PasswordPolicyCodes
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.inputs.IconTextInput
 import com.asier.arguments.ui.components.others.TextCheck
@@ -68,6 +71,8 @@ fun RegisterSecuenceScreen(
             it.statusBarColor = Background.toArgb()
         }
     }
+
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier.fillMaxSize().padding(5.dp))
 
     //Render all the screens
     Column(
@@ -264,7 +269,7 @@ fun RegisterScreenBody1(
         IconTextInput(
             modifier = Modifier.padding(bottom = 5.dp),
             onValueChanged = {
-                registerViewModel.username = it
+                registerViewModel.username = it.toLowerCase(Locale.current)
                 registerViewModel.uniqueTry = false
                 if (registerViewModel.checkUsernamePolicy())
                     registerViewModel.checkUserAvailable(

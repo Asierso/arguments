@@ -12,40 +12,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.asier.arguments.R
 import com.asier.arguments.entities.user.User
 import com.asier.arguments.ui.theme.Montserrat
 import com.asier.arguments.ui.theme.Tertiary
 import com.asier.arguments.ui.theme.TextBright0
+import org.apache.commons.lang3.StringUtils
 
 @Composable
 fun UserCard(
-    user: User,
     modifier: Modifier = Modifier,
+    user: User? = null,
     onClick: ((user: User) -> Unit)? = null
 ){
     Row(
-        modifier = modifier.clip(RoundedCornerShape(22.dp))
+        modifier = modifier
+            .clip(RoundedCornerShape(22.dp))
             .background(Tertiary)
             .padding(start = 10.dp, end = 15.dp, top = 7.dp, bottom = 7.dp)
-            .clickable { onClick?.invoke(user) },
+            .clickable { if (user != null) onClick?.invoke(user) },
         verticalAlignment = Alignment.CenterVertically) {
-        UserAlt(name = user.username, isOnline = user.isActive) {
-            onClick?.invoke(user)
+        UserAlt(name = StringUtils.abbreviate(user?.username?: "??", 10), isOnline = user?.isActive) {
+            if(user != null)
+                onClick?.invoke(user)
         }
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             Text(
-                text = user.username,
+                text = StringUtils.abbreviate(user?.username?: stringResource(R.string.user_card_noone),10),
                 color = TextBright0,
                 fontWeight = FontWeight.Medium,
                 fontFamily = Montserrat,
                 fontSize = 15.sp,
                 modifier = Modifier.padding(start = 7.dp))
             Text(
-                text = "Lvl ${user.level}",
+                text = if(user == null) stringResource(R.string.user_card_nodata) else "Lvl ${user.level}",
                 color = TextBright0,
                 fontWeight = FontWeight.Medium,
                 fontFamily = Montserrat,
@@ -58,7 +63,7 @@ fun UserCard(
 @Preview
 @Composable
 fun UserCardPreview(){
-    UserCard(User().apply {
+    UserCard(user = User().apply {
         firstname = "Antonio"
         lastname = "Garcia"
         username = "agarcia"

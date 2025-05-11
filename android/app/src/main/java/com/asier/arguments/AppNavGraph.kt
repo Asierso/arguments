@@ -13,15 +13,19 @@ import com.asier.arguments.screens.home.HomeScreen
 import com.asier.arguments.screens.login.LoginPage
 import com.asier.arguments.screens.register.RegisterSecuenceScreen
 import com.asier.arguments.screens.register.RegisterSequenceViewModel
-import com.asier.arguments.screens.WelcomePage
+import com.asier.arguments.screens.welcome.WelcomeScreen
 import com.asier.arguments.screens.discussions.DiscussionThreadCreationScreen
 import com.asier.arguments.screens.discussions.DiscussionThreadCreationViewModel
 import com.asier.arguments.screens.home.HomeScreenViewModel
 import com.asier.arguments.screens.login.LoginViewModel
+import com.asier.arguments.screens.messaging.MessagingScreen
+import com.asier.arguments.screens.messaging.MessagingScreenViewModel
 import com.asier.arguments.screens.profile.ProfileEditorScreen
 import com.asier.arguments.screens.profile.ProfileEditorScreenViewModel
 import com.asier.arguments.screens.profile.ProfileScreen
 import com.asier.arguments.screens.profile.ProfileScreenViewModel
+import com.asier.arguments.screens.rankings.RankingsScreen
+import com.asier.arguments.screens.rankings.RankingsScreenViewModel
 
 /**
  * Manage all the navigation flow in the application
@@ -35,7 +39,7 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
     NavHost(navController = parameters.properties.navController, startDestination = start.route, modifier = modifier){
         //Start point and user auth
         composable(Screen.Welcome.route){
-            WelcomePage()
+            WelcomeScreen()
         }
         composable(Screen.Login.route){
             LoginPage(LoginViewModel())
@@ -57,6 +61,14 @@ fun AppNavGraph(modifier : Modifier, start: Screen = Screen.Welcome) {
         //Discussions
         composable(Screen.DiscussionCreate.route){
             DiscussionThreadCreationScreen(DiscussionThreadCreationViewModel())
+        }
+        //Messaging
+        composable(Screen.Messaging.route){
+            MessagingScreen(MessagingScreenViewModel())
+        }
+        //Rankings
+        composable(Screen.Rankings.route){
+            RankingsScreen(RankingsScreenViewModel())
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.asier.arguments.screens.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,8 +34,12 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asier.arguments.R
 import com.asier.arguments.Screen
+import com.asier.arguments.entities.user.User
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.alerts.InfoAlert
+import com.asier.arguments.ui.components.alerts.WarningAlert
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
@@ -43,11 +49,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
     //List state used to make infinity scroll
     val listState = homeScreenViewModel.lazyList
 
@@ -63,8 +70,9 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
 
     //Show overlay for few time when screen is changing
     LaunchedEffect(Unit) {
+        homeScreenViewModel.discussionExpiredWarning = activityProperties.storage.load("discussion_expired") != null
         scope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
                 parameters.isLoading = true
                 delay(1500)
                 parameters.isLoading = false
@@ -81,49 +89,113 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
         }
     }
 
-    ProfileActionTopBar(title = "Discusiones",
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
+
+    ProfileActionTopBar(title = stringResource(R.string.discussions_home_title),
         modifier = Modifier.fillMaxWidth(),
-        profile = {UserAlt(name = homeScreenViewModel.username) {
+        profile = {
+            UserAlt(name = homeScreenViewModel.username) {
                 parameters.viewProfile = homeScreenViewModel.username
                 homeScreenViewModel.loadProfile(activityProperties)
-        }},
+            }
+        },
         onAction = {
-            homeScreenViewModel.logout(activityProperties,scope)
-        }){
+            homeScreenViewModel.logout(activityProperties, scope)
+        }) {
         Icon(painterResource(R.drawable.ic_logout), contentDescription = "logout")
     }
 
     val pullState = rememberPullToRefreshState()
 
-    PullToRefreshBox(state = pullState, isRefreshing = homeScreenViewModel.pageRefreshing, onRefresh = {
-        homeScreenViewModel.reloadDiscussionsPage(parameters,scope)
-        scope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                parameters.isLoading = true
-                delay(1500)
-                parameters.isLoading = false
+    PullToRefreshBox(
+        state = pullState,
+        isRefreshing = homeScreenViewModel.pageRefreshing,
+        onRefresh = {
+            homeScreenViewModel.reloadDiscussionsPage(parameters, scope)
+            scope.launch {
+                withContext(Dispatchers.IO) {
+                    parameters.isLoading = true
+                    delay(1500)
+                    parameters.isLoading = false
+                }
             }
-        }
-    }) {
+        }) {
         LazyColumn(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             state = listState,
-            modifier = Modifier.fillMaxSize().padding(top = 100.dp)) {
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 100.dp)
+        ) {
             itemsIndexed(items = homeScreenViewModel.loadedDiscussions.toList()) { index, item ->
                 DiscussionCard(
                     discussion = item.discussionThread,
-                    userData = item.user.also {
-                        it!!.isActive = if(it.username == homeScreenViewModel.username) true else it.isActive
-                    },
+                    userData = if(item.user != null){
+                        item.user.also {
+                            it!!.isActive =
+                                if (it.username == homeScreenViewModel.username) true else it.isActive
+                        }
+                    }else{
+                        null
+                    }/*also {
+                        it!!.isActive =
+                            if (it.username == homeScreenViewModel.username) true else it.isActive
+                    }*/,
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
                     onUsernameClick = {
+                        if(it == null)
+                            return@DiscussionCard
+
                         parameters.viewProfile = it.username
                         homeScreenViewModel.loadProfile(activityProperties)
-                    })
+                    },
+                    onDiscussionClick = {
+                        homeScreenViewModel.discussionPreloaded = it.id
+                        homeScreenViewModel.discussionWarning = true
+                    }
+                )
             }
         }
     }
+
+    //Warning confirmation to load discussion
+    WarningAlert(
+        title = stringResource(R.string.discussion_join_warning_title),
+        subtitle = stringResource(R.string.discussion_join_warning_text),
+        onConfirm = {
+            homeScreenViewModel.discussionWarning = false
+            homeScreenViewModel.openDiscussion(activityProperties,scope)
+        },
+        onDismiss = {
+            homeScreenViewModel.discussionWarning = false
+        },
+        showAlert = homeScreenViewModel.discussionWarning
+    )
+
+    //Check if there was a discussion in db (joined previously) and user closes the app before discussion expires
+    InfoAlert(
+        title = stringResource(R.string.discussion_expired_info_title),
+        subtitle = stringResource(R.string.discussion_expired_info_text),
+        onClose = {
+            homeScreenViewModel.discussionExpiredWarning = false
+            activityProperties.storage.delete("discussion_expired")
+        },
+        showAlert = homeScreenViewModel.discussionExpiredWarning
+    )
+
+    //Show if the last discussion was alone (only 1 user)
+    InfoAlert(
+        title = stringResource(R.string.discussion_ended_info_title),
+        subtitle = stringResource(R.string.discussion_ended_info_text),
+        onClose = {
+            parameters.isAlone = false
+            homeScreenViewModel.deleteDiscussionId()
+        },
+        showAlert = parameters.isAlone
+    )
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }
@@ -133,12 +205,12 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
                 val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
 
                 if (lastVisibleIndex >= totalItems - 1) {
-                   homeScreenViewModel.loadNextDiscussionsPage(parameters, scope)
+                    homeScreenViewModel.loadNextDiscussionsPage(parameters, scope)
                 }
             }
     }
 
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -148,13 +220,14 @@ fun HomeScreen( homeScreenViewModel: HomeScreenViewModel){
             }) {
             Text(
                 text = "+",
-                fontSize = 30.sp)
+                fontSize = 30.sp
+            )
         }
     }
 }
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen(homeScreenViewModel = HomeScreenViewModel())
 }

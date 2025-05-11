@@ -127,7 +127,7 @@ class RegisterSequenceViewModel : ViewModel() {
     ) {
         scope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                val res = UsersService.getByUsername(username) ?: return@launch
+                val res = UsersService.existsByUsername(username) ?: return@launch
                 when(StatusCodes.valueOf(res.status)) {
                     StatusCodes.SUCCESSFULLY -> {
                         uniqueUsername = false

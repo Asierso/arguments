@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,8 @@ import com.asier.arguments.entities.user.User
 import com.asier.arguments.misc.PasswordPolicyCodes
 import com.asier.arguments.screens.ActivityParameters
 import com.asier.arguments.screens.ActivityProperties
+import com.asier.arguments.ui.components.alerts.WarningAlert
+import com.asier.arguments.ui.components.backgrounds.ArgumentsPatternBackground
 import com.asier.arguments.ui.components.buttons.PrimaryButton
 import com.asier.arguments.ui.components.buttons.WarnedButton
 import com.asier.arguments.ui.components.inputs.BaseTextInput
@@ -73,12 +76,17 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
         return
     }
 
+    ArgumentsPatternBackground(alpha = .05f, modifier = Modifier
+        .fillMaxSize()
+        .padding(5.dp))
+
     ProfileTopBar(title = profileEditorScreenViewModel.userData!!.username,
         modifier = Modifier.fillMaxWidth(),
         profile = {
             UserAlt(
                 name = profileEditorScreenViewModel.userData!!.username) {}
-        })
+        }
+    )
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -88,16 +96,38 @@ fun ProfileEditorScreen(profileEditorScreenViewModel: ProfileEditorScreenViewMod
             .verticalScroll(scrollState)
             .padding(top = 100.dp, start = 10.dp, end = 10.dp)
     ) {
-        UserExtendedCard(user = profileEditorScreenViewModel.userData!!)
-        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+        UserExtendedCard(user = profileEditorScreenViewModel.userData!!, modifier = Modifier
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+        )
+        UserEditableDescriptionCard(profileEditorScreenViewModel, modifier = Modifier
+            .padding(top = 10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+            .hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserDescription(parameters,scope)
             hideKeyboard(context)
         }
-        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier.padding(top = 10.dp).hideKeyboardOnClick()){
+        UserEditableActionsCard(profileEditorScreenViewModel, modifier = Modifier
+            .padding(top = 10.dp)
+            .shadow(shape = RoundedCornerShape(12.dp), elevation = 5.dp)
+            .hideKeyboardOnClick()){
             profileEditorScreenViewModel.updateUserData(parameters,scope)
             hideKeyboard(context)
         }
     }
+
+    //Warning area
+    WarningAlert(
+        title = stringResource(R.string.profile_account_delete_warning_title),
+        subtitle = stringResource(R.string.profile_account_delete_warning_text),
+        onConfirm = {
+            profileEditorScreenViewModel.deleteUser(activityProperties,scope)
+            profileEditorScreenViewModel.deleteAccountWarning = false
+        },
+        onDismiss = {
+            profileEditorScreenViewModel.deleteAccountWarning = false
+        },
+        showAlert = profileEditorScreenViewModel.deleteAccountWarning
+    )
 }
 
 @Composable
@@ -119,12 +149,12 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
         Row(verticalAlignment = Alignment.CenterVertically) {
             //Discussion author
             UserCard(
-                User().apply {
+                user = User().apply {
                     username = user.username
                     isActive = true
             }, modifier = Modifier
-                .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
-                .weight(.60f),
+                    .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
+                    .weight(.60f),
                 onClick = { }
             )
 
@@ -159,11 +189,14 @@ fun UserEditableDescriptionCard(profileEditorScreenViewModel: ProfileEditorScree
             onValueChanged = {profileEditorScreenViewModel.description = it},
             readOnly = false,
             minLines = 5,
+            maxLines = 5,
             modifier = Modifier.fillMaxWidth()
         )
         //Update description button
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = modifier.fillMaxWidth().hideKeyboardOnClick(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .hideKeyboardOnClick(),
             onClick = {
                 updateAction()
             }
@@ -246,7 +279,7 @@ fun UserEditableActionsCard(
             }
         }
         PrimaryButton(text = stringResource(R.string.profile_update_button),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp)
                 .hideKeyboardOnClick(),
@@ -254,12 +287,12 @@ fun UserEditableActionsCard(
                 updateAction()
             })
         WarnedButton(text = stringResource(R.string.profile_delete_account_button),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
                 .hideKeyboardOnClick(),
             onClick = {
-                //TODO update description
+                profileEditorScreenViewModel.deleteAccountWarning = true
             })
     }
 }
