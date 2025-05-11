@@ -79,16 +79,22 @@ class HomeScreenViewModel : ViewModel() {
     fun deleteDiscussionId(){
         if(storage!!.load("discussion")!=null)
             storage!!.delete("discussion")
+
+        if(storage!!.load("discussion_finished")!=null)
+            storage!!.delete("discussion_finished")
     }
 
     fun openDiscussion(activityProperties: ActivityProperties,scope: CoroutineScope){
         scope.launch {
             withContext(Dispatchers.IO){
+                deleteBypass()
+                deleteDiscussionId()
                 val response = DiscussionsService.joinDiscussionById(storage!!,discussionPreloaded)
                 when(StatusCodes.valueOf(response!!.status)){
                     StatusCodes.SUCCESSFULLY -> {
                         //Open discussion and save got id
                         withContext(Dispatchers.Main){
+                            //Register into the new discussion
                             storage?.save("discussion",discussionPreloaded)
                             activityProperties.navController.navigate(Screen.Messaging.route){
                                 popUpTo(0){inclusive = true}

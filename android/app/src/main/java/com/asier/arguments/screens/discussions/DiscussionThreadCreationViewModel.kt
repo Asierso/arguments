@@ -56,6 +56,12 @@ class DiscussionThreadCreationViewModel : ViewModel() {
                     StatusCodes.SUCCESSFULLY -> {
                         //Save discussion id and open it
                         val id = GsonUtils.jsonToClass<DiscussionThread>(response.result!! as LinkedTreeMap<*, *>).id
+
+                        //Try to delete previous discussion
+                        if(storage!!.load("discussion") != null){
+                            storage!!.delete("discussion")
+                        }
+
                         storage!!.save("discussion",id)
 
                         withContext(Dispatchers.Main){

@@ -91,11 +91,11 @@ fun RankingsScreen(rankingsScreenViewModel: RankingsScreenViewModel) {
             .padding(5.dp)
     )
 
-    LaunchedEffect(Unit) {
+
         rankingsScreenViewModel.loadUserXp(scope)
         rankingsScreenViewModel.loadMessages(scope)
         rankingsScreenViewModel.loadRanking(scope)
-    }
+
 
     TitleTopBar(title = "Discusiones",
         modifier = Modifier.fillMaxWidth(),

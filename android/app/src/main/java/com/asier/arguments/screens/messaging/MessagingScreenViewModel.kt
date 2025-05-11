@@ -3,12 +3,14 @@ package com.asier.arguments.screens.messaging
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.room.concurrent.AtomicBoolean
 import com.asier.arguments.MainActivity
 import com.asier.arguments.Screen
 import com.asier.arguments.api.discussions.DiscussionsService
@@ -34,6 +36,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MessagingScreenViewModel : ViewModel() {
+    init {
+        Log.d("AsierLog", "MessagingScreenViewModel: INIT")
+    }
     var storage by mutableStateOf<LocalStorage?>(null)
     var username by mutableStateOf("you")
 
@@ -146,13 +151,13 @@ class MessagingScreenViewModel : ViewModel() {
                         shouldBeLoading = false
                     }
 
-                    if(activityRestarting)
+                    if (activityRestarting)
                         return@launch
                     activityRestarting = true
 
                     //Save flag to show expired message
-                    if(storage!!.load("discussion_expired") == null)
-                        storage!!.save("discussion_expired","true")
+                    if (storage!!.load("discussion_expired") == null)
+                        storage!!.save("discussion_expired", "true")
 
                     delay(1000)
 
@@ -169,16 +174,17 @@ class MessagingScreenViewModel : ViewModel() {
 
     private fun refreshDiscussion(parameters: ActivityParameters, scope: CoroutineScope) {
         val id = storage?.load("discussion") ?: ""
-
         scope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
                 try {
                     //Try to load discussion. If is expired or is another error, just leave message page
                     val response = DiscussionsService.getDiscussionById(storage!!, id)
                     when (StatusCodes.valueOf(response!!.status)) {
                         StatusCodes.SUCCESSFULLY -> {
-                            withContext(Dispatchers.Main){
-                                discussion = GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>).copy()
+                            withContext(Dispatchers.Main) {
+                                discussion =
+                                    GsonUtils.jsonToClass<DiscussionThread>(response.result as LinkedTreeMap<*, *>)
+                                        .copy()
                                 checkStatus(parameters)
                             }
                         }
@@ -194,12 +200,22 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    private fun checkStatus(parameters: ActivityParameters){
-        when(discussion!!.status){
+    private fun checkStatus(parameters: ActivityParameters) {
+        //If discussion finished flag exists avoid execution
+        if (storage?.load("discussion_finished")!=null) return
+        when (discussion!!.status) {
             DiscussionStatus.FINISHED -> {
-                storage!!.delete("discussion")
-                parameters.properties.navController.navigate(Screen.Rankings.route)
+                //Save flags
+                storage?.save("discussion_finished", "true")
+                shouldBeLoading = false
+
+                //Load ranking screen
+                parameters.properties.navController.navigate(Screen.Rankings.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
             }
+
             else -> {}
         }
     }
@@ -208,18 +224,24 @@ class MessagingScreenViewModel : ViewModel() {
         if (updatingCycle)
             return
         updatingCycle = true
+
+        //Avoid execution if discussion finished flag exists
+        if ((storage?.load("discussion_finished") ?: "") == "true")
+            return
+
         scope.launch {
             var counter = 0
-            while (shouldBeLoading) {
-               withContext(Dispatchers.Main){
+            while (shouldBeLoading && (storage?.load("discussion_finished") ?: "") != "true") {
+                withContext(Dispatchers.Main) {
                     loadMessages(parameters, scope)
 
-                   //Execute refresh discussion ever 5s (to load discussion changes)
-                    if(counter % 5 == 0){
-                        refreshDiscussion(parameters,scope)
+                    //Execute refresh discussion ever 5s (to load discussion changes)
+                    if (counter % 5 == 0) {
+                        if ((storage?.load("discussion_finished") ?: "") != "true")
+                            refreshDiscussion(parameters, scope)
                     }
                     if (counter >= Int.MAX_VALUE - 10) {
-                       counter = 0
+                        counter = 0
                     }
 
                 }
@@ -235,16 +257,16 @@ class MessagingScreenViewModel : ViewModel() {
         }
     }
 
-    fun checkIfAlone(parameters: ActivityParameters){
+    fun checkIfAlone(parameters: ActivityParameters) {
         //Save bypass flag (avoid ban alert)
-        if(storage!!.load("discussion_expired_bypass")==null)
-            storage!!.save("discussion_expired_bypass","true")
+        if (storage!!.load("discussion_expired_bypass") == null)
+            storage!!.save("discussion_expired_bypass", "true")
 
         //If the user is alone in the discussion, quit the chance of vote and return to home
-        if(discussion!!.users.size <=1){
+        if (discussion!!.users.size <= 1) {
             parameters.isAlone = true
-            parameters.properties.navController.navigate(Screen.Home.route){
-                popUpTo(0){inclusive = true}
+            parameters.properties.navController.navigate(Screen.Home.route) {
+                popUpTo(0) { inclusive = true }
             }
         }
     }
@@ -253,13 +275,13 @@ class MessagingScreenViewModel : ViewModel() {
         activityProperties.navController.navigate(Screen.Profile.route)
     }
 
-    fun vote(candidate: String,activityProperties: ActivityProperties, scope: CoroutineScope){
+    fun vote(candidate: String, activityProperties: ActivityProperties, scope: CoroutineScope) {
         //Avoid double-voting
-        if(alreadyVoted)
+        if (alreadyVoted)
             return
 
         scope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 try {
                     //Send vote request to server
                     val response = DiscussionsService.voteTo(
@@ -275,7 +297,7 @@ class MessagingScreenViewModel : ViewModel() {
                                 alreadyVoted = true
                                 discussion!!.votes.put(
                                     candidate,
-                                    discussion!!.votes.getValue(candidate)+1
+                                    discussion!!.votes.getValue(candidate) + 1
                                 )
                             }
                         }
@@ -309,7 +331,7 @@ class MessagingScreenViewModel : ViewModel() {
                             )
                         }
                     }
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     //Server connection error
                     activityProperties.snackbarHostState.showSnackbar(
                         message = SnackbarInvoke(SnackbarType.SERVER_ERROR).build(),

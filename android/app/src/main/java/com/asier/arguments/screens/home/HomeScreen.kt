@@ -77,9 +77,6 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
                 parameters.isLoading = false
             }
         }
-
-        //Drop bypass flag
-        homeScreenViewModel.deleteBypass()
     }
 
     //Change status bar color

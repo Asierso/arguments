@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.asier.arguments.Screen
-import com.asier.arguments.api.discussions.DiscussionsService
 import com.asier.arguments.api.messaging.MessagingService
 import com.asier.arguments.api.rankings.RankingsService
 import com.asier.arguments.api.users.UsersService
@@ -40,9 +39,7 @@ class RankingsScreenViewModel : ViewModel() {
     var screen : RankingScreen by mutableStateOf(RankingScreen.OVERVIEW)
 
     fun loadRanking(scope: CoroutineScope){
-        //val discussionId = storage!!.load("discussion")
-        //TODO: Replace
-        val discussionId = "681aa26719a2aa0186950d1b"
+        val discussionId = storage!!.load("discussion") ?: return
         scope.launch {
             withContext(Dispatchers.IO){
                 val response = RankingsService.selectByDiscussion(localStorage = storage!!, discussionId = discussionId!!)
@@ -58,6 +55,7 @@ class RankingsScreenViewModel : ViewModel() {
                             val username = storage!!.load("user")
 
                             //Get self position in ranking
+                            selfPosition=0
                             for((key,value) in sortedRanking){
                                 selfPosition++
                                 if(key.equals(username))
@@ -95,7 +93,7 @@ class RankingsScreenViewModel : ViewModel() {
         scope.launch {
             withContext(Dispatchers.IO){
                 val username = storage!!.load("user") ?: return@withContext
-                val discussionId = "681aa26719a2aa0186950d1b"
+                val discussionId = storage!!.load("discussion")?: return@withContext
                 val response = MessagingService.getMessagesByUsername(
                     localStorage = storage!!,
                     discussionId = discussionId,

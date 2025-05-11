@@ -110,19 +110,12 @@ class MainActivity : ComponentActivity() {
         //Set properties
         parameters.properties = activityProperties
 
-        //TODO: REMOVE
-        AppNavGraph(
-            modifier = Modifier,
-            start = Screen.Rankings
-        )
-
-        /*
         AppNavGraph(
             modifier = modifier,
             start = if ((activityProperties.storage.load("auth")
                     ?: "").isNotBlank()
             ) Screen.Home else Screen.Welcome
-        )*/
+        )
 
         //Load overlay
         if (parameters.isLoading) {
