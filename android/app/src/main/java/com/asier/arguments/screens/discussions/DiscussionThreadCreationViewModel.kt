@@ -61,6 +61,9 @@ class DiscussionThreadCreationViewModel : ViewModel() {
                         if(storage!!.load("discussion") != null){
                             storage!!.delete("discussion")
                         }
+                        if(storage!!.load("discussion_finished")!=null) {
+                            storage!!.delete("discussion_finished")
+                        }
 
                         storage!!.save("discussion",id)
 
