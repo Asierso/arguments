@@ -79,4 +79,11 @@
     <string name="alert_close">Close</string>
     <string name="alert_cancel">Cancel</string>
     <string name="alert_acept">Accept</string>
+    <string name="ranking_ranking_text">Ranking</string>
+    <string name="ranking_summary_button">See summary</string>
+    <string name="ranking_discussion_end_text">¡End of discussion!</string>
+    <string name="ranking_ranking_list_button">See ranking</string>
+    <string name="ranking_arguments_title">Your arguments</string>
+    <string name="ranking_arguments_noarguments_text">Without messages</string>
+    <string name="ranking_position_text">You was</string>
 </resources>

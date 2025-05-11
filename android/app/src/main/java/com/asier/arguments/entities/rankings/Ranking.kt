@@ -5,5 +5,6 @@ data class Ranking (
     var discussion : String,
     var ranking: HashMap<String,Int>,
     var xpPoints: HashMap<String,Int>,
-    var paimonVote: String
+    var paimonVote: String,
+    var title: String
 )

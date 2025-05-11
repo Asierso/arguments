@@ -33,6 +33,7 @@ class RankingsScreenViewModel : ViewModel() {
     var xpEarn by mutableIntStateOf(0)
     var totalXp by mutableIntStateOf(0)
     var messages = mutableListOf<Message>()
+    var title by mutableStateOf("")
 
     //Ranking internal navigation
     enum class RankingScreen { OVERVIEW, LIST}
@@ -47,6 +48,7 @@ class RankingsScreenViewModel : ViewModel() {
                     StatusCodes.SUCCESSFULLY -> {
                         val ranking = GsonUtils.jsonToClass<Ranking>(response.result as LinkedTreeMap<*, *>)
                         withContext(Dispatchers.Main){
+                            title = ranking.title
                             sortedRanking = ranking.ranking.toSortedMap(java.util.Comparator { t, t2 ->
                                 return@Comparator ranking.ranking.getValue(t2).compareTo(ranking.ranking.getValue(t))
                             })
