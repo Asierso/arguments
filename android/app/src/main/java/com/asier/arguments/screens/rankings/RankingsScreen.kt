@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -351,32 +352,35 @@ fun ArgumentsList(
 
             //If there's messages to show, load it
             itemsIndexed(userMessages) { index, item ->
-                Row(modifier = Modifier.padding(8.dp)) {
-                    Column(modifier = Modifier.weight(.5f)) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_ia),
-                            contentDescription = "ia",
-                            tint = shineColorEffector().value,
-                            modifier = Modifier
-                                .width(15.dp)
-                                .height(15.dp)
-                        )
-                        Text(
-                            text = if (item.feedback.toLowerCase(Locale.current)
-                                    .replace("\"", "") == "unknown"
-                            ) "..." else item.feedback,
-                            fontFamily = Montserrat,
-                            fontWeight = FontWeight.Normal,
-                            color = TextBright1,
-                            textAlign = TextAlign.Justify,
-                            fontSize = 13.sp
+                Column {
+                    Row(modifier = Modifier.padding(8.dp)) {
+                        Column(modifier = Modifier.weight(.5f).padding(end = 3.dp)) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_ia),
+                                contentDescription = "ia",
+                                tint = shineColorEffector().value,
+                                modifier = Modifier
+                                    .width(15.dp)
+                                    .height(15.dp)
+                            )
+                            Text(
+                                text = if (item.feedback.toLowerCase(Locale.current)
+                                        .replace("\"", "") == "unknown"
+                                ) "..." else item.feedback,
+                                fontFamily = Montserrat,
+                                fontWeight = FontWeight.Normal,
+                                color = TextBright1,
+                                textAlign = TextAlign.Start,
+                                fontSize = 13.sp
+                            )
+                        }
+                        MessageDialog(
+                            message = item,
+                            self = true,
+                            modifier = Modifier.weight(.5f)
                         )
                     }
-                    MessageDialog(
-                        message = item,
-                        self = true,
-                        modifier = Modifier.weight(.5f)
-                    )
+                    Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().border(1.dp, Color.White.copy(alpha = 0.3f)))
                 }
             }
         }
@@ -444,7 +448,21 @@ fun ArgumentsListPreview() {
                 sendTime = Instant.now(),
                 discussionId = "0",
                 sender = "dummy",
-                feedback = ""
+                feedback = "Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets"
+            ),
+            Message(
+                message = "Hello",
+                sendTime = Instant.now(),
+                discussionId = "0",
+                sender = "dummy",
+                feedback = "Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets"
+            ),
+            Message(
+                message = "Hello",
+                sendTime = Instant.now(),
+                discussionId = "0",
+                sender = "dummy",
+                feedback = "Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets Lorem ipsum dolor sit amets"
             ),
         )
     )
