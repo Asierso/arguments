@@ -94,6 +94,13 @@ class HomeScreenViewModel : ViewModel() {
                     StatusCodes.SUCCESSFULLY -> {
                         //Open discussion and save got id
                         withContext(Dispatchers.Main){
+                            //Delete discussion flags
+                            if(storage!!.load("discussion_finished")!=null) {
+                                storage!!.delete("discussion_finished")
+                            }
+                            if(storage!!.load("discussion_expired_bypass")!=null) {
+                                storage!!.delete("discussion_expired_bypass")
+                            }
                             //Register into the new discussion
                             storage?.save("discussion",discussionPreloaded)
                             activityProperties.navController.navigate(Screen.Messaging.route){

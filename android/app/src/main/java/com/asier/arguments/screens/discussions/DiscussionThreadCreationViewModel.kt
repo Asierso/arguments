@@ -64,6 +64,9 @@ class DiscussionThreadCreationViewModel : ViewModel() {
                         if(storage!!.load("discussion_finished")!=null) {
                             storage!!.delete("discussion_finished")
                         }
+                        if(storage!!.load("discussion_expired_bypass")!=null) {
+                            storage!!.delete("discussion_expired_bypass")
+                        }
 
                         storage!!.save("discussion",id)
 

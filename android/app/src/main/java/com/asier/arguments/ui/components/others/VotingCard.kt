@@ -111,13 +111,13 @@ fun VotingCard(
             return
         }
         Text(
-            text = stringResource(R.string.voting_card_vote_text,
-                if (endVoting == null || Instant.now().isAfter(endVoting)) "" else
+            text = "${stringResource(R.string.voting_card_vote_text)} "
+                + if (endVoting == null || Instant.now().isAfter(endVoting)) "" else {
                     Duration.between(Instant.now(), endVoting)
                         .seconds
                         .let { Instant.ofEpochSecond(it) }
                         .atZone(ZoneOffset.systemDefault())
-                        .format(DateTimeFormatter.ofPattern("'('mm:ss')'"))),
+                        .format(DateTimeFormatter.ofPattern("'('mm:ss')'"))},
             fontFamily = Montserrat,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
