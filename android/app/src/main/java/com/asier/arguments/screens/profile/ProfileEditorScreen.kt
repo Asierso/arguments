@@ -151,6 +151,7 @@ fun UserExtendedCard(modifier: Modifier = Modifier, user: User){
             UserCard(
                 user = User().apply {
                     username = user.username
+                    level = user.level
                     isActive = true
             }, modifier = Modifier
                     .padding(start = 2.dp, top = 10.dp, bottom = 10.dp)
