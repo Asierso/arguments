@@ -44,6 +44,7 @@ import com.asier.arguments.ui.components.others.DiscussionCard
 import com.asier.arguments.ui.components.others.UserAlt
 import com.asier.arguments.ui.components.topbars.ProfileActionTopBar
 import com.asier.arguments.ui.components.topbars.ProfileTopBar
+import com.asier.arguments.ui.theme.Primary
 import com.asier.arguments.ui.theme.TopBarBackground
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -215,6 +216,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 30.dp, end = 20.dp),
+            containerColor = Primary,
             onClick = {
                 activityProperties.navController.navigate(Screen.DiscussionCreate.route)
             }) {
